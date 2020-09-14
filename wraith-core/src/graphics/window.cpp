@@ -3,10 +3,10 @@
 namespace wraith {
 	namespace graphics {
 
-		void onWindowResized(GLFWwindow *window, int width, int height);
-		void keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods);
-		void mouseButtonCallback(GLFWwindow *window, int button, int action, int mods);
-		void cursorPositionCallback(GLFWwindow *window, double xpos, double ypos);
+		void window_size_callback(GLFWwindow *window, int width, int height);
+		void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods);
+		void mouse_button_callback(GLFWwindow *window, int button, int action, int mods);
+		void cursor_position_callback(GLFWwindow *window, double xpos, double ypos);
 
 		Window::Window(const char *title, int width, int height)
 		{
@@ -53,11 +53,11 @@ namespace wraith {
 
 			glfwMakeContextCurrent(m_Window);
 			glfwSetWindowUserPointer(m_Window, this);
-			glfwSetWindowSizeCallback(m_Window, onWindowResized);
+			glfwSetWindowSizeCallback(m_Window, window_size_callback);
 
-			glfwSetKeyCallback(m_Window, keyCallback);
-			glfwSetMouseButtonCallback(m_Window, mouseButtonCallback);
-			glfwSetCursorPosCallback(m_Window, cursorPositionCallback);
+			glfwSetKeyCallback(m_Window, key_callback);
+			glfwSetMouseButtonCallback(m_Window, mouse_button_callback);
+			glfwSetCursorPosCallback(m_Window, cursor_position_callback);
 
 			if (glewInit() != GLEW_OK)
 			{
@@ -111,24 +111,24 @@ namespace wraith {
 			return glfwWindowShouldClose(m_Window) == 1;
 		}
 
-		void onWindowResized(GLFWwindow *window, int width, int height)
+		void window_size_callback(GLFWwindow *window, int width, int height)
 		{
 			glViewport(0, 0, width, height);
 		}
 		
-		void keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods)
+		void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
 		{
 			Window *windowInstance = (Window *)glfwGetWindowUserPointer(window);
 			windowInstance->m_KeysPressed[key] = action != GLFW_RELEASE;
 		}
 
-		void mouseButtonCallback(GLFWwindow *window, int button, int action, int mods)
+		void mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
 		{
 			Window *windowInstance = (Window *)glfwGetWindowUserPointer(window);
 			windowInstance->m_MouseButtonsPressed[button] = action != GLFW_RELEASE;
 		}
 
-		void cursorPositionCallback(GLFWwindow *window, double xpos, double ypos)
+		void cursor_position_callback(GLFWwindow *window, double xpos, double ypos)
 		{
 			Window *windowInstance = (Window *)glfwGetWindowUserPointer(window);
 			windowInstance->m_MouseX = xpos;

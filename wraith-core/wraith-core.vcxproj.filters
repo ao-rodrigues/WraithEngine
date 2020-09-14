@@ -33,6 +33,9 @@
     <ClCompile Include="src\math\matrix4.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\graphics\shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\graphics\window.h">
@@ -53,5 +56,15 @@
     <ClInclude Include="src\math\math.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\utils\file_utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\graphics\shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\shaders\basic.vert" />
+    <None Include="src\shaders\basic.frag" />
   </ItemGroup>
 </Project>
