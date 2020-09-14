@@ -148,6 +148,7 @@
     <ClCompile Include="src\graphics\buffers\buffer.cpp" />
     <ClCompile Include="src\graphics\buffers\index_buffer.cpp" />
     <ClCompile Include="src\graphics\buffers\vertex_array.cpp" />
+    <ClCompile Include="src\graphics\simple_renderer_2d.cpp" />
     <ClCompile Include="src\graphics\shader.cpp" />
     <ClCompile Include="src\graphics\window.cpp" />
     <ClCompile Include="src\math\matrix4.cpp" />
@@ -159,7 +160,10 @@
     <ClInclude Include="src\graphics\buffers\buffer.h" />
     <ClInclude Include="src\graphics\buffers\index_buffer.h" />
     <ClInclude Include="src\graphics\buffers\vertex_array.h" />
+    <ClInclude Include="src\graphics\renderable_2d.h" />
+    <ClInclude Include="src\graphics\renderer_2d.h" />
     <ClInclude Include="src\graphics\shader.h" />
+    <ClInclude Include="src\graphics\simple_renderer_2d.h" />
     <ClInclude Include="src\graphics\window.h" />
     <ClInclude Include="src\math\math.h" />
     <ClInclude Include="src\math\matrix4.h" />
