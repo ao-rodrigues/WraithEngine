@@ -1,9 +1,11 @@
 #include "src/graphics/window.h"
+#include "src/math/math.h"
 
 int main()
 {
 	using namespace wraith;
 	using namespace graphics;
+	using namespace math;
 
 	Window window("Wraith", 800, 600);
 	glClearColor(0.2f, 0.3f, 0.8f, 1.0f);
