@@ -4,6 +4,9 @@ namespace wraith {
 	namespace graphics {
 
 		void onWindowResized(GLFWwindow *window, int width, int height);
+		void keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods);
+		void mouseButtonCallback(GLFWwindow *window, int button, int action, int mods);
+		void cursorPositionCallback(GLFWwindow *window, double xpos, double ypos);
 
 		Window::Window(const char *title, int width, int height)
 		{
@@ -14,6 +17,16 @@ namespace wraith {
 			if (!init())
 			{
 				glfwTerminate();
+			}
+
+			for (int i = 0; i < MAX_KEYS; i++)
+			{
+				m_KeysPressed[i] = false;
+			}
+			
+			for (int i = 0; i < MAX_MOUSE_BUTTONS; i++)
+			{
+				m_MouseButtonsPressed[i] = false;
 			}
 		}
 
@@ -39,8 +52,12 @@ namespace wraith {
 			}
 
 			glfwMakeContextCurrent(m_Window);
+			glfwSetWindowUserPointer(m_Window, this);
 			glfwSetWindowSizeCallback(m_Window, onWindowResized);
 
+			glfwSetKeyCallback(m_Window, keyCallback);
+			glfwSetMouseButtonCallback(m_Window, mouseButtonCallback);
+			glfwSetCursorPosCallback(m_Window, cursorPositionCallback);
 
 			if (glewInit() != GLEW_OK)
 			{
@@ -51,16 +68,41 @@ namespace wraith {
 			return true;
 		}
 
+		bool Window::keyPressed(unsigned int keycode) const
+		{
+			if (keycode >= MAX_KEYS)
+			{
+				// TODO: Log it
+				return false;
+			}
+			return m_KeysPressed[keycode];
+		}
+
+		bool Window::mouseButtonPressed(unsigned int button) const
+		{
+			if (button >= MAX_MOUSE_BUTTONS)
+			{
+				// TODO: Log it
+				return false;
+			}
+			return m_MouseButtonsPressed[button];
+		}
+
+		void Window::getMousePosition(double &x, double &y) const
+		{
+			x = m_MouseX;
+			y = m_MouseY;
+		}
+
 		void Window::clear() const
 		{
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		}
 
+
 		void Window::update()
 		{
 			glfwPollEvents();
-			//glfwGetFramebufferSize(m_Window, &m_Width, &m_Height);
-			
 			glfwSwapBuffers(m_Window);
 		}
 
@@ -72,6 +114,25 @@ namespace wraith {
 		void onWindowResized(GLFWwindow *window, int width, int height)
 		{
 			glViewport(0, 0, width, height);
+		}
+		
+		void keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods)
+		{
+			Window *windowInstance = (Window *)glfwGetWindowUserPointer(window);
+			windowInstance->m_KeysPressed[key] = action != GLFW_RELEASE;
+		}
+
+		void mouseButtonCallback(GLFWwindow *window, int button, int action, int mods)
+		{
+			Window *windowInstance = (Window *)glfwGetWindowUserPointer(window);
+			windowInstance->m_MouseButtonsPressed[button] = action != GLFW_RELEASE;
+		}
+
+		void cursorPositionCallback(GLFWwindow *window, double xpos, double ypos)
+		{
+			Window *windowInstance = (Window *)glfwGetWindowUserPointer(window);
+			windowInstance->m_MouseX = xpos;
+			windowInstance->m_MouseY = ypos;
 		}
 	}
 }
