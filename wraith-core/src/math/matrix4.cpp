@@ -59,12 +59,12 @@ namespace wraith {
 			// Diagonal
 			result.values[0 + 0 * 4] = 2.0f / (right - left);
 			result.values[1 + 1 * 4] = 2.0f / (top - bottom);
-			result.values[2 + 2 * 4] = 2.0f / (near - far);
+			result.values[2 + 2 * 4] = -2.0f / (far - near);
 
 			// Last column
-			result.values[0 + 3 * 4] = (left + right) / (left - right);
-			result.values[1 + 3 * 4] = (bottom + top) / (bottom - top);
-			result.values[2 + 3 * 4] = (far + near) / (far - near);
+			result.values[0 + 3 * 4] = -1.0f * ((right + left) / (right - left));
+			result.values[1 + 3 * 4] = -1.0f * ((top + bottom) / (top - bottom));
+			result.values[2 + 3 * 4] = -1.0f * ((far + near) / (far - near));
 
 			return result;
 		}
