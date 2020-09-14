@@ -8,7 +8,7 @@ namespace wraith {
 			m_RenderQueue.push_back(renderable);
 		}
 
-		void SimpleRenderer2D::flush()
+		void SimpleRenderer2D::render()
 		{
 			while (!m_RenderQueue.empty())
 			{

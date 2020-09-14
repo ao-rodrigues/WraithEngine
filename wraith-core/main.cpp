@@ -42,7 +42,8 @@ int main()
 
 		renderer.submit(&sprite);
 		renderer.submit(&sprite2);
-		renderer.flush();
+
+		renderer.render();
 
 		window.update();
 	}

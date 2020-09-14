@@ -12,7 +12,7 @@ namespace wraith {
 
 		public:
 			void submit(const Renderable2D *renderable) override;
-			void flush() override;
+			void render() override;
 		};
 	}
 }
