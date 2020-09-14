@@ -4,16 +4,16 @@ namespace wraith {
 	namespace math {
 		Matrix4::Matrix4()
 		{
-			std::memset(elements, 0, sizeof elements);
+			std::memset(values, 0, sizeof values);
 		}
 
 		Matrix4::Matrix4(float diagonal)
 		{
-			std::memset(elements, 0, sizeof elements);
+			std::memset(values, 0, sizeof values);
 
 			for (int i = 0; i < 4; i++)
 			{
-				elements[i + i * 4] = diagonal;
+				values[i + i * 4] = diagonal;
 			}
 		}
 
@@ -31,10 +31,10 @@ namespace wraith {
 					float sum = 0.0f;
 					for (int i = 0; i < 4; i++)
 					{
-						sum += elements[x + i * 4] * other.elements[i + y * 4];
+						sum += values[x + i * 4] * other.values[i + y * 4];
 					}
 
-					elements[x + y * 4] = sum;
+					values[x + y * 4] = sum;
 				}
 			}
 
@@ -57,14 +57,14 @@ namespace wraith {
 			Matrix4 result = identity();
 
 			// Diagonal
-			result.elements[0 + 0 * 4] = 2.0f / (right - left);
-			result.elements[1 + 1 * 4] = 2.0f / (top - bottom);
-			result.elements[2 + 2 * 4] = 2.0f / (near - far);
+			result.values[0 + 0 * 4] = 2.0f / (right - left);
+			result.values[1 + 1 * 4] = 2.0f / (top - bottom);
+			result.values[2 + 2 * 4] = 2.0f / (near - far);
 
 			// Last column
-			result.elements[0 + 3 * 4] = (left + right) / (left - right);
-			result.elements[1 + 3 * 4] = (bottom + top) / (bottom - top);
-			result.elements[2 + 3 * 4] = (far + near) / (far - near);
+			result.values[0 + 3 * 4] = (left + right) / (left - right);
+			result.values[1 + 3 * 4] = (bottom + top) / (bottom - top);
+			result.values[2 + 3 * 4] = (far + near) / (far - near);
 
 			return result;
 		}
@@ -78,11 +78,11 @@ namespace wraith {
 			float b = -1.0f * ((far + near) / (far - near));
 			float c = -1.0f * ((2.0f * far * near) / (far - near));
 			
-			result.elements[0 + 0 * 4] = a;
-			result.elements[1 + 1 * 4] = q;
-			result.elements[2 + 2 * 4] = b;
-			result.elements[3 + 2 * 4] = -1.0f;
-			result.elements[2 + 3 * 4] = c;
+			result.values[0 + 0 * 4] = a;
+			result.values[1 + 1 * 4] = q;
+			result.values[2 + 2 * 4] = b;
+			result.values[3 + 2 * 4] = -1.0f;
+			result.values[2 + 3 * 4] = c;
 
 			return result;
 		}
@@ -91,9 +91,9 @@ namespace wraith {
 		{
 			Matrix4 result = identity();
 
-			result.elements[0 + 3 * 4] = translation.x;
-			result.elements[1 + 3 * 4] = translation.y;
-			result.elements[2 + 3 * 4] = translation.z;
+			result.values[0 + 3 * 4] = translation.x;
+			result.values[1 + 3 * 4] = translation.y;
+			result.values[2 + 3 * 4] = translation.z;
 
 			return result;
 		}
@@ -111,17 +111,17 @@ namespace wraith {
 			float y = axis.y;
 			float z = axis.z;
 
-			result.elements[0 + 0 * 4] = c + x * x * omc;
-			result.elements[1 + 0 * 4] = y * x * omc + z * s;
-			result.elements[2 + 0 * 4] = z * x * omc - y * s;
+			result.values[0 + 0 * 4] = c + x * x * omc;
+			result.values[1 + 0 * 4] = y * x * omc + z * s;
+			result.values[2 + 0 * 4] = z * x * omc - y * s;
 
-			result.elements[0 + 1 * 4] = x * y * omc - z * s;
-			result.elements[1 + 1 * 4] = c + y * y * omc;
-			result.elements[2 + 1 * 4] = z * y * omc + x * s;
+			result.values[0 + 1 * 4] = x * y * omc - z * s;
+			result.values[1 + 1 * 4] = c + y * y * omc;
+			result.values[2 + 1 * 4] = z * y * omc + x * s;
 
-			result.elements[0 + 2 * 4] = x * z * omc + y * s;
-			result.elements[1 + 2 * 4] = y * z * omc - x * s;
-			result.elements[2 + 2 * 4] = c + z * z * omc;
+			result.values[0 + 2 * 4] = x * z * omc + y * s;
+			result.values[1 + 2 * 4] = y * z * omc - x * s;
+			result.values[2 + 2 * 4] = c + z * z * omc;
 
 			return result;
 		}
@@ -130,9 +130,9 @@ namespace wraith {
 		{
 			Matrix4 result = identity();
 
-			result.elements[0 + 0 * 4] = scale.x;
-			result.elements[1 + 1 * 4] = scale.y;
-			result.elements[2 + 2 * 4] = scale.z;
+			result.values[0 + 0 * 4] = scale.x;
+			result.values[1 + 1 * 4] = scale.y;
+			result.values[2 + 2 * 4] = scale.z;
 
 			return result;
 		}

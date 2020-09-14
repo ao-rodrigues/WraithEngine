@@ -10,7 +10,11 @@ namespace wraith {
 
 		struct Matrix4
 		{
-			float elements[4 * 4];
+			union
+			{
+				float values[4 * 4];
+				Vector4 columns[4];
+			};
 
 			Matrix4();
 			Matrix4(float diagonal);
@@ -18,7 +22,7 @@ namespace wraith {
 			static Matrix4 identity();
 
 			Matrix4 &multiply(const Matrix4 &other);
-				
+
 			friend Matrix4 operator*(Matrix4 left, const Matrix4 &right);
 			Matrix4 operator*=(const Matrix4 &other);
 
