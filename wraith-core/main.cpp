@@ -12,6 +12,11 @@ int main()
 	{
 		window.clear();
 
+		double x, y;
+		window.getMousePosition(x, y);
+		std::cout << "X: " << x << std::endl;
+		std::cout << "Y: " << y << std::endl;
+
 		glBegin(GL_TRIANGLES);
 		glVertex2f(-0.5f, -0.5f);
 		glVertex2f(0.0f, 0.5f);
