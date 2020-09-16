@@ -1,9 +1,9 @@
-#include "static_sprite.h"
+#include "StaticSprite.h"
 
-namespace wraith {
-	namespace graphics {
-		StaticSprite::StaticSprite(float x, float y, float width, float height, math::Vector4 color, Shader &shader)
-			: Renderable2D(math::Vector3(x, y, 0), math::Vector2(width, height), color), m_Shader(shader)
+namespace Wraith {
+	namespace Graphics {
+		StaticSprite::StaticSprite(float x, float y, float width, float height, Math::Vector4 color, Shader &shader)
+			: Renderable2D(Math::Vector3(x, y, 0), Math::Vector2(width, height), color), m_Shader(shader)
 		{
 			m_VertexArray = new VertexArray();
 
@@ -23,10 +23,10 @@ namespace wraith {
 				color.x, color.y, color.z, color.w
 			};
 
-			m_VertexArray->addBuffer(new Buffer(vertices, 4 * 3, 3), 0);
-			m_VertexArray->addBuffer(new Buffer(colors, 4 * 4, 4), 1);
+			m_VertexArray->AddBuffer(new Buffer(vertices, 4 * 3, 3), 0);
+			m_VertexArray->AddBuffer(new Buffer(colors, 4 * 4, 4), 1);
 
-			GLushort indices[] =
+			GLuint indices[] =
 			{
 				0, 1, 2,
 				2, 3, 0

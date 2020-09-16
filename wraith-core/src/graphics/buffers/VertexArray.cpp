@@ -1,7 +1,7 @@
-#include "vertex_array.h"
+#include "VertexArray.h"
 
-namespace wraith {
-	namespace graphics{
+namespace Wraith {
+	namespace Graphics{
 		VertexArray::VertexArray()
 		{
 			glGenVertexArrays(1, & m_ArrayID);
@@ -17,25 +17,25 @@ namespace wraith {
 			glDeleteVertexArrays(1, &m_ArrayID);
 		}
 
-		void VertexArray::addBuffer(Buffer *buffer, GLuint index)
+		void VertexArray::AddBuffer(Buffer *buffer, GLuint index)
 		{
-			bind();
-			buffer->bind();
+			Bind();
+			buffer->Bind();
 
 			glEnableVertexAttribArray(index);
-			glVertexAttribPointer(index, buffer->getComponentCount(), GL_FLOAT, GL_FALSE, 0, 0);
+			glVertexAttribPointer(index, buffer->GetComponentCount(), GL_FLOAT, GL_FALSE, 0, 0);
 			m_Buffers.push_back(buffer);
 
-			buffer->unbind();
-			unbind();
+			buffer->Unbind();
+			Unbind();
 		}
 
-		void VertexArray::bind() const
+		void VertexArray::Bind() const
 		{
 			glBindVertexArray(m_ArrayID);
 		}
 
-		void VertexArray::unbind() const
+		void VertexArray::Unbind() const
 		{
 			glBindVertexArray(0);
 		}

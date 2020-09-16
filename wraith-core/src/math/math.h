@@ -1,13 +1,13 @@
 #pragma once
 
-#include "vector2.h"
-#include "vector3.h"
-#include "vector4.h"
-#include "matrix4.h"
+#include "Vector2.h"
+#include "Vector3.h"
+#include "Vector4.h"
+#include "Matrix4.h"
 
-namespace wraith {
-	namespace math {
-		inline float toRadians(float degrees)
+namespace Wraith {
+	namespace Math {
+		inline float ToRadians(float degrees)
 		{
 			return degrees * ((float)M_PI / 180.0f);
 		}

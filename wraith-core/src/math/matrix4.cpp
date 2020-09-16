@@ -1,7 +1,7 @@
-#include "matrix4.h"
+#include "Matrix4.h"
 
-namespace wraith {
-	namespace math {
+namespace Wraith {
+	namespace Math {
 		Matrix4::Matrix4()
 		{
 			std::memset(values, 0, sizeof values);
@@ -17,12 +17,12 @@ namespace wraith {
 			}
 		}
 
-		Matrix4 Matrix4::identity()
+		Matrix4 Matrix4::Identity()
 		{
 			return Matrix4(1.0f);
 		}
 
-		Matrix4 &Matrix4::multiply(const Matrix4 &other)
+		Matrix4 &Matrix4::Multiply(const Matrix4 &other)
 		{
 			for (int y = 0; y < 4; y++)
 			{
@@ -43,18 +43,18 @@ namespace wraith {
 
 		Matrix4 operator*(Matrix4 left, const Matrix4 &right)
 		{
-			return left.multiply(right);
+			return left.Multiply(right);
 		}
 
 		Matrix4 Matrix4::operator*=(const Matrix4 &other)
 		{
-			return multiply(other);
+			return Multiply(other);
 		}
 
 
-		Matrix4 Matrix4::orthographic(float left, float right, float bottom, float top, float near, float far)
+		Matrix4 Matrix4::Orthographic(float left, float right, float bottom, float top, float near, float far)
 		{
-			Matrix4 result = identity();
+			Matrix4 result = Identity();
 
 			// Diagonal
 			result.values[0 + 0 * 4] = 2.0f / (right - left);
@@ -69,11 +69,11 @@ namespace wraith {
 			return result;
 		}
 
-		Matrix4 Matrix4::perspective(float fov, float aspectRatio, float near, float far)
+		Matrix4 Matrix4::Perspective(float fov, float aspectRatio, float near, float far)
 		{
 			Matrix4 result;
 
-			float q = 1.0f / tan(toRadians(fov / 2.0f));
+			float q = 1.0f / tan(ToRadians(fov / 2.0f));
 			float a = q / aspectRatio;
 			float b = -1.0f * ((far + near) / (far - near));
 			float c = -1.0f * ((2.0f * far * near) / (far - near));
@@ -87,9 +87,9 @@ namespace wraith {
 			return result;
 		}
 
-		Matrix4 Matrix4::translation(const Vector3 &translation)
+		Matrix4 Matrix4::Translation(const Vector3 &translation)
 		{
-			Matrix4 result = identity();
+			Matrix4 result = Identity();
 
 			result.values[0 + 3 * 4] = translation.x;
 			result.values[1 + 3 * 4] = translation.y;
@@ -98,11 +98,11 @@ namespace wraith {
 			return result;
 		}
 
-		Matrix4 Matrix4::rotation(float angle, const Vector3 &axis)
+		Matrix4 Matrix4::Rotation(float angle, const Vector3 &axis)
 		{
-			Matrix4 result = identity();
+			Matrix4 result = Identity();
 
-			float r = toRadians(angle);
+			float r = ToRadians(angle);
 			float c = cos(r);
 			float s = sin(r);
 			float omc = 1.0f - c;
@@ -126,9 +126,9 @@ namespace wraith {
 			return result;
 		}
 
-		Matrix4 Matrix4::scale(const Vector3 &scale)
+		Matrix4 Matrix4::Scale(const Vector3 &scale)
 		{
-			Matrix4 result = identity();
+			Matrix4 result = Identity();
 
 			result.values[0 + 0 * 4] = scale.x;
 			result.values[1 + 1 * 4] = scale.y;

@@ -1,9 +1,9 @@
 #pragma once
 
-#include <GL/glew.h>
+#include <glad/glad.h>
 
-namespace wraith {
-	namespace graphics {
+namespace Wraith {
+	namespace Graphics {
 		class Buffer
 		{
 		private:
@@ -14,9 +14,9 @@ namespace wraith {
 			Buffer(GLfloat* data, GLsizei count, GLuint componentCount);
 			~Buffer();
 
-			void bind() const;
-			void unbind() const;
-			inline GLuint getComponentCount() const { return m_ComponentCount; };
+			void Bind() const;
+			void Unbind() const;
+			inline GLuint GetComponentCount() const { return m_ComponentCount; };
 		};
 	}
 }

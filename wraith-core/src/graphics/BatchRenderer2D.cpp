@@ -1,11 +1,11 @@
-#include "batch_renderer_2d.h"
+#include "BatchRenderer2D.h"
 
-namespace wraith {
-	namespace graphics {
+namespace Wraith {
+	namespace Graphics {
 
 		BatchRenderer2D::BatchRenderer2D()
 		{
-			init();
+			Init();
 		}
 
 		BatchRenderer2D::~BatchRenderer2D()
@@ -14,7 +14,7 @@ namespace wraith {
 			glDeleteBuffers(1, &m_VBO);
 		}
 
-		void BatchRenderer2D::init()
+		void BatchRenderer2D::Init()
 		{
 			glGenVertexArrays(1, &m_VAO);
 			glBindVertexArray(m_VAO);
@@ -30,7 +30,7 @@ namespace wraith {
 
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-			GLushort *indices = new GLushort[RENDERER_INDICES_SIZE];
+			GLuint *indices = new GLuint[RENDERER_INDICES_SIZE];
 
 			int offset = 0;
 			for (int i = 0; i < RENDERER_INDICES_SIZE; i += 6)
@@ -52,51 +52,51 @@ namespace wraith {
 			delete[] indices;
 		}
 
-		void BatchRenderer2D::begin()
+		void BatchRenderer2D::Begin()
 		{
 			glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
 			m_Buffer = (VertexData *)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
 		}
 
-		void BatchRenderer2D::submit(const Renderable2D *renderable)
+		void BatchRenderer2D::Submit(const Renderable2D *renderable)
 		{
-			const math::Vector3 &position = renderable->getPosition();
-			const math::Vector2 &size= renderable->getSize();
-			const math::Vector4 &color = renderable->getColor();
+			const Math::Vector3 &position = renderable->GetPosition();
+			const Math::Vector2 &size= renderable->GetSize();
+			const Math::Vector4 &color = renderable->GetColor();
 
 			m_Buffer->vertex = position;
 			m_Buffer->color = color;
 			m_Buffer++;
 
-			m_Buffer->vertex = math::Vector3(position.x, position.y + size.y, position.z);
+			m_Buffer->vertex = Math::Vector3(position.x, position.y + size.y, position.z);
 			m_Buffer->color = color;
 			m_Buffer++;
 
-			m_Buffer->vertex = math::Vector3(position.x + size.x, position.y + size.y, position.z);
+			m_Buffer->vertex = Math::Vector3(position.x + size.x, position.y + size.y, position.z);
 			m_Buffer->color = color;
 			m_Buffer++;
 
-			m_Buffer->vertex = math::Vector3(position.x + size.x, position.y, position.z);
+			m_Buffer->vertex = Math::Vector3(position.x + size.x, position.y, position.z);
 			m_Buffer->color = color;
 			m_Buffer++;
 
 			m_IndexCount += 6;
 		}
 
-		void BatchRenderer2D::end()
+		void BatchRenderer2D::End()
 		{
 			glUnmapBuffer(GL_ARRAY_BUFFER);
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 		}
 
-		void BatchRenderer2D::render()
+		void BatchRenderer2D::Render()
 		{
 			glBindVertexArray(m_VAO);
-			m_IBO->bind();
+			m_IBO->Bind();
 
-			glDrawElements(GL_TRIANGLES, m_IndexCount, GL_UNSIGNED_SHORT, NULL);
+			glDrawElements(GL_TRIANGLES, m_IndexCount, GL_UNSIGNED_INT, NULL);
 
-			m_IBO->unbind();
+			m_IBO->Unbind();
 			glBindVertexArray(0);
 
 			m_IndexCount = 0;

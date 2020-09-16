@@ -72,8 +72,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)\Dependencies\GLEW\include;$(SolutionDir)\Dependencies\GLFW\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\Dependencies\GLEW\lib;$(SolutionDir)\Dependencies\GLFW\lib-vc2019;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)bin\$(Configuration)\Intermediates\</IntDir>
   </PropertyGroup>
@@ -82,6 +82,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(SolutionDir)\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -96,7 +98,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;glew32s.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -119,12 +121,13 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -145,38 +148,40 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="src\graphics\batch_renderer_2d.cpp" />
-    <ClCompile Include="src\graphics\buffers\buffer.cpp" />
-    <ClCompile Include="src\graphics\buffers\index_buffer.cpp" />
-    <ClCompile Include="src\graphics\buffers\vertex_array.cpp" />
-    <ClCompile Include="src\graphics\simple_renderer_2d.cpp" />
-    <ClCompile Include="src\graphics\shader.cpp" />
-    <ClCompile Include="src\graphics\sprite.cpp" />
-    <ClCompile Include="src\graphics\static_sprite.cpp" />
-    <ClCompile Include="src\graphics\window.cpp" />
-    <ClCompile Include="src\math\matrix4.cpp" />
-    <ClCompile Include="src\math\vector2.cpp" />
-    <ClCompile Include="src\math\vector3.cpp" />
-    <ClCompile Include="src\math\vector4.cpp" />
+    <ClCompile Include="src\glad.c" />
+    <ClCompile Include="src\graphics\BatchRenderer2D.cpp" />
+    <ClCompile Include="src\graphics\buffers\Buffer.cpp" />
+    <ClCompile Include="src\graphics\buffers\IndexBuffer.cpp" />
+    <ClCompile Include="src\graphics\buffers\VertexArray.cpp" />
+    <ClCompile Include="src\graphics\SimpleRenderer2D.cpp" />
+    <ClCompile Include="src\graphics\Shader.cpp" />
+    <ClCompile Include="src\graphics\Sprite.cpp" />
+    <ClCompile Include="src\graphics\StaticSprite.cpp" />
+    <ClCompile Include="src\graphics\Window.cpp" />
+    <ClCompile Include="src\math\Matrix4.cpp" />
+    <ClCompile Include="src\math\Vector2.cpp" />
+    <ClCompile Include="src\math\Vector3.cpp" />
+    <ClCompile Include="src\math\Vector4.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\graphics\batch_renderer_2d.h" />
-    <ClInclude Include="src\graphics\buffers\buffer.h" />
-    <ClInclude Include="src\graphics\buffers\index_buffer.h" />
-    <ClInclude Include="src\graphics\buffers\vertex_array.h" />
-    <ClInclude Include="src\graphics\renderable_2d.h" />
-    <ClInclude Include="src\graphics\renderer_2d.h" />
-    <ClInclude Include="src\graphics\shader.h" />
-    <ClInclude Include="src\graphics\simple_renderer_2d.h" />
-    <ClInclude Include="src\graphics\sprite.h" />
-    <ClInclude Include="src\graphics\static_sprite.h" />
-    <ClInclude Include="src\graphics\window.h" />
-    <ClInclude Include="src\math\math.h" />
-    <ClInclude Include="src\math\matrix4.h" />
-    <ClInclude Include="src\math\vector2.h" />
-    <ClInclude Include="src\math\vector3.h" />
-    <ClInclude Include="src\math\vector4.h" />
+    <ClInclude Include="src\graphics\BatchRenderer2D.h" />
+    <ClInclude Include="src\graphics\buffers\Buffer.h" />
+    <ClInclude Include="src\graphics\buffers\IndexBuffer.h" />
+    <ClInclude Include="src\graphics\buffers\VertexArray.h" />
+    <ClInclude Include="src\graphics\Renderable2D.h" />
+    <ClInclude Include="src\graphics\Renderer2D.h" />
+    <ClInclude Include="src\graphics\Shader.h" />
+    <ClInclude Include="src\graphics\SimpleRenderer2D.h" />
+    <ClInclude Include="src\graphics\Sprite.h" />
+    <ClInclude Include="src\graphics\StaticSprite.h" />
+    <ClInclude Include="src\graphics\Window.h" />
+    <ClInclude Include="src\math\Math.h" />
+    <ClInclude Include="src\math\Matrix4.h" />
+    <ClInclude Include="src\math\Vector2.h" />
+    <ClInclude Include="src\math\Vector3.h" />
+    <ClInclude Include="src\math\Vector4.h" />
     <ClInclude Include="src\utils\file_utils.h" />
+    <ClInclude Include="src\utils\timer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\shaders\basic.frag" />

@@ -1,7 +1,8 @@
-#include "vector3.h"
+#include "Vector3.h"
 
-namespace wraith {
-	namespace math {
+namespace Wraith {
+	namespace Math {
+
 		Vector3::Vector3()
 		{
 			x = 0.0f;
@@ -16,7 +17,7 @@ namespace wraith {
 			this->z = z;
 		}
 
-		Vector3 &Vector3::add(const Vector3 &other)
+		Vector3 &Vector3::Add(const Vector3 &other)
 		{
 			x += other.x;
 			y += other.y;
@@ -25,7 +26,7 @@ namespace wraith {
 			return *this;
 		}
 
-		Vector3 &Vector3::subtract(const Vector3 &other)
+		Vector3 &Vector3::Subtract(const Vector3 &other)
 		{
 			x -= other.x;
 			y -= other.y;
@@ -34,7 +35,7 @@ namespace wraith {
 			return *this;
 		}
 
-		Vector3 &Vector3::multiply(const Vector3 &other)
+		Vector3 &Vector3::Multiply(const Vector3 &other)
 		{
 			x *= other.x;
 			y *= other.y;
@@ -43,7 +44,7 @@ namespace wraith {
 			return *this;
 		}
 
-		Vector3 &Vector3::divide(const Vector3 &other)
+		Vector3 &Vector3::Divide(const Vector3 &other)
 		{
 			x /= other.x;
 			y = other.y;
@@ -54,22 +55,22 @@ namespace wraith {
 
 		Vector3 operator+(Vector3 left, const Vector3 &right)
 		{
-			return left.add(right);
+			return left.Add(right);
 		}
 
 		Vector3 operator-(Vector3 left, const Vector3 &right)
 		{
-			return left.subtract(right);
+			return left.Subtract(right);
 		}
 
 		Vector3 operator*(Vector3 left, const Vector3 &right)
 		{
-			return left.multiply(right);
+			return left.Multiply(right);
 		}
 
 		Vector3 operator/(Vector3 left, const Vector3 &right)
 		{
-			return left.divide(right);
+			return left.Divide(right);
 		}
 
 		bool Vector3::operator==(const Vector3 &other)
@@ -84,22 +85,22 @@ namespace wraith {
 
 		Vector3 &Vector3::operator+=(const Vector3 &other)
 		{
-			return add(other);
+			return Add(other);
 		}
 
 		Vector3 &Vector3::operator-=(const Vector3 &other)
 		{
-			return subtract(other);
+			return Subtract(other);
 		}
 
 		Vector3 &Vector3::operator*=(const Vector3 &other)
 		{
-			return multiply(other);
+			return Multiply(other);
 		}
 
 		Vector3 &Vector3::operator/=(const Vector3 &other)
 		{
-			return divide(other);
+			return Divide(other);
 		}
 
 		std::ostream &operator<<(std::ostream &stream, const Vector3 &vector)

@@ -1,7 +1,7 @@
-#include "vector4.h"
+#include "Vector4.h"
 
-namespace wraith {
-	namespace math {
+namespace Wraith {
+	namespace Math {
 		Vector4::Vector4()
 		{
 			x = 0.0f;
@@ -18,7 +18,7 @@ namespace wraith {
 			this->w = w;
 		}
 
-		Vector4 &Vector4::add(const Vector4 &other)
+		Vector4 &Vector4::Add(const Vector4 &other)
 		{
 			x += other.x;
 			y += other.y;
@@ -28,7 +28,7 @@ namespace wraith {
 			return *this;
 		}
 
-		Vector4 &Vector4::subtract(const Vector4 &other)
+		Vector4 &Vector4::Subtract(const Vector4 &other)
 		{
 			x -= other.x;
 			y -= other.y;
@@ -38,7 +38,7 @@ namespace wraith {
 			return *this;
 		}
 
-		Vector4 &Vector4::multiply(const Vector4 &other)
+		Vector4 &Vector4::Multiply(const Vector4 &other)
 		{
 			x *= other.x;
 			y *= other.y;
@@ -48,7 +48,7 @@ namespace wraith {
 			return *this;
 		}
 
-		Vector4 &Vector4::divide(const Vector4 &other)
+		Vector4 &Vector4::Divide(const Vector4 &other)
 		{
 			x /= other.x;
 			y = other.y;
@@ -60,22 +60,22 @@ namespace wraith {
 
 		Vector4 operator+(Vector4 left, const Vector4 &right)
 		{
-			return left.add(right);
+			return left.Add(right);
 		}
 
 		Vector4 operator-(Vector4 left, const Vector4 &right)
 		{
-			return left.subtract(right);
+			return left.Subtract(right);
 		}
 
 		Vector4 operator*(Vector4 left, const Vector4 &right)
 		{
-			return left.multiply(right);
+			return left.Multiply(right);
 		}
 
 		Vector4 operator/(Vector4 left, const Vector4 &right)
 		{
-			return left.divide(right);
+			return left.Divide(right);
 		}
 
 		bool Vector4::operator==(const Vector4 &other)
@@ -90,22 +90,22 @@ namespace wraith {
 
 		Vector4 &Vector4::operator+=(const Vector4 &other)
 		{
-			return add(other);
+			return Add(other);
 		}
 
 		Vector4 &Vector4::operator-=(const Vector4 &other)
 		{
-			return subtract(other);
+			return Subtract(other);
 		}
 
 		Vector4 &Vector4::operator*=(const Vector4 &other)
 		{
-			return multiply(other);
+			return Multiply(other);
 		}
 
 		Vector4 &Vector4::operator/=(const Vector4 &other)
 		{
-			return divide(other);
+			return Divide(other);
 		}
 
 		std::ostream &operator<<(std::ostream &stream, const Vector4 &vector)

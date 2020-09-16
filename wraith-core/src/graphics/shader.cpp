@@ -1,12 +1,12 @@
-#include "shader.h"
+#include "Shader.h"
 
-namespace wraith {
-	namespace graphics {
+namespace Wraith {
+	namespace Graphics {
 
 		Shader::Shader(const char *vertPath, const char *fragPath)
 			: m_VertPath(vertPath), m_FragPath(fragPath)
 		{
-			m_ProgramID = load();
+			m_ProgramID = Load();
 		}
 
 		Shader::~Shader()
@@ -14,49 +14,49 @@ namespace wraith {
 			glDeleteProgram(m_ProgramID);
 		}
 
-		GLint Shader::getUniformLocation(const GLchar* name) 
+		GLint Shader::GetUniformLocation(const GLchar* name) 
 		{
 			return glGetUniformLocation(m_ProgramID, name);
 		}
 
-		void Shader::setUniform1f(const GLchar* name, float value)
+		void Shader::SetUniform1f(const GLchar* name, float value)
 		{
-			glUniform1f(getUniformLocation(name), value);
+			glUniform1f(GetUniformLocation(name), value);
 		}
 
-		void Shader::setUniform2f(const GLchar* name, const math::Vector2& vector)
+		void Shader::SetUniform2f(const GLchar* name, const Math::Vector2& vector)
 		{
-			glUniform2f(getUniformLocation(name), vector.x, vector.y);
+			glUniform2f(GetUniformLocation(name), vector.x, vector.y);
 		}
 
-		void Shader::setUniform3f(const GLchar* name, const math::Vector3& vector)
+		void Shader::SetUniform3f(const GLchar* name, const Math::Vector3& vector)
 		{
-			glUniform3f(getUniformLocation(name), vector.x, vector.y, vector.z);
+			glUniform3f(GetUniformLocation(name), vector.x, vector.y, vector.z);
 		}
 
-		void Shader::setUniform4f(const GLchar* name, const math::Vector4& vector)
+		void Shader::SetUniform4f(const GLchar* name, const Math::Vector4& vector)
 		{
-			glUniform4f(getUniformLocation(name), vector.x, vector.y, vector.z, vector.w);
+			glUniform4f(GetUniformLocation(name), vector.x, vector.y, vector.z, vector.w);
 		}
 
-		void Shader::setUniform1i(const GLchar* name, int value)
+		void Shader::SetUniform1i(const GLchar* name, int value)
 		{
-			glUniform1i(getUniformLocation(name), value);
+			glUniform1i(GetUniformLocation(name), value);
 		}
 
-		void Shader::setUniformMat4(const GLchar* name, const math::Matrix4& matrix)
+		void Shader::SetUniformMat4(const GLchar* name, const Math::Matrix4& matrix)
 		{
-			glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, matrix.values);
+			glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, matrix.values);
 		}
 
-		GLuint Shader::load()
+		GLuint Shader::Load()
 		{
 			GLuint program = glCreateProgram();
 			GLuint vertShader = glCreateShader(GL_VERTEX_SHADER);	
 			GLuint fragShader = glCreateShader(GL_FRAGMENT_SHADER);
 
-			std::string vertSrcString = FileUtils::read_file(m_VertPath);
-			std::string fragSrcString = FileUtils::read_file(m_FragPath);
+			std::string vertSrcString = FileUtils::ReadFile(m_VertPath);
+			std::string fragSrcString = FileUtils::ReadFile(m_FragPath);
 
 			const char* vertSrc = vertSrcString.c_str();
 			const char *fragSrc = fragSrcString.c_str();
@@ -109,12 +109,12 @@ namespace wraith {
 			return program;
 		}
 
-		void Shader::enable() const
+		void Shader::Enable() const
 		{
 			glUseProgram(m_ProgramID);
 		}
 
-		void Shader::disable() const
+		void Shader::Disable() const
 		{
 			glUseProgram(0);
 		}

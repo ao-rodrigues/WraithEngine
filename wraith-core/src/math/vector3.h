@@ -2,8 +2,8 @@
 
 #include <iostream>
 
-namespace wraith {
-	namespace math {
+namespace Wraith {
+	namespace Math {
 		struct Vector3
 		{
 			float x, y, z;
@@ -11,10 +11,10 @@ namespace wraith {
 			Vector3();
 			Vector3(const float &x, const float &y, const float &z);
 
-			Vector3 &add(const Vector3 &other);
-			Vector3 &subtract(const Vector3 &other);
-			Vector3 &multiply(const Vector3 &other);
-			Vector3 &divide(const Vector3 &other);
+			Vector3 &Add(const Vector3 &other);
+			Vector3 &Subtract(const Vector3 &other);
+			Vector3 &Multiply(const Vector3 &other);
+			Vector3 &Divide(const Vector3 &other);
 
 			friend Vector3 operator+(Vector3 left, const Vector3 &right);
 			friend Vector3 operator-(Vector3 left, const Vector3 &right);

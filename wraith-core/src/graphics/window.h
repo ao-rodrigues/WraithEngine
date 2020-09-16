@@ -1,11 +1,13 @@
 #pragma once
 
 #include <iostream>
-#include <GL/glew.h>
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-namespace wraith {
-	namespace graphics {
+#include "../math/Math.h"
+
+namespace Wraith {
+	namespace Graphics {
 
 #define MAX_KEYS 1024
 #define MAX_MOUSE_BUTTONS 32
@@ -24,16 +26,16 @@ namespace wraith {
 		public:
 			Window(const char *title, int width, int height);
 			~Window();
-			bool closed() const;
-			void update();
-			void clear() const;
+			bool Closed() const;
+			void Update();
+			void Clear() const;
 
-			bool keyPressed(unsigned int keycode) const;
-			bool mouseButtonPressed(unsigned int button) const;
-			void getMousePosition(double &x, double &y) const;
+			bool KeyPressed(unsigned int keycode) const;
+			bool MouseButtonPressed(unsigned int button) const;
+			Math::Vector2 GetMousePosition() const;
 
 		private:
-			bool init();
+			bool Init();
 			friend static void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods);
 			friend static void mouse_button_callback(GLFWwindow *window, int button, int action, int mods);
 			friend static void cursor_position_callback(GLFWwindow *window, double xpos, double ypos);

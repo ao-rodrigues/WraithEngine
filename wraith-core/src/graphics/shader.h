@@ -2,13 +2,13 @@
 
 #include <iostream>
 #include <vector>
-#include <GL/glew.h>
+#include <glad/glad.h>
 
 #include "../utils/file_utils.h"
-#include "../math/math.h"
+#include "../Math/Math.h"
 
-namespace wraith {
-	namespace graphics {
+namespace Wraith {
+	namespace Graphics {
 
 		class Shader
 		{
@@ -22,21 +22,21 @@ namespace wraith {
 			Shader(const char *vertPath, const char *fragPath);
 			~Shader();
 
-			void setUniform1f(const GLchar *name, float value);
-			void setUniform2f(const GLchar *name, const math::Vector2 &vector);
-			void setUniform3f(const GLchar *name, const math::Vector3 &vector);
-			void setUniform4f(const GLchar *name, const math::Vector4 &vector);
+			void SetUniform1f(const GLchar *name, float value);
+			void SetUniform2f(const GLchar *name, const Math::Vector2 &vector);
+			void SetUniform3f(const GLchar *name, const Math::Vector3 &vector);
+			void SetUniform4f(const GLchar *name, const Math::Vector4 &vector);
 
-			void setUniform1i(const GLchar *name, int value);
+			void SetUniform1i(const GLchar *name, int value);
 
-			void setUniformMat4(const GLchar *name, const math::Matrix4 &matrix);
+			void SetUniformMat4(const GLchar *name, const Math::Matrix4 &matrix);
 
-			void enable() const;
-			void disable() const;
+			void Enable() const;
+			void Disable() const;
 
 		private:
-			GLuint load();
-			GLint getUniformLocation(const GLchar *name);
+			GLuint Load();
+			GLint GetUniformLocation(const GLchar *name);
 		};
 	}
 }

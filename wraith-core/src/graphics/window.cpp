@@ -1,7 +1,8 @@
-#include "window.h"
+#include "Window.h"
 
-namespace wraith {
-	namespace graphics {
+
+namespace Wraith {
+	namespace Graphics {
 
 		void window_size_callback(GLFWwindow *window, int width, int height);
 		void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods);
@@ -14,7 +15,7 @@ namespace wraith {
 			m_Width = width;
 			m_Height = height;
 
-			if (!init())
+			if (!Init())
 			{
 				glfwTerminate();
 			}
@@ -35,7 +36,7 @@ namespace wraith {
 			glfwTerminate();
 		}
 
-		bool Window::init()
+		bool Window::Init()
 		{
 			if (!glfwInit())
 			{
@@ -59,7 +60,7 @@ namespace wraith {
 			glfwSetMouseButtonCallback(m_Window, mouse_button_callback);
 			glfwSetCursorPosCallback(m_Window, cursor_position_callback);
 
-			if (glewInit() != GLEW_OK)
+			if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 			{
 				std::cout << "Failed to initialize GLEW!" << std::endl;
 				return false;
@@ -68,7 +69,7 @@ namespace wraith {
 			return true;
 		}
 
-		bool Window::keyPressed(unsigned int keycode) const
+		bool Window::KeyPressed(unsigned int keycode) const
 		{
 			if (keycode >= MAX_KEYS)
 			{
@@ -78,7 +79,7 @@ namespace wraith {
 			return m_KeysPressed[keycode];
 		}
 
-		bool Window::mouseButtonPressed(unsigned int button) const
+		bool Window::MouseButtonPressed(unsigned int button) const
 		{
 			if (button >= MAX_MOUSE_BUTTONS)
 			{
@@ -88,19 +89,18 @@ namespace wraith {
 			return m_MouseButtonsPressed[button];
 		}
 
-		void Window::getMousePosition(double &x, double &y) const
+		Math::Vector2 Window::GetMousePosition() const
 		{
-			x = m_MouseX;
-			y = m_MouseY;
+			return Math::Vector2(m_MouseX, m_MouseY);
 		}
 
-		void Window::clear() const
+		void Window::Clear() const
 		{
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		}
 
 
-		void Window::update()
+		void Window::Update()
 		{
 			GLenum error = glGetError();
 
@@ -113,7 +113,7 @@ namespace wraith {
 			glfwSwapBuffers(m_Window);
 		}
 
-		bool Window::closed() const
+		bool Window::Closed() const
 		{
 			return glfwWindowShouldClose(m_Window) == 1;
 		}

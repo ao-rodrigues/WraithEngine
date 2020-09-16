@@ -1,9 +1,9 @@
 #pragma once
 
-#include "renderer_2d.h"
+#include "Renderer2D.h"
 
-namespace wraith {
-	namespace graphics {
+namespace Wraith {
+	namespace Graphics {
 
 #define RENDERER_MAX_SPRITES	60000
 #define RENDERER_VERTEX_SIZE	sizeof(VertexData)
@@ -27,13 +27,13 @@ namespace wraith {
 			BatchRenderer2D();
 			~BatchRenderer2D();
 
-			void begin();
-			void submit(const Renderable2D *renderable) override;
-			void end();
-			void render() override;
+			void Begin();
+			void Submit(const Renderable2D *renderable) override;
+			void End();
+			void Render() override;
 
 		private:
-			void init();
+			void Init();
 
 		};
 	}

@@ -1,13 +1,13 @@
 #pragma once
 
-#include "renderable_2d.h"
+#include "Renderable2D.h"
 
-namespace wraith {
-	namespace graphics {
+namespace Wraith {
+	namespace Graphics {
 		class Sprite : public Renderable2D
 		{
 		public:
-			Sprite(float x, float y, float width, float height, math::Vector4 color);
+			Sprite(float x, float y, float width, float height, Math::Vector4 color);
 		};
 	}
 }

@@ -1,12 +1,12 @@
 #pragma once
 
 #include <vector>
-#include <GL/glew.h>
+#include <glad/glad.h>
 
-#include "buffer.h"
+#include "Buffer.h"
 
-namespace wraith {
-	namespace graphics {
+namespace Wraith {
+	namespace Graphics {
 		class VertexArray
 		{
 		private:
@@ -17,9 +17,9 @@ namespace wraith {
 			VertexArray();
 			~VertexArray();
 
-			void addBuffer(Buffer *buffer, GLuint index);
-			void bind() const;
-			void unbind() const;
+			void AddBuffer(Buffer *buffer, GLuint index);
+			void Bind() const;
+			void Unbind() const;
 		};
 	}
 }
