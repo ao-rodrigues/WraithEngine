@@ -9,7 +9,7 @@ namespace Wraith
 	void Engine::Init(const EngineInitParams& initParams)
 	{
 		Debug::Logger::Init();
-		LOG_INFO("Staring Wraith Engine...");
+		LOG_DEBUG("Staring Wraith Engine...");
 
 		_window.Create(initParams.windowWidth, initParams.windowHeight, initParams.windowTitle);
 

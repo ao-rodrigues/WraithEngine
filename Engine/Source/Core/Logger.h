@@ -7,6 +7,7 @@ namespace Wraith::Debug
 	class Logger
 	{
 	public:
+		static void LogDebug(const std::string& msg);
 		static void LogInfo(const std::string& msg);
 		static void LogTrace(const std::string& msg);
 		static void LogWarning(const std::string& msg);
@@ -24,6 +25,7 @@ namespace Wraith::Debug
 
 #ifdef WRAITH_DEBUG
 
+#define LOG_DEBUG(msg) ::Wraith::Debug::Logger::LogDebug(msg)
 #define LOG_INFO(msg) ::Wraith::Debug::Logger::LogInfo(msg)
 #define LOG_TRACE(msg) ::Wraith::Debug::Logger::LogTrace(msg)
 #define LOG_WARNING(msg) ::Wraith::Debug::Logger::LogWarning(msg)
@@ -32,6 +34,7 @@ namespace Wraith::Debug
 
 #else
 
+#define LOG_DEBUG(msg)
 #define LOG_INFO(msg)
 #define LOG_TRACE(msg)
 #define LOG_WARNING(msg)

@@ -5,7 +5,7 @@
 #include <vector>
 #include <fstream>
 
-namespace Wraith
+namespace Wraith::Utils
 {
 	inline std::vector<char> ReadFile(const std::string& fileName)
 	{

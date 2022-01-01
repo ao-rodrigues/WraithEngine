@@ -199,7 +199,7 @@ namespace Wraith
 			throw std::runtime_error("Failed to create Vulkan instance!");
 		}
 
-		LOG_INFO("Created Vulkan instance.");
+		LOG_DEBUG("Created Vulkan instance.");
 	}
 
 	void Renderer::SetupDebugMessenger()
@@ -213,7 +213,7 @@ namespace Wraith
 		{
 			throw std::runtime_error("Failed to set up debug messenger!");
 		}
-		LOG_INFO("Debug messenger setup done.");
+		LOG_DEBUG("Debug messenger setup done.");
 	}
 
 	void Renderer::CreateSurface()
@@ -222,7 +222,7 @@ namespace Wraith
 		{
 			throw std::runtime_error("Failed to create window surface!");
 		}
-		LOG_INFO("Created surface.");
+		LOG_DEBUG("Created surface.");
 	}
 
 	void Renderer::PickPhysicalDevice()
@@ -249,7 +249,7 @@ namespace Wraith
 		{
 			throw std::runtime_error("Failed to find a suitable GPU!");
 		}
-		LOG_INFO("Found physical device.");
+		LOG_DEBUG("Found physical device.");
 	}
 
 	void Renderer::CreateLogicalDevice()
@@ -297,7 +297,7 @@ namespace Wraith
 		{
 			throw std::runtime_error("Failed to create logical device!");
 		}
-		LOG_INFO("Created logical device.");
+		LOG_DEBUG("Created logical device.");
 
 		vkGetDeviceQueue(_device, indices.graphicsFamily.value(), 0, &_graphicsQueue);
 		vkGetDeviceQueue(_device, indices.presentFamily.value(), 0, &_presentQueue);
@@ -353,7 +353,7 @@ namespace Wraith
 		{
 			throw std::runtime_error("Failed to create swap chain!");
 		}
-		LOG_INFO("Created swap chain.");
+		LOG_DEBUG("Created swap chain.");
 
 		vkGetSwapchainImagesKHR(_device, _swapChain, &imageCount, nullptr);
 		_swapChainImages.resize(imageCount);
@@ -388,7 +388,7 @@ namespace Wraith
 				throw std::runtime_error("Failed to create image views!");
 			}
 		}
-		LOG_INFO("Created image views.");
+		LOG_DEBUG("Created image views.");
 	}
 
 	void Renderer::CreateRenderPass()
@@ -434,13 +434,13 @@ namespace Wraith
 		{
 			throw std::runtime_error("Failed to create render pass!");
 		}
-		LOG_INFO("Created render pass.");
+		LOG_DEBUG("Created render pass.");
 	}
 
 	void Renderer::CreateGraphicsPipeline()
 	{
-		const auto vertShaderCode = ReadFile("Shaders/SimpleShader.vert.spv");
-		const auto fragShaderCode = ReadFile("Shaders/SimpleShader.frag.spv");
+		const auto vertShaderCode = Utils::ReadFile("Shaders/SimpleShader.vert.spv");
+		const auto fragShaderCode = Utils::ReadFile("Shaders/SimpleShader.frag.spv");
 
 		VkShaderModule vertShaderModule = CreateShaderModule(vertShaderCode);
 		VkShaderModule fragShaderModule = CreateShaderModule(fragShaderCode);
@@ -546,7 +546,7 @@ namespace Wraith
 		{
 			throw std::runtime_error("Failed to create pipeline layout!");
 		}
-		LOG_INFO("Created pipeline layout.");
+		LOG_DEBUG("Created pipeline layout.");
 
 		VkGraphicsPipelineCreateInfo pipelineInfo{};
 		pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
@@ -570,7 +570,7 @@ namespace Wraith
 		{
 			throw std::runtime_error("Failed to create graphics pipeline!");
 		}
-		LOG_INFO("Created graphics pipeline.");
+		LOG_DEBUG("Created graphics pipeline.");
 
 		vkDestroyShaderModule(_device, fragShaderModule, nullptr);
 		vkDestroyShaderModule(_device, vertShaderModule, nullptr);
@@ -581,7 +581,7 @@ namespace Wraith
 		_swapChainFramebuffers.resize(_swapChainImageViews.size());
 		for (size_t i = 0; i < _swapChainImageViews.size(); i++)
 		{
-			VkImageView attachments[] = {
+			const VkImageView attachments[] = {
 				_swapChainImageViews[i]
 			};
 
@@ -614,7 +614,7 @@ namespace Wraith
 		{
 			throw std::runtime_error("Failed to create command pool!");
 		}
-		LOG_INFO("Created command pool.");
+		LOG_DEBUG("Created command pool.");
 
 
 	}
@@ -631,9 +631,9 @@ namespace Wraith
 
 		if (vkAllocateCommandBuffers(_device, &allocInfo, _commandBuffers.data()) != VK_SUCCESS)
 		{
-			throw std::runtime_error("Failed to create command buffers!");
+			throw std::runtime_error("Failed to allocate command buffers!");
 		}
-		LOG_INFO("Created command buffers.");
+		LOG_DEBUG("Allocated command buffers.");
 
 		for (size_t i = 0; i <_commandBuffers.size(); i++)
 		{
@@ -646,7 +646,7 @@ namespace Wraith
 			{
 				throw std::runtime_error("Failed to begin recording command buffer!");
 			}
-			LOG_INFO("Began recording command buffer...");
+			LOG_DEBUG("Began recording command buffer...");
 
 			VkRenderPassBeginInfo renderPassInfo{};
 			renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
@@ -668,7 +668,7 @@ namespace Wraith
 			{
 				throw std::runtime_error("Failed to record command buffer!");
 			}
-			LOG_INFO("Finished recording command buffer.");
+			LOG_DEBUG("Finished recording command buffer.");
 		}
 	}
 
@@ -694,7 +694,7 @@ namespace Wraith
 			{
 				throw std::runtime_error("Failed to create synchronization objects for a frame!");
 			}
-			LOG_INFO("Created synchonization objects for frame.");
+			LOG_DEBUG("Created synchonization objects for frame.");
 		}
 	}
 
@@ -763,7 +763,7 @@ namespace Wraith
 	{
 		if (messageSeverity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT)
 		{
-			LOG_INFO(callbackData->pMessage);
+			LOG_DEBUG(callbackData->pMessage);
 		}
 		else if (messageSeverity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT)
 		{

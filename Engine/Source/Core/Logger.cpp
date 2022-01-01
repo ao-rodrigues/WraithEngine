@@ -30,6 +30,12 @@ namespace Wraith::Debug
 		return spdlog::get(LOGGER_NAME) != nullptr;
 	}
 
+	void Logger::LogDebug(const std::string& msg)
+	{
+		if (!HasLogger()) return;
+		spdlog::get(LOGGER_NAME)->debug(msg);
+	}
+
 	void Logger::LogInfo(const std::string& msg)
 	{
 		if (!HasLogger()) return;

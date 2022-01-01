@@ -1,10 +1,14 @@
 #include "Window.h"
 
+#include <stdexcept>
+
+#include "Core/Logger.h"
+
 namespace Wraith
 {
 	Window::~Window()
 	{
-		glfwDestroyWindow(_pWindow);
+		glfwDestroyWindow(_window);
 		glfwTerminate();
 	}
 
@@ -15,6 +19,15 @@ namespace Wraith
 		_title = title;
 
 		InitWindow();
+	}
+
+	void Window::CreateSurface(VkInstance instance, VkSurfaceKHR* surface)
+	{
+		if (glfwCreateWindowSurface(instance, _window, nullptr, surface) != VK_SUCCESS)
+		{
+			throw std::runtime_error("Failed to create window surface!");
+		}
+		LOG_DEBUG("Created surface.");
 	}
 
 	void Window::PollEvents()
@@ -28,6 +41,6 @@ namespace Wraith
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
-		_pWindow = glfwCreateWindow(_width, _height, _title.c_str(), nullptr, nullptr);
+		_window = glfwCreateWindow(_width, _height, _title.c_str(), nullptr, nullptr);
 	}
 }

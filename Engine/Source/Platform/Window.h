@@ -18,14 +18,16 @@ namespace Wraith
 
 		bool ShouldClose() const
 		{
-			return glfwWindowShouldClose(_pWindow);
+			return glfwWindowShouldClose(_window);
 		}
+
+		void CreateSurface(VkInstance instance, VkSurfaceKHR* surface);
 
 		void PollEvents();
 
 		GLFWwindow* GetGLFWWindow()
 		{
-			return _pWindow;
+			return _window;
 		}
 
 	private:
@@ -34,6 +36,6 @@ namespace Wraith
 		int _width = 800;
 		int _height = 600;
 		std::string _title = "Wraith Window";
-		GLFWwindow* _pWindow = nullptr;
+		GLFWwindow* _window = nullptr;
 	};
 }
