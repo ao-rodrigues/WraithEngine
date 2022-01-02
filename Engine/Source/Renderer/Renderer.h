@@ -8,10 +8,12 @@
 
 namespace Wraith
 {
+	class Window;
+
 	class Renderer : public Singleton<Renderer>
 	{
 	public:
-		void Init(GLFWwindow* window);
+		void Init();
 		void Shutdown();
 		void DrawFrame();
 
@@ -21,7 +23,7 @@ namespace Wraith
 			std::optional<uint32_t> graphicsFamily;
 			std::optional<uint32_t> presentFamily;
 
-			bool IsComplete()
+			bool IsComplete() const
 			{
 				return graphicsFamily.has_value() && presentFamily.has_value();
 			}
@@ -29,7 +31,7 @@ namespace Wraith
 
 		struct SwapChainSupportDetails
 		{
-			VkSurfaceCapabilitiesKHR capabilities;
+			VkSurfaceCapabilitiesKHR capabilities{};
 			std::vector<VkSurfaceFormatKHR> formats;
 			std::vector<VkPresentModeKHR> presentModes;
 		};
@@ -48,6 +50,9 @@ namespace Wraith
 		void CreateCommandPool();
 		void CreateCommandBuffers();
 		void CreateSyncObjects();
+
+		void CleanupSwapChain();
+		void RecreateSwapChain();
 
 		// Validation layer setup helpers
 		bool CheckValidationLayerSupport();
@@ -89,8 +94,6 @@ namespace Wraith
 
 		static constexpr int MAX_FRAMES_IN_FLIGHT = 2;
 
-		GLFWwindow* _window = nullptr;
-
 		VkInstance _instance = VK_NULL_HANDLE;
 		VkSurfaceKHR _surface = VK_NULL_HANDLE;
 
@@ -104,8 +107,8 @@ namespace Wraith
 
 		VkSwapchainKHR _swapChain = VK_NULL_HANDLE;
 		std::vector<VkImage> _swapChainImages;
-		VkFormat _swapChainImageFormat;
-		VkExtent2D _swapChainExtent;
+		VkFormat _swapChainImageFormat{};
+		VkExtent2D _swapChainExtent{};
 		std::vector<VkImageView> _swapChainImageViews;
 		std::vector<VkFramebuffer> _swapChainFramebuffers;
 

@@ -1,6 +1,5 @@
 #include "Renderer.h"
 
-#include <iostream>
 #include <stdexcept>
 #include <set>
 #include <cstdint>
@@ -8,6 +7,8 @@
 
 #include "Core/Logger.h"
 #include "Core/Utils.h"
+#include "Engine/Engine.h"
+#include "Platform/Window.h"
 
 VkResult CreateDebugUtilsMessengerEXT(
 	VkInstance instance, 
@@ -39,10 +40,8 @@ void DestroyDebugUtilsMessengerEXT(
 namespace Wraith
 {
 
-	void Renderer::Init(GLFWwindow* window)
+	void Renderer::Init()
 	{
-		_window = window;
-
 		CreateVulkanInstance();
 		SetupDebugMessenger();
 		CreateSurface();
@@ -62,6 +61,8 @@ namespace Wraith
 	{
 		vkDeviceWaitIdle(_device);
 
+		CleanupSwapChain();
+
 		for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
 		{
 			vkDestroySemaphore(_device, _imageAvailableSemaphores[i], nullptr);
@@ -70,20 +71,7 @@ namespace Wraith
 		}
 
 		vkDestroyCommandPool(_device, _commandPool, nullptr);
-		for (const auto framebuffer : _swapChainFramebuffers)
-		{
-			vkDestroyFramebuffer(_device, framebuffer, nullptr);
-		}
 
-		vkDestroyPipeline(_device, _graphicsPipeline, nullptr);
-		vkDestroyPipelineLayout(_device, _pipelineLayout, nullptr);
-		vkDestroyRenderPass(_device, _renderPass, nullptr);
-		for (const auto imageView : _swapChainImageViews)
-		{
-			vkDestroyImageView(_device, imageView, nullptr);
-		}
-
-		vkDestroySwapchainKHR(_device, _swapChain, nullptr);
 		vkDestroyDevice(_device, nullptr);
 
 		if constexpr (ENABLE_VALIDATION_LAYERS)
@@ -100,7 +88,16 @@ namespace Wraith
 		vkWaitForFences(_device, 1, &_inFlightFences[_currentFrame], VK_TRUE, UINT64_MAX);
 
 		uint32_t imageIndex = 0;
-		vkAcquireNextImageKHR(_device, _swapChain, UINT64_MAX, _imageAvailableSemaphores[_currentFrame], VK_NULL_HANDLE, &imageIndex);
+		VkResult result = vkAcquireNextImageKHR(_device, _swapChain, UINT64_MAX, _imageAvailableSemaphores[_currentFrame], VK_NULL_HANDLE, &imageIndex);
+		if (result == VK_ERROR_OUT_OF_DATE_KHR) // Swap chain outdated, possibly a window resize
+		{
+			RecreateSwapChain();
+			return;
+		}
+		else if (result != VK_SUCCESS)
+		{
+			throw std::runtime_error("Failed to acquire swap chain image!");
+		}
 
 		// Check if a previous frame is using this image (i.e. there is its' fence to wait on)
 		if (_imagesInFlight[imageIndex] != VK_NULL_HANDLE)
@@ -151,7 +148,16 @@ namespace Wraith
 		presentInfo.pImageIndices = &imageIndex;
 		presentInfo.pResults = nullptr; // Optional
 
-		vkQueuePresentKHR(_presentQueue, &presentInfo);
+		result = vkQueuePresentKHR(_presentQueue, &presentInfo);
+		if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || WRAITH_ENGINE.GetWindow().WindowResized()) // Swap chain outdated, possibly a window resize
+		{
+			WRAITH_ENGINE.GetWindow().ResetWindowResizedFlag();
+			RecreateSwapChain();
+		}
+		else if (result != VK_SUCCESS)
+		{
+			throw std::runtime_error("Failed to present swap chain image!");
+		}
 
 		_currentFrame = (_currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
 	}
@@ -218,7 +224,7 @@ namespace Wraith
 
 	void Renderer::CreateSurface()
 	{
-		if (glfwCreateWindowSurface(_instance, _window, nullptr, &_surface) != VK_SUCCESS)
+		if (glfwCreateWindowSurface(_instance, WRAITH_ENGINE.GetWindow().GetGLFWWindow(), nullptr, &_surface) != VK_SUCCESS)
 		{
 			throw std::runtime_error("Failed to create window surface!");
 		}
@@ -698,6 +704,40 @@ namespace Wraith
 		}
 	}
 
+	void Renderer::CleanupSwapChain()
+	{
+		for (const auto framebuffer : _swapChainFramebuffers)
+		{
+			vkDestroyFramebuffer(_device, framebuffer, nullptr);
+		}
+
+		vkFreeCommandBuffers(_device, _commandPool, static_cast<uint32_t>(_commandBuffers.size()), _commandBuffers.data());
+
+		vkDestroyPipeline(_device, _graphicsPipeline, nullptr);
+		vkDestroyPipelineLayout(_device, _pipelineLayout, nullptr);
+		vkDestroyRenderPass(_device, _renderPass, nullptr);
+		for (const auto imageView : _swapChainImageViews)
+		{
+			vkDestroyImageView(_device, imageView, nullptr);
+		}
+
+		vkDestroySwapchainKHR(_device, _swapChain, nullptr);
+	}
+
+	void Renderer::RecreateSwapChain()
+	{
+		vkDeviceWaitIdle(_device);
+
+		CleanupSwapChain();
+
+		CreateSwapChain();
+		CreateImageViews();
+		CreateRenderPass();
+		CreateGraphicsPipeline();
+		CreateFramebuffers();
+		CreateCommandBuffers();
+	}
+
 	bool Renderer::CheckValidationLayerSupport()
 	{
 		uint32_t layerCount;
@@ -902,7 +942,7 @@ namespace Wraith
 		else
 		{
 			int width, height = 0;
-			glfwGetFramebufferSize(_window, &width, &height);
+			glfwGetFramebufferSize(WRAITH_ENGINE.GetWindow().GetGLFWWindow(), &width, &height);
 
 			VkExtent2D actualExtent = {
 				static_cast<uint32_t>(width),

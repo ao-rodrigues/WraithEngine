@@ -8,34 +8,44 @@ namespace Wraith
 	class Window
 	{
 	public:
-		Window() = default;
+		Window(int width, int height, const std::string& title);
 		~Window();
 
 		Window(const Window&) = delete;
 		Window& operator=(const Window&) = delete;
 
-		void Create(int width, int height, const std::string& title);
+		void CreateSurface(VkInstance instance, VkSurfaceKHR* surface);
+		void PollEvents();
+
+		GLFWwindow* GetGLFWWindow() const
+		{
+			return _window;
+		}
 
 		bool ShouldClose() const
 		{
 			return glfwWindowShouldClose(_window);
 		}
 
-		void CreateSurface(VkInstance instance, VkSurfaceKHR* surface);
-
-		void PollEvents();
-
-		GLFWwindow* GetGLFWWindow()
+		bool WindowResized() const
 		{
-			return _window;
+			return _windowResized;
+		}
+
+		void ResetWindowResizedFlag()
+		{
+			_windowResized = false;
 		}
 
 	private:
 		void InitWindow();
+		static void OnFramebufferResized(GLFWwindow* window, int newWidth, int newHeight);
 
 		int _width = 800;
 		int _height = 600;
 		std::string _title = "Wraith Window";
 		GLFWwindow* _window = nullptr;
+
+		bool _windowResized = false;
 	};
 }

@@ -11,9 +11,9 @@ namespace Wraith
 		Debug::Logger::Init();
 		LOG_DEBUG("Staring Wraith Engine...");
 
-		_window.Create(initParams.windowWidth, initParams.windowHeight, initParams.windowTitle);
+		_window = std::make_unique<Window>(initParams.windowWidth, initParams.windowHeight, initParams.windowTitle);
 
-		Renderer::Instance().Init(_window.GetGLFWWindow());
+		Renderer::Instance().Init();
 	}
 
 	void Engine::Shutdown()
@@ -24,9 +24,9 @@ namespace Wraith
 
 	void Engine::Run()
 	{
-		while (!_window.ShouldClose())
+		while (!_window->ShouldClose())
 		{
-			_window.PollEvents();
+			_window->PollEvents();
 			Renderer::Instance().DrawFrame();
 		}
 
