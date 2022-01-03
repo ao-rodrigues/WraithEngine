@@ -1,9 +1,15 @@
 ﻿#pragma once
 
+#include <memory>
 #include <string>
 
 #include "Core/Singleton.h"
+#include "Graphics/Device.h"
+#include "Graphics/Pipeline.h"
+#include "Graphics/SwapChain.h"
+#include "Graphics/Mesh.h"
 #include "Platform/Window.h"
+#include "Renderer/Renderer.h"
 
 namespace Wraith
 {
@@ -22,15 +28,13 @@ namespace Wraith
 		void Shutdown();
 
 	private:
-		friend class Renderer;
-
-		Window& GetWindow() const
-		{
-			return *_window;
-		}
-
 		std::unique_ptr<Window> _window;
+		std::unique_ptr<Device> _device;
+		std::unique_ptr<SwapChain> _swapChain;
+		std::unique_ptr<Pipeline> _graphicsPipeline;
+		std::unique_ptr<Renderer> _renderer;
+		std::unique_ptr<Mesh> _mesh;
 	};
 
-#define WRAITH_ENGINE Engine::Instance()
+#define WRAITH_ENGINE ::Wraith::Engine::Instance()
 }

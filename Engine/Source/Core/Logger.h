@@ -1,45 +1,43 @@
 ﻿#pragma once
 
 #include <string>
+#include <spdlog/spdlog.h>
+
+#include "Singleton.h"
 
 namespace Wraith::Debug
 {
-	class Logger
+
+#define LOGGER_NAME "WraithLogger"
+
+	class Logger final : public Singleton<Logger>
 	{
 	public:
-		static void LogDebug(const std::string& msg);
-		static void LogInfo(const std::string& msg);
-		static void LogTrace(const std::string& msg);
-		static void LogWarning(const std::string& msg);
-		static void LogError(const std::string& msg);
-		static void LogCritical(const std::string& msg);
-
-	private:
-		friend class Engine;
-		static void Init();
-		static void Shutdown();
-
-		static bool HasLogger();
+		void Init();
+		void Shutdown();
+		bool HasLogger() const;
 	};
-}
 
-#ifdef WRAITH_DEBUG
+#define WRAITH_LOGGER ::Wraith::Debug::Logger::Instance()
 
-#define LOG_DEBUG(msg) ::Wraith::Debug::Logger::LogDebug(msg)
-#define LOG_INFO(msg) ::Wraith::Debug::Logger::LogInfo(msg)
-#define LOG_TRACE(msg) ::Wraith::Debug::Logger::LogTrace(msg)
-#define LOG_WARNING(msg) ::Wraith::Debug::Logger::LogWarning(msg)
-#define LOG_ERROR(msg) ::Wraith::Debug::Logger::LogError(msg)
-#define LOG_CRITICAL(msg) ::Wraith::Debug::Logger::LogCritical(msg)
+#ifdef WR_CONFIG_DEBUG
+
+#define WR_LOG_DEBUG(...) if (WRAITH_LOGGER.HasLogger()) { spdlog::get(LOGGER_NAME)->debug(__VA_ARGS__); }
+#define WR_LOG_INFO(...) if (WRAITH_LOGGER.HasLogger()) { spdlog::get(LOGGER_NAME)->info(__VA_ARGS__); }
+#define WR_LOG_TRACE(...) if (WRAITH_LOGGER.HasLogger()) { spdlog::get(LOGGER_NAME)->trace(__VA_ARGS__); }
+#define WR_LOG_WARNING(...) if (WRAITH_LOGGER.HasLogger()) { spdlog::get(LOGGER_NAME)->warn(__VA_ARGS__); }
+#define WR_LOG_ERROR(...) if (WRAITH_LOGGER.HasLogger()) { spdlog::get(LOGGER_NAME)->error(__VA_ARGS__); }
+#define WR_LOG_FATAL(...) if (WRAITH_LOGGER.HasLogger()) { spdlog::get(LOGGER_NAME)->critical(__VA_ARGS__); }
 
 #else
 
-#define LOG_DEBUG(msg)
-#define LOG_INFO(msg)
-#define LOG_TRACE(msg)
-#define LOG_WARNING(msg)
-#define LOG_ERROR(msg)
-#define LOG_CRITICAL(msg)
+#define WR_LOG_DEBUG(...)
+#define WR_LOG_INFO(...)
+#define WR_LOG_TRACE(...)
+#define WR_LOG_WARNING(...)
+#define WR_LOG_ERROR(...)
+#define WR_LOG_FATAL(...)
 
 #endif
 
+}

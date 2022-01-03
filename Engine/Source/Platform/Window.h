@@ -1,7 +1,8 @@
 #pragma once
 
-#include "Core/Core.h"
 #include <string>
+
+#include "Core/Core.h"
 
 namespace Wraith
 {
@@ -17,25 +18,11 @@ namespace Wraith
 		void CreateSurface(VkInstance instance, VkSurfaceKHR* surface);
 		void PollEvents();
 
-		GLFWwindow* GetGLFWWindow() const
-		{
-			return _window;
-		}
-
-		bool ShouldClose() const
-		{
-			return glfwWindowShouldClose(_window);
-		}
-
-		bool WindowResized() const
-		{
-			return _windowResized;
-		}
-
-		void ResetWindowResizedFlag()
-		{
-			_windowResized = false;
-		}
+		GLFWwindow* GetGLFWWindow() const { return _window; }
+		bool ShouldClose() const { return glfwWindowShouldClose(_window); }
+		bool WasResized() const { return _windowResized; }
+		void ResetWindowResizedFlag() { _windowResized = false; }
+		VkExtent2D GetExtent() const { return {static_cast<uint32_t>(_width), static_cast<uint32_t>(_height)}; }
 
 	private:
 		void InitWindow();

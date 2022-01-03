@@ -2,8 +2,6 @@
 
 #include <stdexcept>
 
-#include "Core/Logger.h"
-
 namespace Wraith
 {
 	Window::Window(int width, int height, const std::string& title)
@@ -26,7 +24,7 @@ namespace Wraith
 		{
 			throw std::runtime_error("Failed to create window surface!");
 		}
-		LOG_DEBUG("Created surface.");
+		WR_LOG_DEBUG("Created surface.")
 	}
 
 	void Window::PollEvents()
