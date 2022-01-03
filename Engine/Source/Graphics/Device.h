@@ -38,7 +38,7 @@ namespace Wraith
 		VkDevice GetLogicalDevice() const { return _device; }
 		VkPhysicalDevice GetPhysicalDevice() const { return _physicalDevice; }
 		VkSurfaceKHR GetSurface() const { return _surface; }
-		VkCommandPool GetCommandPool() const { return _commandPool; }
+		VkCommandPool GetCommandPool() const { return _primaryCommandPool; }
 		VkQueue GetGraphicsQueue() const { return _graphicsQueue; }
 		VkQueue GetPresentQueue() const { return _presentQueue; }
 
@@ -46,7 +46,10 @@ namespace Wraith
 		SwapChainSupportDetails GetSwapChainSupport() const { return QuerySwapChainSupport(_physicalDevice); }
 
 		void FinishOperations() const;
+
+		// Buffer helper functions
 		void CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer &buffer, VkDeviceMemory &bufferMemory);
+		void CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 
 	private:
 		// Init methods
@@ -55,7 +58,7 @@ namespace Wraith
 		void CreateSurface();
 		void PickPhysicalDevice();
 		void CreateLogicalDevice();
-		void CreateCommandPool();
+		void CreateCommandPools();
 
 		// Validation layer setup helpers
 		bool CheckValidationLayerSupport();
@@ -103,6 +106,7 @@ namespace Wraith
 		VkQueue _graphicsQueue = VK_NULL_HANDLE;
 		VkQueue _presentQueue = VK_NULL_HANDLE;
 
-		VkCommandPool _commandPool = VK_NULL_HANDLE;
+		VkCommandPool _primaryCommandPool = VK_NULL_HANDLE;
+		VkCommandPool _transientCommandPool = VK_NULL_HANDLE;
 	};
 }

@@ -30,8 +30,8 @@ namespace Wraith
 			vkDestroyImageView(_device.GetLogicalDevice(), imageView, nullptr);
 		}
 
-		vkDestroySwapchainKHR(_device.GetLogicalDevice(), _swapChain, nullptr);
 		vkDestroyRenderPass(_device.GetLogicalDevice(), _renderPass, nullptr);
+		vkDestroySwapchainKHR(_device.GetLogicalDevice(), _swapChain, nullptr);
 
 		for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
 		{
