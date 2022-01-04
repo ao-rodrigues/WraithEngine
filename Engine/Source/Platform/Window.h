@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Core/VulkanBase.h"
+
 namespace Wraith
 {
 	class Window

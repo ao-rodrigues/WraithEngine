@@ -1,6 +1,11 @@
 ﻿#include "wrpch.h"
 #include "Renderer.h"
 
+#include "Platform/Window.h"
+
+#include "Graphics/SwapChain.h"
+#include "Graphics/Device.h"
+
 namespace Wraith
 {
 	Renderer::Renderer(Device& device, Window& window)
@@ -128,7 +133,7 @@ namespace Wraith
 		allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
 		allocInfo.commandBufferCount = static_cast<uint32_t>(SwapChain::MAX_FRAMES_IN_FLIGHT);
 
-		if (vkAllocateCommandBuffers(_device.GetLogicalDevice(), &allocInfo, _commandBuffers.data()) != VK_SUCCESS)
+		if (vkAllocateCommandBuffers(_device.GetDevice(), &allocInfo, _commandBuffers.data()) != VK_SUCCESS)
 		{
 			throw std::runtime_error("Failed to allocate command buffers!");
 		}
@@ -137,7 +142,7 @@ namespace Wraith
 
 	void Renderer::FreeCommandBuffers()
 	{
-		vkFreeCommandBuffers(_device.GetLogicalDevice(), _device.GetCommandPool(), static_cast<uint32_t>(_commandBuffers.size()), _commandBuffers.data());
+		vkFreeCommandBuffers(_device.GetDevice(), _device.GetCommandPool(), static_cast<uint32_t>(_commandBuffers.size()), _commandBuffers.data());
 	}
 
 	void Renderer::RecreateSwapChain()

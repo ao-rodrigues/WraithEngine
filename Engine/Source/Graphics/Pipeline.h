@@ -1,9 +1,11 @@
 ﻿#pragma once
 
-#include "Device.h"
+#include "Core/VulkanBase.h"
 
 namespace Wraith
 {
+	class Device;
+
 	class Pipeline
 	{
 	public:

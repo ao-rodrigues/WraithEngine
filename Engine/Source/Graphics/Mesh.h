@@ -1,9 +1,11 @@
 ﻿#pragma once
 
-#include "Device.h"
+#include "Core/VulkanBase.h"
 
 namespace Wraith
 {
+	class Device;
+
 	class Mesh
 	{
 	public:
@@ -29,8 +31,8 @@ namespace Wraith
 		void CreateVertexBuffers(const std::vector<Vertex>& vertices);
 
 		Device& _device;
+		VmaAllocation _vertexBufferAllocation;
 		VkBuffer _vertexBuffer = VK_NULL_HANDLE;
-		VkDeviceMemory _vertexBufferMemory = VK_NULL_HANDLE;
 		uint32_t _vertexCount;
 	};
 }

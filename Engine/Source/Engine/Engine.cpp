@@ -1,12 +1,22 @@
 ﻿#include "wrpch.h"
 #include "Engine.h"
 
+#include "Core/VulkanBase.h"
+#include "Platform/Window.h"
+
+#include "Graphics/Device.h"
+#include "Graphics/SwapChain.h"
+#include "Graphics/Pipeline.h"
+#include "Graphics/Mesh.h"
+
+#include "Renderer/Renderer.h"
+
 namespace Wraith
 {
 	void Engine::Init(const EngineInitParams& initParams)
 	{
 		WRAITH_LOGGER.Init();
-		WR_LOG_DEBUG("Staring Wraith Engine...");
+		WR_LOG_DEBUG("Staring Wraith Engine...")
 
 		_window = std::make_unique<Window>(initParams.windowWidth, initParams.windowHeight, initParams.windowTitle);
 		_device = std::make_unique<Device>(*_window);

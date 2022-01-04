@@ -1,6 +1,8 @@
 ﻿#include "wrpch.h"
 #include "SwapChain.h"
 
+#include "Device.h"
+#include "Platform/Window.h"
 #include "Engine/Engine.h"
 
 namespace Wraith
@@ -20,29 +22,29 @@ namespace Wraith
 	{
 		for (const auto framebuffer : _swapChainFramebuffers)
 		{
-			vkDestroyFramebuffer(_device.GetLogicalDevice(), framebuffer, nullptr);
+			vkDestroyFramebuffer(_device.GetDevice(), framebuffer, nullptr);
 		}
 
 		for (const auto imageView : _swapChainImageViews)
 		{
-			vkDestroyImageView(_device.GetLogicalDevice(), imageView, nullptr);
+			vkDestroyImageView(_device.GetDevice(), imageView, nullptr);
 		}
 
-		vkDestroyRenderPass(_device.GetLogicalDevice(), _renderPass, nullptr);
-		vkDestroySwapchainKHR(_device.GetLogicalDevice(), _swapChain, nullptr);
+		vkDestroyRenderPass(_device.GetDevice(), _renderPass, nullptr);
+		vkDestroySwapchainKHR(_device.GetDevice(), _swapChain, nullptr);
 
 		for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
 		{
-			vkDestroySemaphore(_device.GetLogicalDevice(), _imageAvailableSemaphores[i], nullptr);
-			vkDestroySemaphore(_device.GetLogicalDevice(), _renderFinishedSemaphores[i], nullptr);
-			vkDestroyFence(_device.GetLogicalDevice(), _inFlightFences[i], nullptr);
+			vkDestroySemaphore(_device.GetDevice(), _imageAvailableSemaphores[i], nullptr);
+			vkDestroySemaphore(_device.GetDevice(), _renderFinishedSemaphores[i], nullptr);
+			vkDestroyFence(_device.GetDevice(), _inFlightFences[i], nullptr);
 		}
 	}
 
 	VkResult SwapChain::AcquireNextImage(uint32_t* imageIndex) const
 	{
-		vkWaitForFences(_device.GetLogicalDevice(), 1, &_inFlightFences[_currentFrame], VK_TRUE, UINT64_MAX);
-		return vkAcquireNextImageKHR(_device.GetLogicalDevice(), _swapChain, UINT64_MAX, _imageAvailableSemaphores[_currentFrame], VK_NULL_HANDLE, imageIndex);
+		vkWaitForFences(_device.GetDevice(), 1, &_inFlightFences[_currentFrame], VK_TRUE, UINT64_MAX);
+		return vkAcquireNextImageKHR(_device.GetDevice(), _swapChain, UINT64_MAX, _imageAvailableSemaphores[_currentFrame], VK_NULL_HANDLE, imageIndex);
 	}
 
 	VkResult SwapChain::SubmitCommandBuffers(const VkCommandBuffer* buffers, uint32_t* imageIndex)
@@ -50,7 +52,7 @@ namespace Wraith
 		// Check if a previous frame is using this image (i.e. there is its' fence to wait on)
 		if (_imagesInFlight[*imageIndex] != VK_NULL_HANDLE)
 		{
-			vkWaitForFences(_device.GetLogicalDevice(), 1, &_imagesInFlight[*imageIndex], VK_TRUE, UINT64_MAX);
+			vkWaitForFences(_device.GetDevice(), 1, &_imagesInFlight[*imageIndex], VK_TRUE, UINT64_MAX);
 		}
 		// Mark the image as now being in use by this frame
 		_imagesInFlight[*imageIndex] = _inFlightFences[_currentFrame];
@@ -76,7 +78,7 @@ namespace Wraith
 		submitInfo.signalSemaphoreCount = 1;
 		submitInfo.pSignalSemaphores = signalSemaphores;
 
-		vkResetFences(_device.GetLogicalDevice(), 1, &_inFlightFences[_currentFrame]);
+		vkResetFences(_device.GetDevice(), 1, &_inFlightFences[_currentFrame]);
 
 		if (vkQueueSubmit(_device.GetGraphicsQueue(), 1, &submitInfo, _inFlightFences[_currentFrame]) != VK_SUCCESS)
 		{
@@ -148,15 +150,15 @@ namespace Wraith
 		createInfo.clipped = VK_TRUE;
 		createInfo.oldSwapchain = VK_NULL_HANDLE;
 
-		if (vkCreateSwapchainKHR(_device.GetLogicalDevice(), &createInfo, nullptr, &_swapChain) != VK_SUCCESS)
+		if (vkCreateSwapchainKHR(_device.GetDevice(), &createInfo, nullptr, &_swapChain) != VK_SUCCESS)
 		{
 			throw std::runtime_error("Failed to create swap chain!");
 		}
 		WR_LOG_DEBUG("Created swap chain.");
 
-		vkGetSwapchainImagesKHR(_device.GetLogicalDevice(), _swapChain, &imageCount, nullptr);
+		vkGetSwapchainImagesKHR(_device.GetDevice(), _swapChain, &imageCount, nullptr);
 		_swapChainImages.resize(imageCount);
-		vkGetSwapchainImagesKHR(_device.GetLogicalDevice(), _swapChain, &imageCount, _swapChainImages.data());
+		vkGetSwapchainImagesKHR(_device.GetDevice(), _swapChain, &imageCount, _swapChainImages.data());
 
 		_swapChainImageFormat = surfaceFormat.format;
 		_swapChainExtent = extent;
@@ -182,7 +184,7 @@ namespace Wraith
 			createInfo.subresourceRange.baseArrayLayer = 0;
 			createInfo.subresourceRange.layerCount = 1;
 
-			if (vkCreateImageView(_device.GetLogicalDevice(), &createInfo, nullptr, &_swapChainImageViews[i]) != VK_SUCCESS)
+			if (vkCreateImageView(_device.GetDevice(), &createInfo, nullptr, &_swapChainImageViews[i]) != VK_SUCCESS)
 			{
 				throw std::runtime_error("Failed to create image views!");
 			}
@@ -229,7 +231,7 @@ namespace Wraith
 		renderPassInfo.dependencyCount = 1;
 		renderPassInfo.pDependencies = &dependency;
 
-		if (vkCreateRenderPass(_device.GetLogicalDevice(), &renderPassInfo, nullptr, &_renderPass) != VK_SUCCESS)
+		if (vkCreateRenderPass(_device.GetDevice(), &renderPassInfo, nullptr, &_renderPass) != VK_SUCCESS)
 		{
 			throw std::runtime_error("Failed to create render pass!");
 		}
@@ -254,7 +256,7 @@ namespace Wraith
 			framebufferInfo.height = _swapChainExtent.height;
 			framebufferInfo.layers = 1;
 
-			if (vkCreateFramebuffer(_device.GetLogicalDevice(), &framebufferInfo, nullptr, &_swapChainFramebuffers[i]) != VK_SUCCESS)
+			if (vkCreateFramebuffer(_device.GetDevice(), &framebufferInfo, nullptr, &_swapChainFramebuffers[i]) != VK_SUCCESS)
 			{
 				throw std::runtime_error("Failed to create framebuffer!");
 			}
@@ -277,9 +279,9 @@ namespace Wraith
 
 		for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
 		{
-			if (vkCreateSemaphore(_device.GetLogicalDevice(), &semaphoreInfo, nullptr, &_imageAvailableSemaphores[i]) != VK_SUCCESS ||
-				vkCreateSemaphore(_device.GetLogicalDevice(), &semaphoreInfo, nullptr, &_renderFinishedSemaphores[i]) != VK_SUCCESS ||
-				vkCreateFence(_device.GetLogicalDevice(), &fenceInfo, nullptr, &_inFlightFences[i]) != VK_SUCCESS)
+			if (vkCreateSemaphore(_device.GetDevice(), &semaphoreInfo, nullptr, &_imageAvailableSemaphores[i]) != VK_SUCCESS ||
+				vkCreateSemaphore(_device.GetDevice(), &semaphoreInfo, nullptr, &_renderFinishedSemaphores[i]) != VK_SUCCESS ||
+				vkCreateFence(_device.GetDevice(), &fenceInfo, nullptr, &_inFlightFences[i]) != VK_SUCCESS)
 			{
 				throw std::runtime_error("Failed to create synchronization objects for a frame!");
 			}

@@ -1,10 +1,13 @@
 ﻿#pragma once
 
-#include "Graphics/Device.h"
-#include "Graphics/SwapChain.h"
+#include "Core/VulkanBase.h"
 
 namespace Wraith
 {
+	class Window;
+	class Device;
+	class SwapChain;
+
 	class Renderer
 	{
 	public:

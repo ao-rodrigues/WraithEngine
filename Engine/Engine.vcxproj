@@ -95,6 +95,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\Logger.cpp" />
+    <ClCompile Include="Source\Core\VulkanBase.cpp" />
     <ClCompile Include="Source\Engine\Application.cpp" />
     <ClCompile Include="Source\Engine\Engine.cpp" />
     <ClCompile Include="Source\Graphics\Device.cpp" />
@@ -117,6 +118,7 @@
     <ClInclude Include="Source\Core\Logger.h" />
     <ClInclude Include="Source\Core\Singleton.h" />
     <ClInclude Include="Source\Core\Utils.h" />
+    <ClInclude Include="Source\Core\VulkanBase.h" />
     <ClInclude Include="Source\Engine\Application.h" />
     <ClInclude Include="Source\Core\Core.h" />
     <ClInclude Include="Source\Engine\Engine.h" />

@@ -1,4 +1,5 @@
 #include "wrpch.h"
+
 #include "Device.h"
 
 #include "Engine/Engine.h"
@@ -32,6 +33,8 @@ void DestroyDebugUtilsMessengerEXT(
 
 namespace Wraith
 {
+	constexpr auto VULKAN_VERSION VK_API_VERSION_1_2;
+
 	Device::Device(Window& window)
 		: _window(window)
 	{
@@ -39,11 +42,14 @@ namespace Wraith
 		CreateSurface();
 		PickPhysicalDevice();
 		CreateLogicalDevice();
+		CreateAllocator();
 		CreateCommandPools();
 	}
 
 	Device::~Device()
 	{
+		vmaDestroyAllocator(_allocator);
+
 		vkDestroyCommandPool(_device, _primaryCommandPool, nullptr);
 		vkDestroyCommandPool(_device, _transientCommandPool, nullptr);
 
@@ -65,9 +71,9 @@ namespace Wraith
 
 	void Device::CreateBuffer(VkDeviceSize size, 
 		VkBufferUsageFlags usage, 
-		VkMemoryPropertyFlags properties, 
-		VkBuffer& buffer, 
-		VkDeviceMemory& bufferMemory)
+		VkBuffer& buffer,
+		VmaMemoryUsage memoryUsage,
+		VmaAllocation& allocation)
 	{
 		VkBufferCreateInfo bufferInfo{};
 		bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
@@ -75,25 +81,13 @@ namespace Wraith
 		bufferInfo.usage = usage;
 		bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
-		if (vkCreateBuffer(_device, &bufferInfo, nullptr, &buffer) != VK_SUCCESS)
+		VmaAllocationCreateInfo allocInfo{};
+		allocInfo.usage = memoryUsage;
+
+		if (vmaCreateBuffer(_allocator, &bufferInfo, &allocInfo, &buffer, &allocation, nullptr) != VK_SUCCESS)
 		{
 			throw std::runtime_error("Failed to create vertex buffer!");
 		}
-
-		VkMemoryRequirements memoryRequirements;
-		vkGetBufferMemoryRequirements(_device, buffer, &memoryRequirements);
-
-		VkMemoryAllocateInfo allocInfo{};
-		allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-		allocInfo.allocationSize = memoryRequirements.size;
-		allocInfo.memoryTypeIndex = FindMemoryType(memoryRequirements.memoryTypeBits, properties);
-
-		if (vkAllocateMemory(_device, &allocInfo, nullptr, &bufferMemory) != VK_SUCCESS)
-		{
-			throw std::runtime_error("Failed to allocate vertex buffer memory!");
-		}
-
-		vkBindBufferMemory(_device, buffer, bufferMemory, 0);
 	}
 
 	void Device::CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size)
@@ -145,7 +139,7 @@ namespace Wraith
 		appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
 		appInfo.pEngineName = "Wraith Engine";
 		appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
-		appInfo.apiVersion = VK_API_VERSION_1_1;
+		appInfo.apiVersion = VULKAN_VERSION;
 
 		VkInstanceCreateInfo createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
@@ -277,6 +271,17 @@ namespace Wraith
 
 		vkGetDeviceQueue(_device, indices.graphicsFamily.value(), 0, &_graphicsQueue);
 		vkGetDeviceQueue(_device, indices.presentFamily.value(), 0, &_presentQueue);
+	}
+
+	void Device::CreateAllocator()
+	{
+		VmaAllocatorCreateInfo allocatorInfo{};
+		allocatorInfo.vulkanApiVersion = VULKAN_VERSION;
+		allocatorInfo.physicalDevice = _physicalDevice;
+		allocatorInfo.device = _device;
+		allocatorInfo.instance = _instance;
+
+		vmaCreateAllocator(&allocatorInfo, &_allocator);
 	}
 
 	void Device::CreateCommandPools()

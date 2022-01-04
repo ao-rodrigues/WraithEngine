@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/VulkanBase.h"
 #include "Platform/Window.h"
 
 namespace Wraith
@@ -31,12 +32,13 @@ namespace Wraith
 		Device& operator=(const Device&) = delete;
 
 
-		VkDevice GetLogicalDevice() const { return _device; }
+		VkDevice GetDevice() const { return _device; }
 		VkPhysicalDevice GetPhysicalDevice() const { return _physicalDevice; }
 		VkSurfaceKHR GetSurface() const { return _surface; }
 		VkCommandPool GetCommandPool() const { return _primaryCommandPool; }
 		VkQueue GetGraphicsQueue() const { return _graphicsQueue; }
 		VkQueue GetPresentQueue() const { return _presentQueue; }
+		VmaAllocator GetAllocator() const { return _allocator; }
 
 		QueueFamilyIndices GetQueueFamilyIndices() const { return FindQueueFamilies(_physicalDevice); }
 		SwapChainSupportDetails GetSwapChainSupport() const { return QuerySwapChainSupport(_physicalDevice); }
@@ -44,7 +46,7 @@ namespace Wraith
 		void FinishOperations() const;
 
 		// Buffer helper functions
-		void CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer &buffer, VkDeviceMemory &bufferMemory);
+		void CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkBuffer& buffer, VmaMemoryUsage memoryUsage, VmaAllocation& allocation);
 		void CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 
 	private:
@@ -54,6 +56,7 @@ namespace Wraith
 		void CreateSurface();
 		void PickPhysicalDevice();
 		void CreateLogicalDevice();
+		void CreateAllocator();
 		void CreateCommandPools();
 
 		// Validation layer setup helpers
@@ -104,5 +107,7 @@ namespace Wraith
 
 		VkCommandPool _primaryCommandPool = VK_NULL_HANDLE;
 		VkCommandPool _transientCommandPool = VK_NULL_HANDLE;
+
+		VmaAllocator _allocator = nullptr;
 	};
 }

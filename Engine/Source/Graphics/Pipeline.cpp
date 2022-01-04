@@ -1,6 +1,7 @@
 ﻿#include "wrpch.h"
 #include "Pipeline.h"
 
+#include "Device.h"
 #include "Mesh.h"
 
 namespace Wraith
@@ -20,10 +21,10 @@ namespace Wraith
 
 	Pipeline::~Pipeline()
 	{
-		vkDestroyShaderModule(_device.GetLogicalDevice(), _vertShaderModule, nullptr);
-		vkDestroyShaderModule(_device.GetLogicalDevice(), _fragShaderModule, nullptr);
-		vkDestroyPipeline(_device.GetLogicalDevice(), _pipeline, nullptr);
-		vkDestroyPipelineLayout(_device.GetLogicalDevice(), _pipelineLayout, nullptr);
+		vkDestroyShaderModule(_device.GetDevice(), _vertShaderModule, nullptr);
+		vkDestroyShaderModule(_device.GetDevice(), _fragShaderModule, nullptr);
+		vkDestroyPipeline(_device.GetDevice(), _pipeline, nullptr);
+		vkDestroyPipelineLayout(_device.GetDevice(), _pipelineLayout, nullptr);
 	}
 
 	void Pipeline::Bind(VkCommandBuffer commandBuffer) const
@@ -146,7 +147,7 @@ namespace Wraith
 		pipelineLayoutCreateInfo.pushConstantRangeCount = 0; // Optional
 		pipelineLayoutCreateInfo.pPushConstantRanges = nullptr; // Optional
 
-		if (vkCreatePipelineLayout(_device.GetLogicalDevice(), &pipelineLayoutCreateInfo, nullptr, &_pipelineLayout) != VK_SUCCESS)
+		if (vkCreatePipelineLayout(_device.GetDevice(), &pipelineLayoutCreateInfo, nullptr, &_pipelineLayout) != VK_SUCCESS)
 		{
 			throw std::runtime_error("Failed to create pipeline layout!");
 		}
@@ -170,7 +171,7 @@ namespace Wraith
 		pipelineInfo.basePipelineHandle = VK_NULL_HANDLE; // Optional
 		pipelineInfo.basePipelineIndex = -1; // Optional
 
-		if (vkCreateGraphicsPipelines(_device.GetLogicalDevice(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &_pipeline) != VK_SUCCESS)
+		if (vkCreateGraphicsPipelines(_device.GetDevice(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &_pipeline) != VK_SUCCESS)
 		{
 			throw std::runtime_error("Failed to create graphics pipeline!");
 		}
@@ -185,7 +186,7 @@ namespace Wraith
 		createInfo.pCode = reinterpret_cast<const uint32_t*>(shaderCode.data());
 
 		VkShaderModule shaderModule;
-		if (vkCreateShaderModule(_device.GetLogicalDevice(), &createInfo, nullptr, &shaderModule) != VK_SUCCESS)
+		if (vkCreateShaderModule(_device.GetDevice(), &createInfo, nullptr, &shaderModule) != VK_SUCCESS)
 		{
 			throw std::runtime_error("Failed to create shader module!");
 		}
