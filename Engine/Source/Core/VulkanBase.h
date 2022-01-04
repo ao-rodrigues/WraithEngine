@@ -8,4 +8,4 @@
 #include <glm/glm.hpp>
 
 #define VULKAN_H // No need to include Vulkan since GLFW already did it
-#include <vma/vk_mem_alloc.h>
+#include <VMA/vk_mem_alloc.h>
