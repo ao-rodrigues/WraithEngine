@@ -1,10 +1,5 @@
 #pragma once
 
-#include <ios>
-#include <string>
-#include <vector>
-#include <fstream>
-
 namespace Wraith::Utils
 {
 	inline std::vector<char> ReadFile(const std::string& fileName)

@@ -1,4 +1,5 @@
-﻿#include "Logger.h"
+﻿#include "wrpch.h"
+#include "Logger.h"
 
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <memory>

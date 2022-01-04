@@ -1,7 +1,5 @@
+#include "wrpch.h"
 #include "Device.h"
-
-#include <set>
-#include <stdexcept>
 
 #include "Engine/Engine.h"
 
@@ -147,7 +145,7 @@ namespace Wraith
 		appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
 		appInfo.pEngineName = "Wraith Engine";
 		appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
-		appInfo.apiVersion = VK_API_VERSION_1_2;
+		appInfo.apiVersion = VK_API_VERSION_1_1;
 
 		VkInstanceCreateInfo createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;

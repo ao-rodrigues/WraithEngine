@@ -1,7 +1,5 @@
-﻿#include "SwapChain.h"
-
-#include <algorithm>
-#include <stdexcept>
+﻿#include "wrpch.h"
+#include "SwapChain.h"
 
 #include "Engine/Engine.h"
 

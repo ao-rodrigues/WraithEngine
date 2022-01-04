@@ -1,6 +1,5 @@
-﻿#include "Engine.h"
-
-#include "Core/Core.h"
+﻿#include "wrpch.h"
+#include "Engine.h"
 
 namespace Wraith
 {

@@ -1,9 +1,5 @@
 ﻿#pragma once
 
-#include <string>
-#include <vector>
-
-#include "Core/Core.h"
 #include "Device.h"
 
 namespace Wraith

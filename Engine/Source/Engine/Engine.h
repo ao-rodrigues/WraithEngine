@@ -1,8 +1,5 @@
 ﻿#pragma once
 
-#include <memory>
-#include <string>
-
 #include "Core/Singleton.h"
 #include "Graphics/Device.h"
 #include "Graphics/Pipeline.h"

@@ -1,8 +1,5 @@
 ﻿#pragma once
 
-#include <vector>
-
-#include "Core/Core.h"
 #include "Graphics/Device.h"
 #include "Graphics/SwapChain.h"
 

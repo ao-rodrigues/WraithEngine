@@ -1,6 +1,5 @@
+#include "wrpch.h"
 #include "Window.h"
-
-#include <stdexcept>
 
 namespace Wraith
 {

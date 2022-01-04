@@ -1,5 +1,4 @@
-#include <iostream>
-#include <cstdlib>
+#include "wrpch.h"
 #include "Engine/Application.h"
 
 int main()

@@ -1,6 +1,6 @@
-﻿#include "Pipeline.h"
+﻿#include "wrpch.h"
+#include "Pipeline.h"
 
-#include "Core/Utils.h"
 #include "Mesh.h"
 
 namespace Wraith

@@ -1,4 +1,5 @@
-﻿#include "Mesh.h"
+﻿#include "wrpch.h"
+#include "Mesh.h"
 
 namespace Wraith
 {

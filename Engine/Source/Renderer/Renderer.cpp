@@ -1,6 +1,5 @@
-﻿#include "Renderer.h"
-
-#include <stdexcept>
+﻿#include "wrpch.h"
+#include "Renderer.h"
 
 namespace Wraith
 {
