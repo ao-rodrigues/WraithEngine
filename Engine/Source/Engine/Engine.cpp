@@ -25,11 +25,15 @@ namespace Wraith
 		_renderer = std::make_unique<Renderer>(*_device, *_window);
 
 		std::vector<Mesh::Vertex> vertices = {
-			{{0.0f, -0.5f}, {1.0f, 0.0f, 0.0f}},
-			{{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
-			{{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}}
+			{{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
+			{{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}},
+			{{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
+			{{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}}
 		};
-		_mesh = std::make_unique<Mesh>(*_device, vertices);
+		std::vector<uint16_t> indices = {
+			0, 1, 2, 2, 3, 0
+		};
+		_mesh = std::make_unique<Mesh>(*_device, vertices, indices);
 	}
 
 	void Engine::Shutdown()
