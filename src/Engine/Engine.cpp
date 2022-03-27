@@ -2,6 +2,7 @@
 #include "Engine.h"
 
 #include "Core/VulkanBase.h"
+#include "Core/Utils.h"
 #include "Platform/Window.h"
 
 #include "Graphics/Device.h"
@@ -21,7 +22,7 @@ namespace Wraith
 		_window = std::make_unique<Window>(initParams.windowWidth, initParams.windowHeight, initParams.windowTitle);
 		_device = std::make_unique<Device>(*_window);
 		_swapChain = std::make_unique<SwapChain>(*_device, *_window);
-		_graphicsPipeline = std::make_unique<Pipeline>(*_device, _swapChain->GetRenderPass(), "Shaders/SimpleShader.vert.spv", "Shaders/SimpleShader.frag.spv");
+		_graphicsPipeline = std::make_unique<Pipeline>(*_device, _swapChain->GetRenderPass(), WR_ASSET("shaders/SimpleShader.vert.spv"), WR_ASSET("shadersSimpleShader.frag.spv"));
 		_renderer = std::make_unique<Renderer>(*_device, *_window);
 
 		std::vector<Mesh::Vertex> vertices = {
