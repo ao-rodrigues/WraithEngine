@@ -4,10 +4,6 @@ project(WraithEngine VERSION 1.0.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 
-if (NOT DEFINED ASSETS_DIR)
-    set(ASSETS_DIR assets)
-endif ()
-
 # External Libraries
 # GLFW
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "Build GLFW docs" FORCE)
@@ -56,10 +52,31 @@ target_link_libraries(${PROJECT_NAME}
             VulkanMemoryAllocator
 )
 
+target_precompile_headers(${PROJECT_NAME} PRIVATE src/wrpch.h)
+
+if (NOT DEFINED ASSETS_DIR)
+    set(ASSETS_DIR assets)
+endif ()
+
 # Preprocessor defines
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DWR_CONFIG_DEBUG")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DWR_CONFIG_RELEASE")
 
-target_precompile_headers(${PROJECT_NAME} PRIVATE src/wrpch.h)
+target_compile_definitions(${PROJECT_NAME} PUBLIC WR_ASSETS_DIR="${ASSETS_DIR}")
 
+# Shader compilation
+file(GLOB SHADERS ${CMAKE_CURRENT_SOURCE_DIR}/shaders/*.vert ${CMAKE_CURRENT_SOURCE_DIR}/shaders/*.frag)
 
+message(STATUS "Compiling shaders...")
+add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
+    COMMAND mkdir -p ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}\\${ASSETS_DIR}\\shaders
+)
+
+foreach(shader ${SHADERS})
+    get_filename_component(SHADER_NAME ${shader} NAME)
+    message(STATUS "Compiling ${SHADER_NAME}...")
+    add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
+            COMMAND glslc -c ${shader} -o ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}\\${ASSETS_DIR}\\shaders\\${SHADER_NAME}.spv
+    )
+endforeach()
+message(STATUS "Shaders compiled!")
