@@ -1,5 +1,7 @@
 #pragma once
 
+#define WR_ASSET(path) WR_ASSETS_DIR"""/"path
+
 namespace Wraith::Utils
 {
 	inline std::vector<char> ReadFile(const std::string& fileName)
