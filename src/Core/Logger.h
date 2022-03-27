@@ -2,7 +2,7 @@
 
 #include <spdlog/spdlog.h>
 
-#include "Singleton.h"
+#include "Core/Singleton.h"
 
 namespace Wraith::Debug
 {
