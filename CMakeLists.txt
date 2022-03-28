@@ -8,18 +8,18 @@ set(CMAKE_CXX_STANDARD 20)
 # GLFW
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "Build GLFW docs" FORCE)
 set(GLFW_BUILD_TEST OFF CACHE BOOL "Build GLFW tests" FORCE)
-add_subdirectory(external/glfw)
+add_subdirectory(libs/glfw)
 
 # GLM
 set(GLM_TEST_ENABLE OFF CACHE BOOL "Enable GLM tests" FORCE)
-add_subdirectory(external/glm)
+add_subdirectory(libs/glm)
 
 # spdlog
 set(SPDLOG_MASTER_PROJECT OFF CACHE BOOL "" FORCE)
-add_subdirectory(external/spdlog)
+add_subdirectory(libs/spdlog)
 
 # VMA
-add_subdirectory(external/VulkanMemoryAllocator)
+add_subdirectory(libs/VulkanMemoryAllocator)
 
 # Vulkan
 find_package(Vulkan REQUIRED)
