@@ -22,7 +22,8 @@ add_subdirectory(libs/spdlog)
 add_subdirectory(libs/VulkanMemoryAllocator)
 
 # Vulkan
-find_package(Vulkan REQUIRED)
+find_package(Vulkan REQUIRED COMPONENTS glslc)
+find_program(GLSLC_EXECUTABLE NAMES glslc HINTS Vulkan::glslc)
 
 file(GLOB SOURCES "src/*.cpp" "src/*/*.cpp" "src/*/*/*.cpp")
 
@@ -30,13 +31,13 @@ add_library(${PROJECT_NAME} STATIC ${SOURCES})
 
 target_include_directories(${PROJECT_NAME}
         PUBLIC
-            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+            $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
             $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>
             glm
             spdlog
         PRIVATE
-            ${CMAKE_CURRENT_SOURCE_DIR}/src
-            ${CMAKE_CURRENT_SOURCE_DIR}/include/WraithEngine
+            ${PROJECT_SOURCE_DIR}/src
+            ${PROJECT_SOURCE_DIR}/include/WraithEngine
             ${Vulkan_INCLUDE_DIRS}
             glfw
             VulkanMemoryAllocator
@@ -64,19 +65,36 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DWR_CONFIG_RELEASE")
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC WR_ASSETS_DIR="${ASSETS_DIR}")
 
-# Shader compilation
-file(GLOB SHADERS ${CMAKE_CURRENT_SOURCE_DIR}/shaders/*.vert ${CMAKE_CURRENT_SOURCE_DIR}/shaders/*.frag)
+# Compile shaders
+set(SHADER_SOURCE_DIR ${PROJECT_SOURCE_DIR}/shaders)
+set(SHADER_BINARY_DIR ${CMAKE_BINARY_DIR}/${ASSETS_DIR}/shaders)
 
-message(STATUS "Compiling shaders...")
-add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
-    COMMAND mkdir -p ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}\\${ASSETS_DIR}\\shaders
+file(GLOB_RECURSE Shaders
+        ${SHADER_SOURCE_DIR}/*.vert
+        ${SHADER_SOURCE_DIR}/*.frag
+        ${SHADER_SOURCE_DIR}/*.comp
+        ${SHADER_SOURCE_DIR}/*.geom
+        ${SHADER_SOURCE_DIR}/*.tesc
+        ${SHADER_SOURCE_DIR}/*.tese
+        ${SHADER_SOURCE_DIR}/*.mesh
+        ${SHADER_SOURCE_DIR}/*.task
+        ${SHADER_SOURCE_DIR}/*.rgen
+        ${SHADER_SOURCE_DIR}/*.rchit
+        ${SHADER_SOURCE_DIR}/*.rmiss
 )
 
-foreach(shader ${SHADERS})
-    get_filename_component(SHADER_NAME ${shader} NAME)
-    message(STATUS "Compiling ${SHADER_NAME}...")
-    add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
-            COMMAND glslc -c ${shader} -o ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}\\${ASSETS_DIR}\\shaders\\${SHADER_NAME}.spv
+add_custom_command(
+        TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E make_directory ${SHADER_BINARY_DIR}
+        COMMENT "Creating ${SHADER_BINARY_DIR}"
+)
+
+foreach(shader IN LISTS Shaders)
+    get_filename_component(FILENAME ${shader} NAME)
+    add_custom_command(
+            TARGET ${PROJECT_NAME} POST_BUILD
+            COMMAND ${GLSLC_EXECUTABLE} ${shader} -o ${SHADER_BINARY_DIR}/${FILENAME}.spv
+            DEPENDS ${shader} ${SHADER_BINARY_DIR}
+            COMMENT "Compiling ${FILENAME}"
     )
 endforeach()
-message(STATUS "Shaders compiled!")
