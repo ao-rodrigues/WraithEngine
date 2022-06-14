@@ -1,16 +1,14 @@
 #pragma once
 
-namespace Wraith
-{
-	class Application
-	{
-	public:
-		Application(int windowWidth, int windowHeight, const std::string& name);
+namespace Wraith {
+    class Application {
+    public:
+        Application(int windowWidth, int windowHeight, const std::string& name);
 
-		void Run();
+        void Run();
 
-	private:
-		void Shutdown();
+    private:
+        void Shutdown();
 
-	};
+    };
 }

@@ -2,44 +2,41 @@
 
 #include "Core/VulkanBase.h"
 
-namespace Wraith
-{
-	class Device;
+namespace Wraith {
+    class Device;
 
-	class Mesh
-	{
-	public:
-		struct Vertex
-		{
-			glm::vec2 position;
-			glm::vec3 color;
-			
-			static std::vector<VkVertexInputBindingDescription> GetBindingDescriptions();
-			static std::vector<VkVertexInputAttributeDescription> GetAttributeDescriptions();
-		};
+    class Mesh {
+    public:
+        struct Vertex {
+            glm::vec2 position;
+            glm::vec3 color;
 
-		Mesh(Device& device, const std::vector<Vertex>& vertices, const std::vector<uint16_t>& indices);
-		~Mesh();
+            static std::vector<VkVertexInputBindingDescription> GetBindingDescriptions();
+            static std::vector<VkVertexInputAttributeDescription> GetAttributeDescriptions();
+        };
 
-		Mesh(const Mesh&) = delete;
-		Mesh& operator=(const Mesh&) = delete;
+        Mesh(Device& device, const std::vector<Vertex>& vertices, const std::vector<uint16_t>& indices);
+        ~Mesh();
 
-		void Bind(VkCommandBuffer commandBuffer);
-		void Draw(VkCommandBuffer commandBuffer);
+        Mesh(const Mesh&) = delete;
+        Mesh& operator=(const Mesh&) = delete;
 
-	private:
-		void CreateVertexBuffers(const std::vector<Vertex>& vertices);
-		void CreateIndexBuffers(const std::vector<uint16_t>& indices);
+        void Bind(VkCommandBuffer commandBuffer);
+        void Draw(VkCommandBuffer commandBuffer);
 
-		Device& _device;
+    private:
+        void CreateVertexBuffers(const std::vector<Vertex>& vertices);
+        void CreateIndexBuffers(const std::vector<uint16_t>& indices);
 
-		VmaAllocation _vertexBufferAllocation;
-		VkBuffer _vertexBuffer = VK_NULL_HANDLE;
-		uint32_t _vertexCount;
+        Device& _device;
+
+        VmaAllocation _vertexBufferAllocation;
+        VkBuffer _vertexBuffer = VK_NULL_HANDLE;
+        uint32_t _vertexCount;
 
 
-		VmaAllocation _indexBufferAllocation;
-		VkBuffer _indexBuffer = VK_NULL_HANDLE;
-		uint32_t _indexCount;
-	};
+        VmaAllocation _indexBufferAllocation;
+        VkBuffer _indexBuffer = VK_NULL_HANDLE;
+        uint32_t _indexCount;
+    };
 }
