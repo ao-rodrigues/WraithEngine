@@ -10,6 +10,11 @@ set(GLFW_BUILD_DOCS OFF CACHE BOOL "Build GLFW docs" FORCE)
 set(GLFW_BUILD_TEST OFF CACHE BOOL "Build GLFW tests" FORCE)
 add_subdirectory(libs/glfw)
 
+# SDL2
+set(SDL_SHARED ON CACHE BOOL "Build SDL shared")
+set(SDL_STATIC OFF CACHE BOOL "Build SDL static")
+add_subdirectory(libs/SDL2)
+
 # GLM
 set(GLM_TEST_ENABLE OFF CACHE BOOL "Enable GLM tests" FORCE)
 add_subdirectory(libs/glm)
@@ -51,9 +56,22 @@ target_link_libraries(${PROJECT_NAME}
             ${Vulkan_LIBRARIES}
             glfw
             VulkanMemoryAllocator
+            SDL2::SDL2
+            SDL2::SDL2main
 )
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE src/wrpch.h)
+
+# Copy SDL2 dll to the same folder as the executable
+if (WIN32)
+    add_custom_command(
+            TARGET ${PROJECT_NAME} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            $<TARGET_FILE:SDL2::SDL2>
+            $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}>
+            VERBATIM
+    )
+endif()
 
 if (NOT DEFINED ASSETS_DIR)
     set(ASSETS_DIR assets)
