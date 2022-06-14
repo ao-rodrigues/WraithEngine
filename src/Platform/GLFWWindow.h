@@ -17,7 +17,7 @@ namespace Wraith {
         void CreateSurface(VkInstance instance, VkSurfaceKHR *surface) override;
         void GetFramebufferSize(int *width, int *height) override;
 
-        const char** GetInstanceExtensions(unsigned int *count) override;
+        std::vector<const char*> GetInstanceExtensions(unsigned int *count) override;
 
         void PollEvents() override;
         void WaitEvents() override;

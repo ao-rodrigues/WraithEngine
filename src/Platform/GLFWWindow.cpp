@@ -34,8 +34,9 @@ namespace Wraith {
         glfwGetFramebufferSize(_window, width, height);
     }
 
-    const char** GLFWWindow::GetInstanceExtensions(unsigned int *count) {
-        return glfwGetRequiredInstanceExtensions(count);
+    std::vector<const char*> GLFWWindow::GetInstanceExtensions(unsigned int *count) {
+        const char** extensionNames = glfwGetRequiredInstanceExtensions(count);
+        return {extensionNames, extensionNames + *count};
     }
 
     void GLFWWindow::PollEvents() {

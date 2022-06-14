@@ -339,9 +339,7 @@ namespace Wraith
 	std::vector<const char*> Device::GetRequiredInstanceExtensions()
 	{
 		uint32_t extensionCount = 0;
-		const char** extensionNames = _window.GetInstanceExtensions(&extensionCount);
-
-		std::vector<const char*> extensions(extensionNames, extensionNames + extensionCount);
+		std::vector<const char*> extensions = _window.GetInstanceExtensions(&extensionCount);
 		if (ENABLE_VALIDATION_LAYERS)
 		{
 			extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);

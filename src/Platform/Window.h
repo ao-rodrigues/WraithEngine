@@ -13,7 +13,7 @@ namespace Wraith {
 
 		virtual void CreateSurface(VkInstance instance, VkSurfaceKHR* surface) = 0;
         virtual void GetFramebufferSize(int* width, int* height) = 0;
-        virtual const char** GetInstanceExtensions(unsigned int* count) = 0;
+        virtual std::vector<const char *> GetInstanceExtensions(unsigned int* count) = 0;
 		VkExtent2D GetExtent() const { return {static_cast<uint32_t>(_width), static_cast<uint32_t>(_height)}; }
 
 		virtual void PollEvents() = 0;
