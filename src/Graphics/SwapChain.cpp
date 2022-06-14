@@ -324,7 +324,7 @@ namespace Wraith
 		else
 		{
 			int width, height = 0;
-			glfwGetFramebufferSize(_window.GetGLFWWindow(), &width, &height);
+			_window.GetFramebufferSize(&width, &height);
 
 			VkExtent2D actualExtent = {
 				static_cast<uint32_t>(width),

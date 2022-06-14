@@ -3,7 +3,7 @@
 
 #include "Core/VulkanBase.h"
 #include "Core/Utils.h"
-#include "Platform/Window.h"
+#include "Platform/SDL2Window.h"
 
 #include "Graphics/Device.h"
 #include "Graphics/SwapChain.h"
@@ -19,7 +19,7 @@ namespace Wraith
 		WRAITH_LOGGER.Init();
 		WR_LOG_DEBUG("Staring Wraith Engine...")
 
-		_window = std::make_unique<Window>(initParams.windowWidth, initParams.windowHeight, initParams.windowTitle);
+		_window = std::make_unique<SDL2Window>(initParams.windowWidth, initParams.windowHeight, initParams.windowTitle);
 		_device = std::make_unique<Device>(*_window);
 		_swapChain = std::make_unique<SwapChain>(*_device, *_window);
 		_graphicsPipeline = std::make_unique<Pipeline>(*_device, _swapChain->GetRenderPass(), WR_ASSET("shaders/SimpleShader.vert.spv"), WR_ASSET("shaders/SimpleShader.frag.spv"));
