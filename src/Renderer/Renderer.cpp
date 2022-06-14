@@ -151,7 +151,7 @@ namespace Wraith
 		while (extent.width == 0 || extent.height == 0)
 		{
 			extent = _window.GetExtent();
-			glfwWaitEvents();
+			_window.WaitEvents();
 		}
 
 		if (_swapChain != nullptr)

@@ -188,11 +188,7 @@ namespace Wraith
 
 	void Device::CreateSurface()
 	{
-		if (glfwCreateWindowSurface(_instance, _window.GetGLFWWindow(), nullptr, &_surface) != VK_SUCCESS)
-		{
-			throw std::runtime_error("Failed to create window surface!");
-		}
-		WR_LOG_DEBUG("Created surface.")
+        _window.CreateSurface(_instance, &_surface);
 	}
 
 	void Device::PickPhysicalDevice()
@@ -342,10 +338,10 @@ namespace Wraith
 
 	std::vector<const char*> Device::GetRequiredInstanceExtensions()
 	{
-		uint32_t glfwExtensionCount = 0;
-		const char** glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
+		uint32_t extensionCount = 0;
+		const char** extensionNames = _window.GetInstanceExtensions(&extensionCount);
 
-		std::vector<const char*> extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
+		std::vector<const char*> extensions(extensionNames, extensionNames + extensionCount);
 		if (ENABLE_VALIDATION_LAYERS)
 		{
 			extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);

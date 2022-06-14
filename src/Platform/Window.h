@@ -2,34 +2,31 @@
 
 #include "Core/VulkanBase.h"
 
-namespace Wraith
-{
-	class Window
-	{
+namespace Wraith {
+	class Window {
 	public:
-		Window(int width, int height, const std::string& title);
-		~Window();
+		Window(int width, int height, const std::string& title) : _width(width), _height(height), _title(title) {}
+		virtual ~Window() = default;
 
 		Window(const Window&) = delete;
 		Window& operator=(const Window&) = delete;
 
-		void CreateSurface(VkInstance instance, VkSurfaceKHR* surface);
-		void PollEvents();
-
-		GLFWwindow* GetGLFWWindow() const { return _window; }
-		bool ShouldClose() const { return glfwWindowShouldClose(_window); }
-		bool WasResized() const { return _windowResized; }
-		void ResetWindowResizedFlag() { _windowResized = false; }
+		virtual void CreateSurface(VkInstance instance, VkSurfaceKHR* surface) = 0;
+        virtual void GetFramebufferSize(int* width, int* height) = 0;
+        virtual const char** GetInstanceExtensions(unsigned int* count) = 0;
 		VkExtent2D GetExtent() const { return {static_cast<uint32_t>(_width), static_cast<uint32_t>(_height)}; }
 
-	private:
-		void InitWindow();
-		static void OnFramebufferResized(GLFWwindow* window, int newWidth, int newHeight);
+		virtual void PollEvents() = 0;
+        virtual void WaitEvents() = 0;
+		virtual bool ShouldClose() const = 0;
 
+		bool WasResized() const { return _windowResized; }
+		void ResetWindowResizedFlag() { _windowResized = false; }
+
+    protected:
 		int _width = 800;
 		int _height = 600;
 		std::string _title = "Wraith Window";
-		GLFWwindow* _window = nullptr;
 
 		bool _windowResized = false;
 	};
