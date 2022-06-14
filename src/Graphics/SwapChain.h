@@ -2,55 +2,54 @@
 
 #include "Core/VulkanBase.h"
 
-namespace Wraith
-{
-	class Window;
-	class Device;
+namespace Wraith {
+    class Window;
 
-	class SwapChain
-	{
-	public:
-		explicit SwapChain(Device& device, Window& window);
-		~SwapChain();
+    class Device;
 
-		SwapChain(const SwapChain&) = delete;
-		SwapChain& operator=(const SwapChain&) = delete;
+    class SwapChain {
+    public:
+        explicit SwapChain(Device& device, Window& window);
+        ~SwapChain();
 
-		VkResult AcquireNextImage(uint32_t* imageIndex) const;
-		VkResult SubmitCommandBuffers(const VkCommandBuffer* buffers, uint32_t* imageIndex);
+        SwapChain(const SwapChain&) = delete;
+        SwapChain& operator=(const SwapChain&) = delete;
 
-		VkExtent2D GetExtent() const { return _swapChainExtent; }
-		VkRenderPass GetRenderPass() const { return _renderPass; }
-		VkFramebuffer GetFramebuffer(uint32_t imageIndex) const { return _swapChainFramebuffers[imageIndex]; }
+        VkResult AcquireNextImage(uint32_t* imageIndex) const;
+        VkResult SubmitCommandBuffers(const VkCommandBuffer* buffers, uint32_t* imageIndex);
 
-		static constexpr int MAX_FRAMES_IN_FLIGHT = 2;
-	private:
-		void CreateSwapChain();
-		void CreateImageViews();
-		void CreateRenderPass();
-		void CreateFramebuffers();
-		void CreateSyncObjects();
+        VkExtent2D GetExtent() const { return _swapChainExtent; }
+        VkRenderPass GetRenderPass() const { return _renderPass; }
+        VkFramebuffer GetFramebuffer(uint32_t imageIndex) const { return _swapChainFramebuffers[imageIndex]; }
 
-		VkSurfaceFormatKHR ChooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
-		VkPresentModeKHR ChooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
-		VkExtent2D ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
+        static constexpr int MAX_FRAMES_IN_FLIGHT = 2;
+    private:
+        void CreateSwapChain();
+        void CreateImageViews();
+        void CreateRenderPass();
+        void CreateFramebuffers();
+        void CreateSyncObjects();
 
-		Device& _device;
-		Window& _window;
+        VkSurfaceFormatKHR ChooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
+        VkPresentModeKHR ChooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
+        VkExtent2D ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
 
-		VkSwapchainKHR _swapChain = VK_NULL_HANDLE;
-		std::vector<VkImage> _swapChainImages;
-		VkFormat _swapChainImageFormat{};
-		VkExtent2D _swapChainExtent{};
-		std::vector<VkImageView> _swapChainImageViews;
-		std::vector<VkFramebuffer> _swapChainFramebuffers;
+        Device& _device;
+        Window& _window;
 
-		VkRenderPass _renderPass = VK_NULL_HANDLE;
+        VkSwapchainKHR _swapChain = VK_NULL_HANDLE;
+        std::vector<VkImage> _swapChainImages;
+        VkFormat _swapChainImageFormat{};
+        VkExtent2D _swapChainExtent{};
+        std::vector<VkImageView> _swapChainImageViews;
+        std::vector<VkFramebuffer> _swapChainFramebuffers;
 
-		std::vector<VkSemaphore> _imageAvailableSemaphores;
-		std::vector<VkSemaphore> _renderFinishedSemaphores;
-		std::vector<VkFence> _inFlightFences;
-		std::vector<VkFence> _imagesInFlight;
-		size_t _currentFrame = 0;
-	};
+        VkRenderPass _renderPass = VK_NULL_HANDLE;
+
+        std::vector<VkSemaphore> _imageAvailableSemaphores;
+        std::vector<VkSemaphore> _renderFinishedSemaphores;
+        std::vector<VkFence> _inFlightFences;
+        std::vector<VkFence> _imagesInFlight;
+        size_t _currentFrame = 0;
+    };
 }

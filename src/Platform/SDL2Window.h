@@ -16,10 +16,10 @@ namespace Wraith {
         SDL2Window(int width, int height, const std::string& title);
         ~SDL2Window() override;
 
-        void CreateSurface(VkInstance instance, VkSurfaceKHR *surface) override;
-        void GetFramebufferSize(int *width, int *height) override;
+        void CreateSurface(VkInstance instance, VkSurfaceKHR* surface) override;
+        void GetFramebufferSize(int* width, int* height) override;
 
-        std::vector<const char*> GetInstanceExtensions(unsigned int *count) override;
+        std::vector<const char*> GetInstanceExtensions(unsigned int* count) override;
 
         void WaitEvents() override;
         void PollEvents() override;

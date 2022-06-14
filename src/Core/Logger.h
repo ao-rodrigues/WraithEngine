@@ -4,18 +4,16 @@
 
 #include "Core/Singleton.h"
 
-namespace Wraith::Debug
-{
+namespace Wraith::Debug {
 
 #define LOGGER_NAME "WraithLogger"
 
-	class Logger final : public Singleton<Logger>
-	{
-	public:
-		void Init();
-		void Shutdown();
-		bool HasLogger() const;
-	};
+    class Logger final : public Singleton<Logger> {
+    public:
+        void Init();
+        void Shutdown();
+        bool HasLogger() const;
+    };
 
 #define WRAITH_LOGGER ::Wraith::Debug::Logger::Instance()
 

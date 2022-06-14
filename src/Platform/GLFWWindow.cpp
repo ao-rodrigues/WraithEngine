@@ -23,18 +23,18 @@ namespace Wraith {
         glfwTerminate();
     }
 
-    void GLFWWindow::CreateSurface(VkInstance instance, VkSurfaceKHR *surface) {
+    void GLFWWindow::CreateSurface(VkInstance instance, VkSurfaceKHR* surface) {
         if (glfwCreateWindowSurface(instance, _window, nullptr, surface) != VK_SUCCESS) {
             throw std::runtime_error("Failed to create window surface!");
         }
         WR_LOG_DEBUG("Created surface.")
     }
 
-    void GLFWWindow::GetFramebufferSize(int *width, int *height) {
+    void GLFWWindow::GetFramebufferSize(int* width, int* height) {
         glfwGetFramebufferSize(_window, width, height);
     }
 
-    std::vector<const char*> GLFWWindow::GetInstanceExtensions(unsigned int *count) {
+    std::vector<const char*> GLFWWindow::GetInstanceExtensions(unsigned int* count) {
         const char** extensionNames = glfwGetRequiredInstanceExtensions(count);
         return {extensionNames, extensionNames + *count};
     }
@@ -51,7 +51,7 @@ namespace Wraith {
         return glfwWindowShouldClose(_window);
     }
 
-    void GLFWWindow::OnFramebufferResized(GLFWwindow *window, int newWidth, int newHeight) {
+    void GLFWWindow::OnFramebufferResized(GLFWwindow* window, int newWidth, int newHeight) {
         const auto thisWindow = static_cast<GLFWWindow*>(glfwGetWindowUserPointer(window));
         thisWindow->_width = newWidth;
         thisWindow->_height = newHeight;

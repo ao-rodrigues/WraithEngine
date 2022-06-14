@@ -2,41 +2,41 @@
 
 #include "Core/VulkanBase.h"
 
-namespace Wraith
-{
-	class Window;
-	class Device;
-	class SwapChain;
+namespace Wraith {
+    class Window;
 
-	class Renderer
-	{
-	public:
-		Renderer(Device& device, Window& window);
-		~Renderer();
+    class Device;
 
-		Renderer(const Renderer&) = delete;
-		Renderer& operator=(const Renderer&) = delete;
+    class SwapChain;
 
-		VkCommandBuffer BeginFrame();
-		void BeginSwapChainRenderPass(VkCommandBuffer commandBuffer);
-		void EndSwapChainRenderPass(VkCommandBuffer commandBuffer);
-		void EndFrame();
+    class Renderer {
+    public:
+        Renderer(Device& device, Window& window);
+        ~Renderer();
 
-		VkCommandBuffer GetCurrentCommandBuffer() const;
+        Renderer(const Renderer&) = delete;
+        Renderer& operator=(const Renderer&) = delete;
 
-	private:
-		void CreateCommandBuffers();
-		void FreeCommandBuffers();
-		void RecreateSwapChain();
-		
-		Device& _device;
-		Window& _window;
-		std::unique_ptr<SwapChain> _swapChain;
+        VkCommandBuffer BeginFrame();
+        void BeginSwapChainRenderPass(VkCommandBuffer commandBuffer);
+        void EndSwapChainRenderPass(VkCommandBuffer commandBuffer);
+        void EndFrame();
 
-		std::vector<VkCommandBuffer> _commandBuffers;
+        VkCommandBuffer GetCurrentCommandBuffer() const;
 
-		uint32_t _currentImageIndex;
-		size_t _currentFrameIndex = 0;
-		bool _frameStarted = false;
-	};
+    private:
+        void CreateCommandBuffers();
+        void FreeCommandBuffers();
+        void RecreateSwapChain();
+
+        Device& _device;
+        Window& _window;
+        std::unique_ptr<SwapChain> _swapChain;
+
+        std::vector<VkCommandBuffer> _commandBuffers;
+
+        uint32_t _currentImageIndex;
+        size_t _currentFrameIndex = 0;
+        bool _frameStarted = false;
+    };
 }
