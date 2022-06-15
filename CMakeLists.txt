@@ -51,6 +51,7 @@ target_include_directories(${PROJECT_NAME}
             ${Vulkan_INCLUDE_DIRS}
             glfw
             VulkanMemoryAllocator
+            tinygltf
 )
 
 target_link_libraries(${PROJECT_NAME}
@@ -63,6 +64,7 @@ target_link_libraries(${PROJECT_NAME}
             VulkanMemoryAllocator
             SDL2::SDL2
             SDL2::SDL2main
+            tinygltf
 )
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE src/wrpch.h)
@@ -87,6 +89,7 @@ endif ()
 target_compile_definitions(
         ${PROJECT_NAME} PUBLIC
         WR_ASSETS_DIR="${ASSETS_DIR}"
+        TINYGLTF_USE_CPP14
         $<$<CONFIG:DEBUG>:WR_CONFIG_DEBUG>
         $<$<CONFIG:RELEASE>:WR_CONFIG_RELEASE>
 )
@@ -95,7 +98,10 @@ target_compile_definitions(
 file(GLOB_RECURSE GameAssets
         ${CMAKE_SOURCE_DIR}/${ASSETS_DIR}/*.gltf
         ${CMAKE_SOURCE_DIR}/${ASSETS_DIR}/*.glb
+        ${CMAKE_SOURCE_DIR}/${ASSETS_DIR}/*.bin
         ${CMAKE_SOURCE_DIR}/${ASSETS_DIR}/*.png
+        ${CMAKE_SOURCE_DIR}/${ASSETS_DIR}/*.jpg
+        ${CMAKE_SOURCE_DIR}/${ASSETS_DIR}/*.jpeg
 )
 
 foreach(asset IN LISTS GameAssets)
