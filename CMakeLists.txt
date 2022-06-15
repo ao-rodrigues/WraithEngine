@@ -78,10 +78,12 @@ if (NOT DEFINED ASSETS_DIR)
 endif ()
 
 # Preprocessor defines
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DWR_CONFIG_DEBUG")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DWR_CONFIG_RELEASE")
-
-target_compile_definitions(${PROJECT_NAME} PUBLIC WR_ASSETS_DIR="${ASSETS_DIR}")
+target_compile_definitions(
+        ${PROJECT_NAME} PUBLIC
+        WR_ASSETS_DIR="${ASSETS_DIR}"
+        $<$<CONFIG:DEBUG>:WR_CONFIG_DEBUG>
+        $<$<CONFIG:RELEASE>:WR_CONFIG_RELEASE>
+)
 
 # Compile shaders
 set(SHADER_SOURCE_DIR ${PROJECT_SOURCE_DIR}/shaders)
