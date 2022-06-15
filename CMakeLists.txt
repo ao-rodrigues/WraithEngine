@@ -80,6 +80,7 @@ endif()
 
 if (NOT DEFINED ASSETS_DIR)
     set(ASSETS_DIR assets)
+    set(BINARY_ASSETS_DIR ${CMAKE_BINARY_DIR}/${ASSETS_DIR})
 endif ()
 
 # Preprocessor defines
@@ -90,9 +91,26 @@ target_compile_definitions(
         $<$<CONFIG:RELEASE>:WR_CONFIG_RELEASE>
 )
 
+# Copy new assets
+file(GLOB_RECURSE GameAssets
+        ${CMAKE_SOURCE_DIR}/${ASSETS_DIR}/*.gltf
+        ${CMAKE_SOURCE_DIR}/${ASSETS_DIR}/*.glb
+        ${CMAKE_SOURCE_DIR}/${ASSETS_DIR}/*.png
+)
+
+foreach(asset IN LISTS GameAssets)
+    add_custom_command(
+            TARGET ${PROJECT_NAME} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            ${asset}
+            ${BINARY_ASSETS_DIR}
+            VERBATIM
+    )
+endforeach()
+
 # Compile shaders
 set(SHADER_SOURCE_DIR ${PROJECT_SOURCE_DIR}/shaders)
-set(SHADER_BINARY_DIR ${CMAKE_BINARY_DIR}/${ASSETS_DIR}/shaders)
+set(SHADER_BINARY_DIR ${BINARY_ASSETS_DIR}/shaders)
 
 file(GLOB_RECURSE Shaders
         ${SHADER_SOURCE_DIR}/*.vert
