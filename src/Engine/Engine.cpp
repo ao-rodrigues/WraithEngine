@@ -25,6 +25,7 @@ namespace Wraith {
                                                        WR_ASSET("shaders/SimpleShader.frag.spv"));
         _renderer = std::make_unique<Renderer>(*_device, *_window);
 
+        /*
         std::vector<Mesh::Vertex> vertices = {
                 {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
                 {{0.5f,  -0.5f}, {0.0f, 1.0f, 0.0f}},
@@ -35,6 +36,8 @@ namespace Wraith {
                 0, 1, 2, 2, 3, 0
         };
         _mesh = std::make_unique<Mesh>(*_device, vertices, indices);
+         */
+        _mesh = std::make_unique<Mesh>(*_device, WR_ASSET("Suzanne.gltf"));
     }
 
     void Engine::Shutdown() {

@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "Core/Singleton.h"
+#include "Utils/Singleton.h"
 
 #include "Platform/Window.h"
 
