@@ -1,6 +1,8 @@
 ﻿#include "wrpch.h"
 #include "Engine.h"
 
+#include <glm/gtx/transform.hpp>
+
 #include "Core/VulkanBase.h"
 #include "Core/Utils.h"
 #include "Platform/SDL2Window.h"
@@ -54,6 +56,7 @@ namespace Wraith {
     }
 
     void Engine::Run() {
+        int frameNumber = 0;
         while (!_window->ShouldClose()) {
             _window->PollEvents();
 
@@ -63,11 +66,28 @@ namespace Wraith {
                 _graphicsPipeline->Bind(commandBuffer);
 
                 _mesh->Bind(commandBuffer);
+
+                glm::vec3 camPos = {0.0f, 0.0f, -2.0f};
+                glm::mat4 view = glm::translate(glm::mat4(1.0f), camPos);
+                glm::mat4 projection = glm::perspective(glm::radians(70.0f), 1700.0f / 900.0f, 0.1f, 200.0f);
+                projection[1][1] *= -1;
+
+                glm::mat4 model = glm::rotate(glm::mat4(1.0f), glm::radians(static_cast<float>(frameNumber) * 0.04f), glm::vec3(0, 1, 0));
+
+                glm::mat4 meshMatrix = projection * view * model;
+
+                Pipeline::MeshPushConstants constants{};
+                constants.renderMatrix = meshMatrix;
+
+                vkCmdPushConstants(commandBuffer, _graphicsPipeline->GetPipelineLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(Pipeline::MeshPushConstants), &constants);
+
                 _mesh->Draw(commandBuffer);
 
                 _renderer->EndSwapChainRenderPass(commandBuffer);
                 _renderer->EndFrame();
             }
+
+            frameNumber++;
         }
         Shutdown();
     }

@@ -7,8 +7,9 @@ namespace Wraith {
 
     class Pipeline {
     public:
-        struct ConfigInfo {
-
+        struct MeshPushConstants {
+            glm::vec4 data;
+            glm::mat4 renderMatrix;
         };
 
         Pipeline(Device& device, VkRenderPass renderPass, const std::string& vertShaderPath,
@@ -19,6 +20,8 @@ namespace Wraith {
         Pipeline& operator=(const Pipeline&) = delete;
 
         void Bind(VkCommandBuffer commandBuffer) const;
+
+        VkPipelineLayout GetPipelineLayout() const {return _pipelineLayout;}
 
     private:
         void CreateGraphicsPipeline();

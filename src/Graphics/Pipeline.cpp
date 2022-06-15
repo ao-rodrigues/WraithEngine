@@ -141,8 +141,14 @@ namespace Wraith {
         pipelineLayoutCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
         pipelineLayoutCreateInfo.setLayoutCount = 0; // Optional
         pipelineLayoutCreateInfo.pSetLayouts = nullptr; // Optional
-        pipelineLayoutCreateInfo.pushConstantRangeCount = 0; // Optional
-        pipelineLayoutCreateInfo.pPushConstantRanges = nullptr; // Optional
+
+        VkPushConstantRange pushConstantRange{};
+        pushConstantRange.offset = 0;
+        pushConstantRange.size = sizeof(MeshPushConstants);
+        pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+
+        pipelineLayoutCreateInfo.pushConstantRangeCount = 1; // Optional
+        pipelineLayoutCreateInfo.pPushConstantRanges = &pushConstantRange; // Optional
 
         if (vkCreatePipelineLayout(_device.GetDevice(), &pipelineLayoutCreateInfo, nullptr, &_pipelineLayout) !=
             VK_SUCCESS) {
