@@ -19,6 +19,11 @@ add_subdirectory(libs/SDL2)
 set(GLM_TEST_ENABLE OFF CACHE BOOL "Enable GLM tests" FORCE)
 add_subdirectory(libs/glm)
 
+# tinygltf
+set(TINYGLTF_HEADER_ONLY ON CACHE INTERNAL "" FORCE)
+set(TINYGLTF_INSTALL OFF CACHE INTERNAL "" FORCE)
+add_subdirectory(libs/tinygltf)
+
 # spdlog
 set(SPDLOG_MASTER_PROJECT OFF CACHE BOOL "" FORCE)
 add_subdirectory(libs/spdlog)
