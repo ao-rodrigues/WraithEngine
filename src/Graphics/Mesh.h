@@ -8,7 +8,7 @@ namespace Wraith {
     class Mesh {
     public:
         struct Vertex {
-            glm::vec2 position;
+            glm::vec3 position;
             glm::vec3 color;
 
             static std::vector<VkVertexInputBindingDescription> GetBindingDescriptions();
@@ -16,6 +16,7 @@ namespace Wraith {
         };
 
         Mesh(Device& device, const std::vector<Vertex>& vertices, const std::vector<uint16_t>& indices);
+        Mesh(Device& device, const std::string& modelPath);
         ~Mesh();
 
         Mesh(const Mesh&) = delete;
