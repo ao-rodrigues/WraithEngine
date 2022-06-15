@@ -21,7 +21,7 @@ namespace Wraith {
             std::vector<VkPresentModeKHR> presentModes;
         };
 
-        Device(Window& window);
+        explicit Device(Window& window);
         ~Device();
 
         Device(const Device&) = delete;
