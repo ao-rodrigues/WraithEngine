@@ -25,7 +25,62 @@ namespace Wraith {
         _window = std::make_unique<SDL2Window>(initParams.windowWidth, initParams.windowHeight, initParams.windowTitle);
         _device = std::make_unique<Device>(*_window);
         _swapChain = std::make_unique<SwapChain>(*_device, *_window);
+        _renderer = std::make_unique<Renderer>(*_device, *_window);
 
+        InitPipelines();
+        LoadMeshes();
+        InitScene();
+    }
+
+    void Engine::Shutdown() {
+        _device->FinishOperations();
+
+        _renderer.reset();
+        _meshPipeline.reset();
+        _swapChain.reset();
+
+        _materials.clear();
+        _meshes.clear();
+        _renderables.clear();
+
+        _device.reset();
+        _window.reset();
+
+        WRAITH_LOGGER.Shutdown();
+    }
+
+    void Engine::Run() {
+        while (!_window->ShouldClose()) {
+            _window->PollEvents();
+
+            if (VkCommandBuffer commandBuffer = _renderer->BeginFrame()) {
+                _renderer->BeginSwapChainRenderPass(commandBuffer);
+
+                DrawRenderables(commandBuffer, _renderables);
+
+                _renderer->EndSwapChainRenderPass(commandBuffer);
+                _renderer->EndFrame();
+            }
+        }
+        Shutdown();
+    }
+
+    std::shared_ptr<Material> Engine::CreateMaterial(std::shared_ptr<Pipeline> pipeline, const std::string& name) {
+        _materials[name] = std::make_shared<Material>(Material{std::move(pipeline)});
+        return _materials[name];
+    }
+
+    std::shared_ptr<Material> Engine::GetMaterial(const std::string& name) {
+        auto it = _materials.find(name);
+        return it != _materials.end() ? (*it).second : nullptr;
+    }
+
+    std::shared_ptr<Mesh> Engine::GetMesh(const std::string& name) {
+        auto it = _meshes.find(name);
+        return it != _meshes.end() ? (*it).second : nullptr;
+    }
+
+    void Engine::InitPipelines() {
         // Init shaders
         VkShaderModule vertShaderModule = VkFactory::ShaderModule(_device->GetVkDevice(),
                                                                   WR_ASSET("shaders/SimpleShader.vert.spv"));
@@ -63,78 +118,82 @@ namespace Wraith {
 
 
         const std::vector<VkPushConstantRange> pushConstantRanges = {
-                VkFactory::PushConstantRange(0, sizeof(Pipeline::MeshPushConstants), VK_SHADER_STAGE_VERTEX_BIT)
+                VkFactory::PushConstantRange(0, sizeof(Mesh::PushConstants), VK_SHADER_STAGE_VERTEX_BIT)
         };
         VkPipelineLayoutCreateInfo graphicsPipelineLayoutInfo = VkFactory::PipelineLayoutCreateInfo(pushConstantRanges);
         VkPipelineLayout  graphicsPipelineLayout;
         WR_VK_CHECK(vkCreatePipelineLayout(_device->GetVkDevice(), &graphicsPipelineLayoutInfo, nullptr, &graphicsPipelineLayout), "Failed to create pipeline layout!")
+
         pipelineBuilder.pipelineLayout = graphicsPipelineLayout;
-        
-        _graphicsPipeline = std::make_unique<Pipeline>(*_device, pipelineBuilder.Build(_device->GetVkDevice(), _swapChain->GetRenderPass()), graphicsPipelineLayout);
-        _renderer = std::make_unique<Renderer>(*_device, *_window);
 
-        /*
-        std::vector<Mesh::Vertex> vertices = {
-                {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
-                {{0.5f,  -0.5f}, {0.0f, 1.0f, 0.0f}},
-                {{0.5f,  0.5f},  {0.0f, 0.0f, 1.0f}},
-                {{-0.5f, 0.5f},  {1.0f, 1.0f, 1.0f}}
-        };
-        std::vector<uint16_t> indices = {
-                0, 1, 2, 2, 3, 0
-        };
-        _mesh = std::make_unique<Mesh>(*_device, vertices, indices);
-         */
-        _mesh = std::make_unique<Mesh>(*_device, WR_ASSET("DamagedHelmet.glb"), true);
+        _meshPipeline = std::make_shared<Pipeline>(*_device, pipelineBuilder.Build(_device->GetVkDevice(), _swapChain->GetRenderPass()), graphicsPipelineLayout);
+
+        vkDestroyShaderModule(_device->GetVkDevice(), vertShaderModule, nullptr);
+        vkDestroyShaderModule(_device->GetVkDevice(), fragShaderModule, nullptr);
+
+        CreateMaterial(_meshPipeline, "M_Default");
     }
 
-    void Engine::Shutdown() {
-        _device->FinishOperations();
-
-        _renderer.reset();
-        _graphicsPipeline.reset();
-        _swapChain.reset();
-        _mesh.reset();
-        _device.reset();
-        _window.reset();
-
-        WRAITH_LOGGER.Shutdown();
+    void Engine::LoadMeshes() {
+        _meshes["Monke"] = std::make_shared<Mesh>(*_device, WR_ASSET("Suzanne.gltf"));
+        _meshes["Duck"] = std::make_shared<Mesh>(*_device, WR_ASSET("Duck.glb"), true);
     }
 
-    void Engine::Run() {
-        int frameNumber = 0;
-        glm::vec3 camPos = {0.0f, 0.0f, -4.0f};
+    void Engine::InitScene() {
+        Renderable monke;
+        monke.mesh = GetMesh("Monke");
+        monke.material = GetMaterial("M_Default");
+        monke.transform = glm::mat4{1.0f} * glm::translate(glm::mat4{1.0f}, glm::vec3(0, 5, 0));
+
+        _renderables.emplace_back(monke);
+
+        for (int x = -5; x <= 5; x++) {
+            for (int y = -5; y <= 5; y++) {
+                Renderable duck;
+                duck.mesh = GetMesh("Duck");
+                duck.material = GetMaterial("M_Default");
+
+                glm::mat4 translation = glm::translate(glm::mat4{1.0f}, glm::vec3(x, 0, y));
+                glm::mat4 scale = glm::scale(glm::mat4{1.0}, glm::vec3(0.01f, 0.01f, 0.01f));
+                duck.transform = translation * scale;
+
+                _renderables.emplace_back(duck);
+            }
+        }
+    }
+
+    void Engine::DrawRenderables(VkCommandBuffer commandBuffer, const std::vector<Renderable>& renderables) {
+        glm::vec3 camPos = {0.0f, -6.0f, -10.0f};
         glm::mat4 view = glm::translate(glm::mat4(1.0f), camPos);
-        glm::mat4 projection = glm::perspective(glm::radians(70.0f), 1700.0f / 900.0f, 0.1f, 200.0f);
+
+        VkExtent2D windowExtent = _window->GetExtent();
+        glm::mat4 projection = glm::perspective(glm::radians(70.0f), static_cast<float>(windowExtent.width) / static_cast<float>(windowExtent.height), 0.1f, 200.0f);
         projection[1][1] *= -1;
 
-        while (!_window->ShouldClose()) {
-            _window->PollEvents();
-
-            if (const VkCommandBuffer commandBuffer = _renderer->BeginFrame()) {
-                _renderer->BeginSwapChainRenderPass(commandBuffer);
-
-                _graphicsPipeline->Bind(commandBuffer);
-
-                _mesh->Bind(commandBuffer);
-
-                glm::mat4 model = glm::rotate(glm::mat4(1.0f), glm::radians(static_cast<float>(frameNumber) * 0.04f), glm::vec3(0, 1, 0));
-
-                glm::mat4 meshMatrix = projection * view * model;
-
-                Pipeline::MeshPushConstants constants{};
-                constants.renderMatrix = meshMatrix;
-
-                vkCmdPushConstants(commandBuffer, _graphicsPipeline->GetPipelineLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(Pipeline::MeshPushConstants), &constants);
-
-                _mesh->Draw(commandBuffer);
-
-                _renderer->EndSwapChainRenderPass(commandBuffer);
-                _renderer->EndFrame();
+        std::shared_ptr<Mesh> lastMesh = nullptr;
+        std::shared_ptr<Material> lastMaterial = nullptr;
+        for(const auto& renderable : renderables) {
+            // Only bind the pipeline if it doesn't match with the one already bound
+            if (renderable.material != lastMaterial) {
+                renderable.material->pipeline->Bind(commandBuffer);
+                lastMaterial = renderable.material;
             }
 
-            frameNumber++;
+            glm::mat4 model = renderable.transform;
+            glm::mat4 meshMatrix = projection * view * model;
+
+            Mesh::PushConstants pushConstants{};
+            pushConstants.renderMatrix = meshMatrix;
+
+            vkCmdPushConstants(commandBuffer, renderable.material->pipeline->GetPipelineLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(Mesh::PushConstants), &pushConstants);
+
+            // Only bind the mesh if it's different from last bind
+            if (renderable.mesh != lastMesh) {
+                renderable.mesh->Bind(commandBuffer);
+                lastMesh = renderable.mesh;
+            }
+
+            renderable.mesh->Draw(commandBuffer);
         }
-        Shutdown();
     }
 }
