@@ -5,12 +5,12 @@
 #pragma once
 
 #include "Core/VulkanBase.h"
+#include "Graphics/Pipeline.h"
 
 namespace Wraith {
 
     struct Material {
-        VkPipeline pipeline;
-        VkPipelineLayout pipelineLayout;
+        std::shared_ptr<Pipeline> pipeline;
     };
 }
 
