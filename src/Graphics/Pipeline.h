@@ -12,8 +12,7 @@ namespace Wraith {
             glm::mat4 renderMatrix;
         };
 
-        Pipeline(Device& device, VkRenderPass renderPass, const std::string& vertShaderPath,
-                 const std::string& fragShaderPath);
+        Pipeline(Device& device, VkPipeline pipeline, VkPipelineLayout pipelineLayout);
         ~Pipeline();
 
         Pipeline(const Pipeline&) = delete;
@@ -21,18 +20,12 @@ namespace Wraith {
 
         void Bind(VkCommandBuffer commandBuffer) const;
 
-        VkPipelineLayout GetPipelineLayout() const {return _pipelineLayout;}
+        VkPipelineLayout GetPipelineLayout() const { return _pipelineLayout; }
 
     private:
-        void CreateGraphicsPipeline();
-        VkShaderModule CreateShaderModule(const std::vector<char>& shaderCode) const;
-
         Device& _device;
-        VkRenderPass _renderPass = VK_NULL_HANDLE;
 
         VkPipeline _pipeline = VK_NULL_HANDLE;
         VkPipelineLayout _pipelineLayout = VK_NULL_HANDLE;
-        VkShaderModule _vertShaderModule = VK_NULL_HANDLE;
-        VkShaderModule _fragShaderModule = VK_NULL_HANDLE;
     };
 }
