@@ -26,6 +26,7 @@ namespace Wraith {
     private:
         void CreateSwapChain();
         void CreateImageViews();
+        void CreateDepthImage();
         void CreateRenderPass();
         void CreateFramebuffers();
         void CreateSyncObjects();
@@ -38,13 +39,21 @@ namespace Wraith {
         Window& _window;
 
         VkSwapchainKHR _swapChain = VK_NULL_HANDLE;
+
         std::vector<VkImage> _swapChainImages;
+        VkImage _depthImage{};
+
         VkFormat _swapChainImageFormat{};
+        VkFormat _depthImageFormat{};
+
         VkExtent2D _swapChainExtent{};
         std::vector<VkImageView> _swapChainImageViews;
+        VkImageView _depthImageView{};
         std::vector<VkFramebuffer> _swapChainFramebuffers;
 
         VkRenderPass _renderPass = VK_NULL_HANDLE;
+
+        VmaAllocation _depthImageAllocation;
 
         std::vector<VkSemaphore> _imageAvailableSemaphores;
         std::vector<VkSemaphore> _renderFinishedSemaphores;

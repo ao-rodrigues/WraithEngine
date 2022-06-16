@@ -4,12 +4,14 @@
 #include "Device.h"
 #include "Platform/Window.h"
 #include "Engine/Engine.h"
+#include "Utils/VkFactory.h"
 
 namespace Wraith {
     SwapChain::SwapChain(Device& device, Window& window)
             : _device(device), _window(window) {
         CreateSwapChain();
         CreateImageViews();
+        CreateDepthImage();
         CreateRenderPass();
         CreateFramebuffers();
         CreateSyncObjects();
@@ -23,6 +25,9 @@ namespace Wraith {
         for (const auto imageView: _swapChainImageViews) {
             vkDestroyImageView(_device.GetDevice(), imageView, nullptr);
         }
+
+        vkDestroyImageView(_device.GetDevice(), _depthImageView, nullptr);
+        vmaDestroyImage(_device.GetAllocator(), _depthImage, _depthImageAllocation);
 
         vkDestroyRenderPass(_device.GetDevice(), _renderPass, nullptr);
         vkDestroySwapchainKHR(_device.GetDevice(), _swapChain, nullptr);
@@ -152,26 +157,34 @@ namespace Wraith {
     void SwapChain::CreateImageViews() {
         _swapChainImageViews.resize(_swapChainImages.size());
         for (size_t i = 0; i < _swapChainImages.size(); i++) {
-            VkImageViewCreateInfo createInfo{};
-            createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-            createInfo.image = _swapChainImages[i];
-            createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
-            createInfo.format = _swapChainImageFormat;
-            createInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
-            createInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
-            createInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
-            createInfo.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
-            createInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-            createInfo.subresourceRange.baseMipLevel = 0;
-            createInfo.subresourceRange.levelCount = 1;
-            createInfo.subresourceRange.baseArrayLayer = 0;
-            createInfo.subresourceRange.layerCount = 1;
+            VkImageViewCreateInfo createInfo = VkFactory::ImageViewCreateInfo(_swapChainImageFormat, _swapChainImages[i], VK_IMAGE_ASPECT_COLOR_BIT);
 
             if (vkCreateImageView(_device.GetDevice(), &createInfo, nullptr, &_swapChainImageViews[i]) != VK_SUCCESS) {
                 throw std::runtime_error("Failed to create image views!");
             }
         }
         WR_LOG_DEBUG("Created image views.")
+    }
+
+    void SwapChain::CreateDepthImage() {
+        _depthImageFormat = VK_FORMAT_D32_SFLOAT;
+        VkExtent3D depthImageExtent = {
+            _swapChainExtent.width,
+            _swapChainExtent.height,
+            1
+        };
+        VkImageCreateInfo imageCreateInfo = VkFactory::ImageCreateInfo(_depthImageFormat, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, depthImageExtent);
+
+        VmaAllocationCreateInfo allocationCreateInfo{};
+        allocationCreateInfo.usage = VMA_MEMORY_USAGE_GPU_ONLY;
+        allocationCreateInfo.requiredFlags = VkMemoryPropertyFlags(VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+
+        vmaCreateImage(_device.GetAllocator(), &imageCreateInfo, &allocationCreateInfo, &_depthImage, &_depthImageAllocation, nullptr);
+
+        VkImageViewCreateInfo imageViewCreateInfo = VkFactory::ImageViewCreateInfo(_depthImageFormat, _depthImage, VK_IMAGE_ASPECT_DEPTH_BIT);
+        if (vkCreateImageView(_device.GetDevice(), &imageViewCreateInfo, nullptr, &_depthImageView) != VK_SUCCESS) {
+            throw std::runtime_error("Failed to create depth image view!");
+        }
     }
 
     void SwapChain::CreateRenderPass() {
