@@ -261,21 +261,21 @@ namespace Wraith {
     void SwapChain::CreateFramebuffers() {
         _swapChainFramebuffers.resize(_swapChainImageViews.size());
         for (size_t i = 0; i < _swapChainImageViews.size(); i++) {
-            const VkImageView attachments[] = {
-                    _swapChainImageViews[i]
+            VkImageView attachments[2] = {
+                    _swapChainImageViews[i],
+                    _depthImageView
             };
 
             VkFramebufferCreateInfo framebufferInfo{};
             framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
             framebufferInfo.renderPass = _renderPass;
-            framebufferInfo.attachmentCount = 1;
+            framebufferInfo.attachmentCount = 2;
             framebufferInfo.pAttachments = attachments;
             framebufferInfo.width = _swapChainExtent.width;
             framebufferInfo.height = _swapChainExtent.height;
             framebufferInfo.layers = 1;
 
-            if (vkCreateFramebuffer(_device.GetDevice(), &framebufferInfo, nullptr, &_swapChainFramebuffers[i]) !=
-                VK_SUCCESS) {
+            if (vkCreateFramebuffer(_device.GetDevice(), &framebufferInfo, nullptr, &_swapChainFramebuffers[i]) != VK_SUCCESS) {
                 throw std::runtime_error("Failed to create framebuffer!");
             }
         }
