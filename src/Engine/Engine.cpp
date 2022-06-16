@@ -10,7 +10,10 @@
 #include "Graphics/Device.h"
 #include "Graphics/SwapChain.h"
 #include "Graphics/Pipeline.h"
+#include "Graphics/PipelineBuilder.h"
 #include "Graphics/Mesh.h"
+
+#include "Utils/VkFactory.h"
 
 #include "Renderer/Renderer.h"
 
@@ -22,9 +25,52 @@ namespace Wraith {
         _window = std::make_unique<SDL2Window>(initParams.windowWidth, initParams.windowHeight, initParams.windowTitle);
         _device = std::make_unique<Device>(*_window);
         _swapChain = std::make_unique<SwapChain>(*_device, *_window);
-        _graphicsPipeline = std::make_unique<Pipeline>(*_device, _swapChain->GetRenderPass(),
-                                                       WR_ASSET("shaders/SimpleShader.vert.spv"),
-                                                       WR_ASSET("shaders/SimpleShader.frag.spv"));
+
+        // Init shaders
+        VkShaderModule vertShaderModule = VkFactory::ShaderModule(_device->GetDevice(),
+                                                                  WR_ASSET("shaders/SimpleShader.vert.spv"));
+        VkShaderModule fragShaderModule = VkFactory::ShaderModule(_device->GetDevice(),
+                                                                  WR_ASSET("shaders/SimpleShader.frag.spv"));
+
+        // Build pipeline
+        PipelineBuilder pipelineBuilder;
+        pipelineBuilder.shaderStages.emplace_back(
+                VkFactory::PipelineShaderStageCreateInfo(VK_SHADER_STAGE_VERTEX_BIT, vertShaderModule));
+        pipelineBuilder.shaderStages.emplace_back(
+                VkFactory::PipelineShaderStageCreateInfo(VK_SHADER_STAGE_FRAGMENT_BIT, fragShaderModule));
+
+        auto bindingDescriptions = Mesh::Vertex::GetBindingDescriptions();
+        auto attributeDescriptions = Mesh::Vertex::GetAttributeDescriptions();
+        pipelineBuilder.vertexInputInfo = VkFactory::PipelineVertexInputStateCreateInfo(bindingDescriptions, attributeDescriptions);
+
+        pipelineBuilder.inputAssembly = VkFactory::PipelineInputAssemblyStateCreateInfo(VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
+        pipelineBuilder.viewportState = VkFactory::PipelineViewportStateCreateInfo();
+        pipelineBuilder.rasterizer = VkFactory::PipelineRasterizationStateCreateInfo(VK_POLYGON_MODE_FILL);
+        pipelineBuilder.multisampling = VkFactory::PipelineMultisampleStateCreateInfo();
+
+        const std::vector<VkPipelineColorBlendAttachmentState> colorBlendAttachments = {
+                VkFactory::PipelineColorBlendAttachmentState()
+        };
+        pipelineBuilder.colorBlending = VkFactory::PipelineColorBlendStateCreateInfo(colorBlendAttachments);
+
+        pipelineBuilder.depthStencilInfo = VkFactory::DepthStencilStateCreateInfo(true, true, VK_COMPARE_OP_LESS_OR_EQUAL);
+
+        const std::vector<VkDynamicState> dynamicStates = {
+                VK_DYNAMIC_STATE_VIEWPORT,
+                VK_DYNAMIC_STATE_SCISSOR
+        };
+        pipelineBuilder.dynamicState = VkFactory::PipelineDynamicStateCreateInfo(dynamicStates);
+
+
+        const std::vector<VkPushConstantRange> pushConstantRanges = {
+                VkFactory::PushConstantRange(0, sizeof(Pipeline::MeshPushConstants), VK_SHADER_STAGE_VERTEX_BIT)
+        };
+        VkPipelineLayoutCreateInfo graphicsPipelineLayoutInfo = VkFactory::PipelineLayoutCreateInfo(pushConstantRanges);
+        VkPipelineLayout  graphicsPipelineLayout;
+        WR_VK_CHECK(vkCreatePipelineLayout(_device->GetDevice(), &graphicsPipelineLayoutInfo, nullptr, &graphicsPipelineLayout), "Failed to create pipeline layout!")
+        pipelineBuilder.pipelineLayout = graphicsPipelineLayout;
+        
+        _graphicsPipeline = std::make_unique<Pipeline>(*_device, pipelineBuilder.Build(_device->GetDevice(), _swapChain->GetRenderPass()), graphicsPipelineLayout);
         _renderer = std::make_unique<Renderer>(*_device, *_window);
 
         /*
