@@ -35,7 +35,7 @@ add_subdirectory(libs/VulkanMemoryAllocator)
 find_package(Vulkan REQUIRED COMPONENTS glslc)
 find_program(GLSLC_EXECUTABLE NAMES glslc HINTS Vulkan::glslc)
 
-file(GLOB_RECURSE SOURCES "src/*.cpp")
+file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.h")
 
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
 
