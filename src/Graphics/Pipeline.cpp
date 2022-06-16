@@ -8,8 +8,8 @@ namespace Wraith {
         : _device(device), _pipeline(pipeline), _pipelineLayout(pipelineLayout) {}
 
     Pipeline::~Pipeline() {
-        vkDestroyPipeline(_device.GetDevice(), _pipeline, nullptr);
-        vkDestroyPipelineLayout(_device.GetDevice(), _pipelineLayout, nullptr);
+        vkDestroyPipeline(_device.GetVkDevice(), _pipeline, nullptr);
+        vkDestroyPipelineLayout(_device.GetVkDevice(), _pipelineLayout, nullptr);
     }
 
     void Pipeline::Bind(VkCommandBuffer commandBuffer) const {

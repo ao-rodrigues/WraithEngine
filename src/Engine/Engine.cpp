@@ -27,9 +27,9 @@ namespace Wraith {
         _swapChain = std::make_unique<SwapChain>(*_device, *_window);
 
         // Init shaders
-        VkShaderModule vertShaderModule = VkFactory::ShaderModule(_device->GetDevice(),
+        VkShaderModule vertShaderModule = VkFactory::ShaderModule(_device->GetVkDevice(),
                                                                   WR_ASSET("shaders/SimpleShader.vert.spv"));
-        VkShaderModule fragShaderModule = VkFactory::ShaderModule(_device->GetDevice(),
+        VkShaderModule fragShaderModule = VkFactory::ShaderModule(_device->GetVkDevice(),
                                                                   WR_ASSET("shaders/SimpleShader.frag.spv"));
 
         // Build pipeline
@@ -67,10 +67,10 @@ namespace Wraith {
         };
         VkPipelineLayoutCreateInfo graphicsPipelineLayoutInfo = VkFactory::PipelineLayoutCreateInfo(pushConstantRanges);
         VkPipelineLayout  graphicsPipelineLayout;
-        WR_VK_CHECK(vkCreatePipelineLayout(_device->GetDevice(), &graphicsPipelineLayoutInfo, nullptr, &graphicsPipelineLayout), "Failed to create pipeline layout!")
+        WR_VK_CHECK(vkCreatePipelineLayout(_device->GetVkDevice(), &graphicsPipelineLayoutInfo, nullptr, &graphicsPipelineLayout), "Failed to create pipeline layout!")
         pipelineBuilder.pipelineLayout = graphicsPipelineLayout;
         
-        _graphicsPipeline = std::make_unique<Pipeline>(*_device, pipelineBuilder.Build(_device->GetDevice(), _swapChain->GetRenderPass()), graphicsPipelineLayout);
+        _graphicsPipeline = std::make_unique<Pipeline>(*_device, pipelineBuilder.Build(_device->GetVkDevice(), _swapChain->GetRenderPass()), graphicsPipelineLayout);
         _renderer = std::make_unique<Renderer>(*_device, *_window);
 
         /*

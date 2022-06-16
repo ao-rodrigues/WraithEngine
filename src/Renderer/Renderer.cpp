@@ -124,14 +124,14 @@ namespace Wraith {
         allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
         allocInfo.commandBufferCount = static_cast<uint32_t>(SwapChain::MAX_FRAMES_IN_FLIGHT);
 
-        if (vkAllocateCommandBuffers(_device.GetDevice(), &allocInfo, _commandBuffers.data()) != VK_SUCCESS) {
+        if (vkAllocateCommandBuffers(_device.GetVkDevice(), &allocInfo, _commandBuffers.data()) != VK_SUCCESS) {
             throw std::runtime_error("Failed to allocate command buffers!");
         }
         WR_LOG_DEBUG("Allocated command buffers.")
     }
 
     void Renderer::FreeCommandBuffers() {
-        vkFreeCommandBuffers(_device.GetDevice(), _device.GetCommandPool(),
+        vkFreeCommandBuffers(_device.GetVkDevice(), _device.GetCommandPool(),
                              static_cast<uint32_t>(_commandBuffers.size()), _commandBuffers.data());
     }
 

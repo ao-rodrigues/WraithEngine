@@ -28,7 +28,7 @@ namespace Wraith {
         Device& operator=(const Device&) = delete;
 
 
-        VkDevice GetDevice() const { return _device; }
+        VkDevice GetVkDevice() const { return _device; }
         VkPhysicalDevice GetPhysicalDevice() const { return _physicalDevice; }
         VkSurfaceKHR GetSurface() const { return _surface; }
         VkCommandPool GetCommandPool() const { return _primaryCommandPool; }
