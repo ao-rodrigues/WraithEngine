@@ -15,6 +15,7 @@ namespace Wraith {
 
         void Bind(VkCommandBuffer commandBuffer) const;
 
+        VkPipeline GetVkPipeline() const { return _pipeline; }
         VkPipelineLayout GetPipelineLayout() const { return _pipelineLayout; }
 
     private:
