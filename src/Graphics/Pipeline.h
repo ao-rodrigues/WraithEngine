@@ -7,11 +7,6 @@ namespace Wraith {
 
     class Pipeline {
     public:
-        struct MeshPushConstants {
-            glm::vec4 data;
-            glm::mat4 renderMatrix;
-        };
-
         Pipeline(Device& device, VkPipeline pipeline, VkPipelineLayout pipelineLayout);
         ~Pipeline();
 

@@ -7,6 +7,11 @@ namespace Wraith {
 
     class Mesh {
     public:
+        struct PushConstants {
+            glm::vec4 data;
+            glm::mat4 renderMatrix;
+        };
+
         struct Vertex {
             glm::vec3 position;
             glm::vec3 color;
