@@ -56,9 +56,15 @@ namespace Wraith {
         renderPassInfo.renderArea.offset = {0, 0};
         renderPassInfo.renderArea.extent = _swapChain->GetExtent();
 
-        constexpr VkClearValue clearColor = {{{0.0f, 0.0f, 0.0f}}};
-        renderPassInfo.clearValueCount = 1;
-        renderPassInfo.pClearValues = &clearColor;
+        VkClearValue clearColor;
+        clearColor.color = {0.0f, 0.0f, 0.0f};
+
+        VkClearValue depthClear;
+        depthClear.depthStencil.depth = 1.0f;
+
+        VkClearValue clearValues[2] = {clearColor, depthClear};
+        renderPassInfo.clearValueCount = 2;
+        renderPassInfo.pClearValues = &clearValues[0];
 
         vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
