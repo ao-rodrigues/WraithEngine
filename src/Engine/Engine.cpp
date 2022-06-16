@@ -85,7 +85,7 @@ namespace Wraith {
         };
         _mesh = std::make_unique<Mesh>(*_device, vertices, indices);
          */
-        _mesh = std::make_unique<Mesh>(*_device, WR_ASSET("Suzanne.gltf"));
+        _mesh = std::make_unique<Mesh>(*_device, WR_ASSET("DamagedHelmet.glb"), true);
     }
 
     void Engine::Shutdown() {
