@@ -6,8 +6,23 @@
 
 namespace Wraith::VkFactory {
 
-    // Pipeline creation factories
+    VkShaderModule ShaderModule(VkDevice device, const std::string& shaderPath) {
+        const std::vector<char> shaderCode = Utils::ReadFile(shaderPath);
 
+        VkShaderModuleCreateInfo shaderInfo{};
+        shaderInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+        shaderInfo.codeSize = shaderCode.size();
+        shaderInfo.pCode = reinterpret_cast<const uint32_t*>(shaderCode.data());
+
+        VkShaderModule shaderModule;
+        if (vkCreateShaderModule(device, &shaderInfo, nullptr, &shaderModule) != VK_SUCCESS) {
+            WR_LOG_ERROR("Failed to create shader module!")
+            return VK_NULL_HANDLE;
+        }
+        return shaderModule;
+    }
+
+    // Pipeline creation factories
     VkPipelineShaderStageCreateInfo PipelineShaderStageCreateInfo(VkShaderStageFlagBits stage, VkShaderModule shaderModule) {
         VkPipelineShaderStageCreateInfo shaderStageInfo{};
         shaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;

@@ -7,6 +7,8 @@
 #include "Core/VulkanBase.h"
 
 namespace Wraith::VkFactory {
+    VkShaderModule ShaderModule(VkDevice device, const std::string& shaderPath);
+
     // Pipeline creation factories
     VkPipelineShaderStageCreateInfo PipelineShaderStageCreateInfo(VkShaderStageFlagBits stage, VkShaderModule shaderModule);
     VkPipelineVertexInputStateCreateInfo PipelineVertexInputStateCreateInfo(const std::vector<VkVertexInputBindingDescription>& bindingDescriptions, const std::vector<VkVertexInputAttributeDescription>& attributeDescriptions);
