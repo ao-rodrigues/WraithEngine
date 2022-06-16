@@ -93,7 +93,7 @@ namespace Wraith::VkFactory {
         colorBlendAttachment.colorWriteMask =
                 VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT |
                 VK_COLOR_COMPONENT_A_BIT;
-        colorBlendAttachment.blendEnable = VK_FALSE;
+        colorBlendAttachment.blendEnable = VK_FALSE; // TODO Disabled for now
         colorBlendAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_ONE; // Optional
         colorBlendAttachment.dstColorBlendFactor = VK_BLEND_FACTOR_ZERO; // Optional
         colorBlendAttachment.colorBlendOp = VK_BLEND_OP_ADD; // Optional
@@ -102,12 +102,44 @@ namespace Wraith::VkFactory {
         return colorBlendAttachment;
     }
 
+    VkPipelineColorBlendStateCreateInfo PipelineColorBlendStateCreateInfo(const std::vector<VkPipelineColorBlendAttachmentState>& colorBlendAttachments) {
+        VkPipelineColorBlendStateCreateInfo colorBlending{};
+        colorBlending.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
+        colorBlending.logicOpEnable = VK_FALSE;
+        colorBlending.logicOp = VK_LOGIC_OP_COPY; // Optional
+        colorBlending.attachmentCount = colorBlendAttachments.size();
+        colorBlending.pAttachments = colorBlendAttachments.data();
+        colorBlending.blendConstants[0] = 0.0f; // Optional
+        colorBlending.blendConstants[1] = 0.0f; // Optional
+        colorBlending.blendConstants[2] = 0.0f; // Optional
+        colorBlending.blendConstants[3] = 0.0f; // Optional
+        return colorBlending;
+    }
+
     VkPipelineDynamicStateCreateInfo PipelineDynamicStateCreateInfo(const std::vector<VkDynamicState>& dynamicStates) {
         VkPipelineDynamicStateCreateInfo dynamicState{};
         dynamicState.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
         dynamicState.pDynamicStates = dynamicStates.data();
         dynamicState.dynamicStateCount = static_cast<uint32_t>(dynamicStates.size());
         return dynamicState;
+    }
+
+    VkPushConstantRange PushConstantRange(uint32_t offset, uint32_t size, VkShaderStageFlags stageFlags) {
+        VkPushConstantRange pushConstantRange{};
+        pushConstantRange.offset = offset;
+        pushConstantRange.size = size;
+        pushConstantRange.stageFlags = stageFlags;
+        return pushConstantRange;
+    }
+
+    VkPipelineLayoutCreateInfo PipelineLayoutCreateInfo(const std::vector<VkPushConstantRange>& pushConstantRanges) {
+        VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
+        pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+        pipelineLayoutInfo.setLayoutCount = 0; // Optional
+        pipelineLayoutInfo.pSetLayouts = nullptr; // Optional
+        pipelineLayoutInfo.pushConstantRangeCount = pushConstantRanges.size(); // Optional
+        pipelineLayoutInfo.pPushConstantRanges = pushConstantRanges.data(); // Optional
+        return pipelineLayoutInfo;
     }
 
     // Image factories
