@@ -37,21 +37,24 @@ namespace Wraith {
         CreateIndexBuffers(indices);
     }
 
-    Mesh::Mesh(Device& device, const std::string& modelPath) : _device(device) {
+    Mesh::Mesh(Device& device, const std::string& modelPath, bool binaryFile) : _device(device) {
         tinygltf::TinyGLTF loader;
         tinygltf::Model model;
 
         std::string err;
         std::string warn;
-        if (!loader.LoadASCIIFromFile(&model, &err, &warn, modelPath)) {
-            WR_LOG_ERROR("Failed to parse glTF from file: %s", modelPath);
+        if (!binaryFile && !loader.LoadASCIIFromFile(&model, &err, &warn, modelPath)) {
+            WR_LOG_ERROR("Failed to parse glTF from file: {}", modelPath);
+            return;
+        } else if (binaryFile && !loader.LoadBinaryFromFile(&model, &err, &warn, modelPath)) {
+            WR_LOG_ERROR("Failed to parse glb from file: {}", modelPath);
             return;
         }
         if (!warn.empty()) {
-            WR_LOG_WARNING("TinyGLTF: %s", warn);
+            WR_LOG_WARNING("TinyGLTF: {}", warn);
         }
         if (!err.empty()) {
-            WR_LOG_ERROR("TinyGLTF: %s", err);
+            WR_LOG_ERROR("TinyGLTF: {}", err);
         }
 
         std::vector<Vertex> vertices;

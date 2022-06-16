@@ -16,7 +16,7 @@ namespace Wraith {
         };
 
         Mesh(Device& device, const std::vector<Vertex>& vertices, const std::vector<uint16_t>& indices);
-        Mesh(Device& device, const std::string& modelPath);
+        Mesh(Device& device, const std::string& modelPath, bool binaryFile = false);
         ~Mesh();
 
         Mesh(const Mesh&) = delete;
@@ -31,13 +31,13 @@ namespace Wraith {
 
         Device& _device;
 
-        VmaAllocation _vertexBufferAllocation;
+        VmaAllocation _vertexBufferAllocation = VK_NULL_HANDLE;
         VkBuffer _vertexBuffer = VK_NULL_HANDLE;
-        uint32_t _vertexCount;
+        uint32_t _vertexCount = 0;
 
 
-        VmaAllocation _indexBufferAllocation;
+        VmaAllocation _indexBufferAllocation = VK_NULL_HANDLE;
         VkBuffer _indexBuffer = VK_NULL_HANDLE;
-        uint32_t _indexCount;
+        uint32_t _indexCount = 0;
     };
 }
