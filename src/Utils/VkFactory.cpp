@@ -41,5 +41,21 @@ namespace Wraith::VkFactory {
         return createInfo;
     }
 
+    VkPipelineDepthStencilStateCreateInfo DepthStencilStateCreateInfo(bool depthTest, bool depthWrite, VkCompareOp compareOp) {
+        VkPipelineDepthStencilStateCreateInfo createInfo{};
+        createInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
+        createInfo.pNext = nullptr;
+
+        createInfo.depthTestEnable = depthTest ? VK_TRUE : VK_FALSE;
+        createInfo.depthWriteEnable = depthWrite ? VK_TRUE : VK_FALSE;
+        createInfo.depthCompareOp = depthTest ? compareOp : VK_COMPARE_OP_ALWAYS;
+        createInfo.depthBoundsTestEnable = VK_FALSE;
+        createInfo.minDepthBounds = 0.0f; // Optional
+        createInfo.maxDepthBounds = 1.0f; // Optional
+        createInfo.stencilTestEnable = VK_FALSE;
+
+        return createInfo;
+    }
+
 }
 

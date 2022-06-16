@@ -3,6 +3,7 @@
 
 #include "Device.h"
 #include "Mesh.h"
+#include "Utils/VkFactory.h"
 
 namespace Wraith {
     Pipeline::Pipeline(Device& device, VkRenderPass renderPass, const std::string& vertShaderPath,
@@ -156,6 +157,8 @@ namespace Wraith {
         }
         WR_LOG_DEBUG("Created pipeline layout.")
 
+        VkPipelineDepthStencilStateCreateInfo depthStencilStateCreateInfo = VkFactory::DepthStencilStateCreateInfo(true, true, VK_COMPARE_OP_LESS_OR_EQUAL);
+
         VkGraphicsPipelineCreateInfo pipelineInfo{};
         pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
         pipelineInfo.stageCount = 2;
@@ -165,7 +168,7 @@ namespace Wraith {
         pipelineInfo.pViewportState = &viewportState;
         pipelineInfo.pRasterizationState = &rasterizer;
         pipelineInfo.pMultisampleState = &multisampling;
-        pipelineInfo.pDepthStencilState = nullptr; // Optional
+        pipelineInfo.pDepthStencilState = &depthStencilStateCreateInfo; // Optional
         pipelineInfo.pColorBlendState = &colorBlending;
         pipelineInfo.pDynamicState = &dynamicState; // Optional
         pipelineInfo.layout = _pipelineLayout;
