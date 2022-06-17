@@ -16,3 +16,6 @@
 [submodule "tinygltf"]
 	path = libs/tinygltf
 	url = https://github.com/syoyo/tinygltf.git
+[submodule "libs/EnTT"]
+	path = libs/EnTT
+	url = https://github.com/skypjack/entt.git
