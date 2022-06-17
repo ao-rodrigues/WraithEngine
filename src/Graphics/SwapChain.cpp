@@ -4,12 +4,14 @@
 #include "Device.h"
 #include "Platform/Window.h"
 #include "Engine/Engine.h"
+#include "Utils/VkFactory.h"
 
 namespace Wraith {
     SwapChain::SwapChain(Device& device, Window& window)
             : _device(device), _window(window) {
         CreateSwapChain();
         CreateImageViews();
+        CreateDepthImage();
         CreateRenderPass();
         CreateFramebuffers();
         CreateSyncObjects();
@@ -17,33 +19,36 @@ namespace Wraith {
 
     SwapChain::~SwapChain() {
         for (const auto framebuffer: _swapChainFramebuffers) {
-            vkDestroyFramebuffer(_device.GetDevice(), framebuffer, nullptr);
+            vkDestroyFramebuffer(_device.GetVkDevice(), framebuffer, nullptr);
         }
 
         for (const auto imageView: _swapChainImageViews) {
-            vkDestroyImageView(_device.GetDevice(), imageView, nullptr);
+            vkDestroyImageView(_device.GetVkDevice(), imageView, nullptr);
         }
 
-        vkDestroyRenderPass(_device.GetDevice(), _renderPass, nullptr);
-        vkDestroySwapchainKHR(_device.GetDevice(), _swapChain, nullptr);
+        vkDestroyImageView(_device.GetVkDevice(), _depthImageView, nullptr);
+        vmaDestroyImage(_device.GetAllocator(), _depthImage, _depthImageAllocation);
+
+        vkDestroyRenderPass(_device.GetVkDevice(), _renderPass, nullptr);
+        vkDestroySwapchainKHR(_device.GetVkDevice(), _swapChain, nullptr);
 
         for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
-            vkDestroySemaphore(_device.GetDevice(), _imageAvailableSemaphores[i], nullptr);
-            vkDestroySemaphore(_device.GetDevice(), _renderFinishedSemaphores[i], nullptr);
-            vkDestroyFence(_device.GetDevice(), _inFlightFences[i], nullptr);
+            vkDestroySemaphore(_device.GetVkDevice(), _imageAvailableSemaphores[i], nullptr);
+            vkDestroySemaphore(_device.GetVkDevice(), _renderFinishedSemaphores[i], nullptr);
+            vkDestroyFence(_device.GetVkDevice(), _inFlightFences[i], nullptr);
         }
     }
 
     VkResult SwapChain::AcquireNextImage(uint32_t* imageIndex) const {
-        vkWaitForFences(_device.GetDevice(), 1, &_inFlightFences[_currentFrame], VK_TRUE, UINT64_MAX);
-        return vkAcquireNextImageKHR(_device.GetDevice(), _swapChain, UINT64_MAX,
+        vkWaitForFences(_device.GetVkDevice(), 1, &_inFlightFences[_currentFrame], VK_TRUE, UINT64_MAX);
+        return vkAcquireNextImageKHR(_device.GetVkDevice(), _swapChain, UINT64_MAX,
                                      _imageAvailableSemaphores[_currentFrame], VK_NULL_HANDLE, imageIndex);
     }
 
     VkResult SwapChain::SubmitCommandBuffers(const VkCommandBuffer* buffers, uint32_t* imageIndex) {
         // Check if a previous frame is using this image (i.e. there is its' fence to wait on)
         if (_imagesInFlight[*imageIndex] != VK_NULL_HANDLE) {
-            vkWaitForFences(_device.GetDevice(), 1, &_imagesInFlight[*imageIndex], VK_TRUE, UINT64_MAX);
+            vkWaitForFences(_device.GetVkDevice(), 1, &_imagesInFlight[*imageIndex], VK_TRUE, UINT64_MAX);
         }
         // Mark the image as now being in use by this frame
         _imagesInFlight[*imageIndex] = _inFlightFences[_currentFrame];
@@ -69,7 +74,7 @@ namespace Wraith {
         submitInfo.signalSemaphoreCount = 1;
         submitInfo.pSignalSemaphores = signalSemaphores;
 
-        vkResetFences(_device.GetDevice(), 1, &_inFlightFences[_currentFrame]);
+        vkResetFences(_device.GetVkDevice(), 1, &_inFlightFences[_currentFrame]);
 
         if (vkQueueSubmit(_device.GetGraphicsQueue(), 1, &submitInfo, _inFlightFences[_currentFrame]) != VK_SUCCESS) {
             throw std::runtime_error("Failed to submit draw command buffer!");
@@ -136,14 +141,14 @@ namespace Wraith {
         createInfo.clipped = VK_TRUE;
         createInfo.oldSwapchain = VK_NULL_HANDLE;
 
-        if (vkCreateSwapchainKHR(_device.GetDevice(), &createInfo, nullptr, &_swapChain) != VK_SUCCESS) {
+        if (vkCreateSwapchainKHR(_device.GetVkDevice(), &createInfo, nullptr, &_swapChain) != VK_SUCCESS) {
             throw std::runtime_error("Failed to create swap chain!");
         }
         WR_LOG_DEBUG("Created swap chain.");
 
-        vkGetSwapchainImagesKHR(_device.GetDevice(), _swapChain, &imageCount, nullptr);
+        vkGetSwapchainImagesKHR(_device.GetVkDevice(), _swapChain, &imageCount, nullptr);
         _swapChainImages.resize(imageCount);
-        vkGetSwapchainImagesKHR(_device.GetDevice(), _swapChain, &imageCount, _swapChainImages.data());
+        vkGetSwapchainImagesKHR(_device.GetVkDevice(), _swapChain, &imageCount, _swapChainImages.data());
 
         _swapChainImageFormat = surfaceFormat.format;
         _swapChainExtent = extent;
@@ -152,26 +157,34 @@ namespace Wraith {
     void SwapChain::CreateImageViews() {
         _swapChainImageViews.resize(_swapChainImages.size());
         for (size_t i = 0; i < _swapChainImages.size(); i++) {
-            VkImageViewCreateInfo createInfo{};
-            createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-            createInfo.image = _swapChainImages[i];
-            createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
-            createInfo.format = _swapChainImageFormat;
-            createInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
-            createInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
-            createInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
-            createInfo.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
-            createInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-            createInfo.subresourceRange.baseMipLevel = 0;
-            createInfo.subresourceRange.levelCount = 1;
-            createInfo.subresourceRange.baseArrayLayer = 0;
-            createInfo.subresourceRange.layerCount = 1;
+            VkImageViewCreateInfo createInfo = VkFactory::ImageViewCreateInfo(_swapChainImageFormat, _swapChainImages[i], VK_IMAGE_ASPECT_COLOR_BIT);
 
-            if (vkCreateImageView(_device.GetDevice(), &createInfo, nullptr, &_swapChainImageViews[i]) != VK_SUCCESS) {
+            if (vkCreateImageView(_device.GetVkDevice(), &createInfo, nullptr, &_swapChainImageViews[i]) != VK_SUCCESS) {
                 throw std::runtime_error("Failed to create image views!");
             }
         }
         WR_LOG_DEBUG("Created image views.")
+    }
+
+    void SwapChain::CreateDepthImage() {
+        _depthImageFormat = VK_FORMAT_D32_SFLOAT;
+        VkExtent3D depthImageExtent = {
+            _swapChainExtent.width,
+            _swapChainExtent.height,
+            1
+        };
+        VkImageCreateInfo imageCreateInfo = VkFactory::ImageCreateInfo(_depthImageFormat, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, depthImageExtent);
+
+        VmaAllocationCreateInfo allocationCreateInfo{};
+        allocationCreateInfo.usage = VMA_MEMORY_USAGE_GPU_ONLY;
+        allocationCreateInfo.requiredFlags = VkMemoryPropertyFlags(VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+
+        vmaCreateImage(_device.GetAllocator(), &imageCreateInfo, &allocationCreateInfo, &_depthImage, &_depthImageAllocation, nullptr);
+
+        VkImageViewCreateInfo imageViewCreateInfo = VkFactory::ImageViewCreateInfo(_depthImageFormat, _depthImage, VK_IMAGE_ASPECT_DEPTH_BIT);
+        if (vkCreateImageView(_device.GetVkDevice(), &imageViewCreateInfo, nullptr, &_depthImageView) != VK_SUCCESS) {
+            throw std::runtime_error("Failed to create depth image view!");
+        }
     }
 
     void SwapChain::CreateRenderPass() {
@@ -189,15 +202,32 @@ namespace Wraith {
         colorAttachmentRef.attachment = 0;
         colorAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
+        VkAttachmentDescription depthAttachment{};
+        depthAttachment.format = _depthImageFormat;
+        depthAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
+        depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+        depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+        depthAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+        depthAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+        depthAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+        depthAttachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+
+        VkAttachmentReference depthAttachmentRef{};
+        depthAttachmentRef.attachment = 1;
+        depthAttachmentRef.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+
         VkSubpassDescription subpass{};
         subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
         subpass.colorAttachmentCount = 1;
         subpass.pColorAttachments = &colorAttachmentRef;
+        subpass.pDepthStencilAttachment = &depthAttachmentRef;
+
+        VkAttachmentDescription attachments[2] = {colorAttachment, depthAttachment};
 
         VkRenderPassCreateInfo renderPassInfo{};
         renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
-        renderPassInfo.attachmentCount = 1;
-        renderPassInfo.pAttachments = &colorAttachment;
+        renderPassInfo.attachmentCount = 2;
+        renderPassInfo.pAttachments = &attachments[0];
         renderPassInfo.subpassCount = 1;
         renderPassInfo.pSubpasses = &subpass;
 
@@ -209,10 +239,20 @@ namespace Wraith {
         dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
         dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
 
-        renderPassInfo.dependencyCount = 1;
-        renderPassInfo.pDependencies = &dependency;
+        VkSubpassDependency depthDependency{};
+        depthDependency.srcSubpass = VK_SUBPASS_EXTERNAL;
+        depthDependency.dstSubpass = 0;
+        depthDependency.srcStageMask = VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT | VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT;
+        depthDependency.srcAccessMask = 0;
+        depthDependency.dstStageMask = VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT | VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT;
+        depthDependency.dstAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
 
-        if (vkCreateRenderPass(_device.GetDevice(), &renderPassInfo, nullptr, &_renderPass) != VK_SUCCESS) {
+        VkSubpassDependency dependencies[2] = {dependency, depthDependency};
+
+        renderPassInfo.dependencyCount = 2;
+        renderPassInfo.pDependencies = &dependencies[0];
+
+        if (vkCreateRenderPass(_device.GetVkDevice(), &renderPassInfo, nullptr, &_renderPass) != VK_SUCCESS) {
             throw std::runtime_error("Failed to create render pass!");
         }
         WR_LOG_DEBUG("Created render pass.")
@@ -221,21 +261,21 @@ namespace Wraith {
     void SwapChain::CreateFramebuffers() {
         _swapChainFramebuffers.resize(_swapChainImageViews.size());
         for (size_t i = 0; i < _swapChainImageViews.size(); i++) {
-            const VkImageView attachments[] = {
-                    _swapChainImageViews[i]
+            VkImageView attachments[2] = {
+                    _swapChainImageViews[i],
+                    _depthImageView
             };
 
             VkFramebufferCreateInfo framebufferInfo{};
             framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
             framebufferInfo.renderPass = _renderPass;
-            framebufferInfo.attachmentCount = 1;
+            framebufferInfo.attachmentCount = 2;
             framebufferInfo.pAttachments = attachments;
             framebufferInfo.width = _swapChainExtent.width;
             framebufferInfo.height = _swapChainExtent.height;
             framebufferInfo.layers = 1;
 
-            if (vkCreateFramebuffer(_device.GetDevice(), &framebufferInfo, nullptr, &_swapChainFramebuffers[i]) !=
-                VK_SUCCESS) {
+            if (vkCreateFramebuffer(_device.GetVkDevice(), &framebufferInfo, nullptr, &_swapChainFramebuffers[i]) != VK_SUCCESS) {
                 throw std::runtime_error("Failed to create framebuffer!");
             }
         }
@@ -255,11 +295,11 @@ namespace Wraith {
         fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 
         for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
-            if (vkCreateSemaphore(_device.GetDevice(), &semaphoreInfo, nullptr, &_imageAvailableSemaphores[i]) !=
+            if (vkCreateSemaphore(_device.GetVkDevice(), &semaphoreInfo, nullptr, &_imageAvailableSemaphores[i]) !=
                 VK_SUCCESS ||
-                vkCreateSemaphore(_device.GetDevice(), &semaphoreInfo, nullptr, &_renderFinishedSemaphores[i]) !=
-                VK_SUCCESS ||
-                vkCreateFence(_device.GetDevice(), &fenceInfo, nullptr, &_inFlightFences[i]) != VK_SUCCESS) {
+                    vkCreateSemaphore(_device.GetVkDevice(), &semaphoreInfo, nullptr, &_renderFinishedSemaphores[i]) !=
+                    VK_SUCCESS ||
+                vkCreateFence(_device.GetVkDevice(), &fenceInfo, nullptr, &_inFlightFences[i]) != VK_SUCCESS) {
                 throw std::runtime_error("Failed to create synchronization objects for a frame!");
             }
             WR_LOG_DEBUG("Created synchronization objects for frame.")

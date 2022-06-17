@@ -30,8 +30,7 @@ void DestroyDebugUtilsMessengerEXT(
 namespace Wraith {
     constexpr auto VULKAN_VERSION VK_API_VERSION_1_2;
 
-    Device::Device(Window& window)
-            : _window(window) {
+    Device::Device(Window& window) : _window(window) {
         CreateInstance();
         CreateSurface();
         PickPhysicalDevice();

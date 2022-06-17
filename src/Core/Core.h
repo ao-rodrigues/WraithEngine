@@ -9,8 +9,11 @@
 
 #ifdef WR_CONFIG_DEBUG
 
-// TODO break at the line when the assert happens
-#define WR_ASSERT(x, msg) if (!(x)) { WR_LOG_FATAL("[{}:{}] Assert {} failed: {}", __FILE__, __LINE__, #x, msg) }
+#define WR_ASSERT(x, msg)                                                           \
+    if (!(x)) {                                                                     \
+        WR_LOG_FATAL("[{}:{}] Assert {} failed: {}", __FILE__, __LINE__, #x, msg);  \
+        abort();                                                                    \
+    }                                                                               \
 
 #else
 
@@ -18,3 +21,21 @@
 
 #endif
 
+#define WR_VK_CHECK(x)                                                          \
+{                                                                               \
+    VkResult err = x;                                                           \
+    if (err != VK_SUCCESS) {                                                    \
+        WR_LOG_ERROR("[{}:{}] Vulkan error: {}", __FILE__, __LINE__, err);      \
+        abort();                                                                \
+    }                                                                           \
+}                                                                               \
+
+
+#define WR_VK_CHECK(x, msg)                                                             \
+{                                                                                       \
+    VkResult err = x;                                                                   \
+    if (err != VK_SUCCESS) {                                                            \
+        WR_LOG_ERROR("[{}:{}] Vulkan error {}: {}", __FILE__, __LINE__, err, msg);      \
+        abort();                                                                        \
+    }                                                                                   \
+}                                                                                       \

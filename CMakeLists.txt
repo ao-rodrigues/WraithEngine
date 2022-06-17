@@ -19,6 +19,11 @@ add_subdirectory(libs/SDL2)
 set(GLM_TEST_ENABLE OFF CACHE BOOL "Enable GLM tests" FORCE)
 add_subdirectory(libs/glm)
 
+# tinygltf
+set(TINYGLTF_HEADER_ONLY ON CACHE INTERNAL "" FORCE)
+set(TINYGLTF_INSTALL OFF CACHE INTERNAL "" FORCE)
+add_subdirectory(libs/tinygltf)
+
 # spdlog
 set(SPDLOG_MASTER_PROJECT OFF CACHE BOOL "" FORCE)
 add_subdirectory(libs/spdlog)
@@ -30,7 +35,7 @@ add_subdirectory(libs/VulkanMemoryAllocator)
 find_package(Vulkan REQUIRED COMPONENTS glslc)
 find_program(GLSLC_EXECUTABLE NAMES glslc HINTS Vulkan::glslc)
 
-file(GLOB_RECURSE SOURCES "src/*.cpp")
+file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.h")
 
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
 
@@ -46,6 +51,7 @@ target_include_directories(${PROJECT_NAME}
             ${Vulkan_INCLUDE_DIRS}
             glfw
             VulkanMemoryAllocator
+            tinygltf
 )
 
 target_link_libraries(${PROJECT_NAME}
@@ -58,6 +64,7 @@ target_link_libraries(${PROJECT_NAME}
             VulkanMemoryAllocator
             SDL2::SDL2
             SDL2::SDL2main
+            tinygltf
 )
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE src/wrpch.h)
@@ -75,19 +82,41 @@ endif()
 
 if (NOT DEFINED ASSETS_DIR)
     set(ASSETS_DIR assets)
+    set(BINARY_ASSETS_DIR ${CMAKE_BINARY_DIR}/${ASSETS_DIR})
 endif ()
 
 # Preprocessor defines
 target_compile_definitions(
         ${PROJECT_NAME} PUBLIC
         WR_ASSETS_DIR="${ASSETS_DIR}"
+        TINYGLTF_USE_CPP14
         $<$<CONFIG:DEBUG>:WR_CONFIG_DEBUG>
         $<$<CONFIG:RELEASE>:WR_CONFIG_RELEASE>
 )
 
+# Copy new assets
+file(GLOB_RECURSE GameAssets
+        ${CMAKE_SOURCE_DIR}/${ASSETS_DIR}/*.gltf
+        ${CMAKE_SOURCE_DIR}/${ASSETS_DIR}/*.glb
+        ${CMAKE_SOURCE_DIR}/${ASSETS_DIR}/*.bin
+        ${CMAKE_SOURCE_DIR}/${ASSETS_DIR}/*.png
+        ${CMAKE_SOURCE_DIR}/${ASSETS_DIR}/*.jpg
+        ${CMAKE_SOURCE_DIR}/${ASSETS_DIR}/*.jpeg
+)
+
+foreach(asset IN LISTS GameAssets)
+    add_custom_command(
+            TARGET ${PROJECT_NAME} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            ${asset}
+            ${BINARY_ASSETS_DIR}
+            VERBATIM
+    )
+endforeach()
+
 # Compile shaders
 set(SHADER_SOURCE_DIR ${PROJECT_SOURCE_DIR}/shaders)
-set(SHADER_BINARY_DIR ${CMAKE_BINARY_DIR}/${ASSETS_DIR}/shaders)
+set(SHADER_BINARY_DIR ${BINARY_ASSETS_DIR}/shaders)
 
 file(GLOB_RECURSE Shaders
         ${SHADER_SOURCE_DIR}/*.vert

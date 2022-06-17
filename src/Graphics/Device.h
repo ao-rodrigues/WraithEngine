@@ -21,14 +21,14 @@ namespace Wraith {
             std::vector<VkPresentModeKHR> presentModes;
         };
 
-        Device(Window& window);
+        explicit Device(Window& window);
         ~Device();
 
         Device(const Device&) = delete;
         Device& operator=(const Device&) = delete;
 
 
-        VkDevice GetDevice() const { return _device; }
+        VkDevice GetVkDevice() const { return _device; }
         VkPhysicalDevice GetPhysicalDevice() const { return _physicalDevice; }
         VkSurfaceKHR GetSurface() const { return _surface; }
         VkCommandPool GetCommandPool() const { return _primaryCommandPool; }
