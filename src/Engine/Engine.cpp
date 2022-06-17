@@ -53,9 +53,13 @@ namespace Wraith {
         while (!_window->ShouldClose()) {
             _window->PollEvents();
 
+             // TODO Update game logic here
+
+             // TODO Draw frame using single call from Renderer
             if (VkCommandBuffer commandBuffer = _renderer->BeginFrame()) {
                 _renderer->BeginSwapChainRenderPass(commandBuffer);
 
+                // TODO use ECS to get all entities with Renderable components
                 DrawRenderables(commandBuffer, _renderables);
 
                 _renderer->EndSwapChainRenderPass(commandBuffer);
