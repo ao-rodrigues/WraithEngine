@@ -120,13 +120,13 @@ namespace Wraith {
         const std::vector<VkPushConstantRange> pushConstantRanges = {
                 VkFactory::PushConstantRange(0, sizeof(Mesh::PushConstants), VK_SHADER_STAGE_VERTEX_BIT)
         };
-        VkPipelineLayoutCreateInfo graphicsPipelineLayoutInfo = VkFactory::PipelineLayoutCreateInfo(pushConstantRanges);
-        VkPipelineLayout  graphicsPipelineLayout;
-        WR_VK_CHECK(vkCreatePipelineLayout(_device->GetVkDevice(), &graphicsPipelineLayoutInfo, nullptr, &graphicsPipelineLayout), "Failed to create pipeline layout!")
+        VkPipelineLayoutCreateInfo meshPipelineLayoutInfo = VkFactory::PipelineLayoutCreateInfo(pushConstantRanges);
+        VkPipelineLayout  meshPipelineLayout;
+        WR_VK_CHECK(vkCreatePipelineLayout(_device->GetVkDevice(), &meshPipelineLayoutInfo, nullptr, &meshPipelineLayout), "Failed to create pipeline layout!")
 
-        pipelineBuilder.pipelineLayout = graphicsPipelineLayout;
+        pipelineBuilder.pipelineLayout = meshPipelineLayout;
 
-        _meshPipeline = std::make_shared<Pipeline>(*_device, pipelineBuilder.Build(_device->GetVkDevice(), _swapChain->GetRenderPass()), graphicsPipelineLayout);
+        _meshPipeline = std::make_shared<Pipeline>(*_device, pipelineBuilder.Build(_device->GetVkDevice(), _swapChain->GetRenderPass()), meshPipelineLayout);
 
         vkDestroyShaderModule(_device->GetVkDevice(), vertShaderModule, nullptr);
         vkDestroyShaderModule(_device->GetVkDevice(), fragShaderModule, nullptr);
