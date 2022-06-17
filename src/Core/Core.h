@@ -21,16 +21,6 @@
 
 #endif
 
-#define WR_VK_CHECK(x)                                                          \
-{                                                                               \
-    VkResult err = x;                                                           \
-    if (err != VK_SUCCESS) {                                                    \
-        WR_LOG_ERROR("[{}:{}] Vulkan error: {}", __FILE__, __LINE__, err);      \
-        abort();                                                                \
-    }                                                                           \
-}                                                                               \
-
-
 #define WR_VK_CHECK(x, msg)                                                             \
 {                                                                                       \
     VkResult err = x;                                                                   \
