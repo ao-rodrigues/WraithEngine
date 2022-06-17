@@ -72,6 +72,7 @@ add_library(${PROJECT_NAME} STATIC
         ${PROJECT_SOURCE_DIR}/src/Renderer/Renderer.h
         ${PROJECT_SOURCE_DIR}/src/Utils/VkFactory.cpp
         ${PROJECT_SOURCE_DIR}/src/Utils/VkFactory.h
+        ${PROJECT_SOURCE_DIR}/src/Scene/CommonComponents.h
         ${PROJECT_SOURCE_DIR}/src/wrpch.cpp
         ${PROJECT_SOURCE_DIR}/src/wrpch.h
 )
