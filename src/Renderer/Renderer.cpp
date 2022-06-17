@@ -26,7 +26,8 @@ namespace Wraith {
             return nullptr;
         }
         if (result != VK_SUCCESS) {
-            throw std::runtime_error("Failed to acquire swap chain image!");
+            WR_LOG_ERROR("Failed to acquire swap chain image!")
+            abort();
         }
 
         _frameStarted = true;
@@ -37,9 +38,7 @@ namespace Wraith {
         beginInfo.flags = 0; // Optional
         beginInfo.pInheritanceInfo = nullptr; // Optional
 
-        if (vkBeginCommandBuffer(commandBuffer, &beginInfo) != VK_SUCCESS) {
-            throw std::runtime_error("Failed to begin recording command buffer!");
-        }
+        WR_VK_CHECK(vkBeginCommandBuffer(commandBuffer, &beginInfo), "Failed to begin recording command buffer!")
 
         return commandBuffer;
     }
@@ -93,17 +92,17 @@ namespace Wraith {
     void Renderer::EndFrame() {
         WR_ASSERT(_frameStarted, "Can't call EndFrame while frame is not in progress!")
 
-        const VkCommandBuffer commandBuffer = GetCurrentCommandBuffer();
-        if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS) {
-            throw std::runtime_error("Failed to record command buffer!");
-        }
+        VkCommandBuffer commandBuffer = GetCurrentCommandBuffer();
+
+        WR_VK_CHECK(vkEndCommandBuffer(commandBuffer), "Failed to record command buffer!")
 
         const VkResult result = _swapChain->SubmitCommandBuffers(&commandBuffer, &_currentImageIndex);
         if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || _window.WasResized()) {
             _window.ResetWindowResizedFlag();
             RecreateSwapChain();
         } else if (result != VK_SUCCESS) {
-            throw std::runtime_error("Failed to present swap chain image!");
+            WR_LOG_ERROR("Failed to present swap chain image!")
+            abort();
         }
 
         _frameStarted = false;
@@ -124,9 +123,7 @@ namespace Wraith {
         allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
         allocInfo.commandBufferCount = static_cast<uint32_t>(SwapChain::MAX_FRAMES_IN_FLIGHT);
 
-        if (vkAllocateCommandBuffers(_device.GetVkDevice(), &allocInfo, _commandBuffers.data()) != VK_SUCCESS) {
-            throw std::runtime_error("Failed to allocate command buffers!");
-        }
+        WR_VK_CHECK(vkAllocateCommandBuffers(_device.GetVkDevice(), &allocInfo, _commandBuffers.data()), "Failed to allocate command buffers!")
         WR_LOG_DEBUG("Allocated command buffers.")
     }
 
