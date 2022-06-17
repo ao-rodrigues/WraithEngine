@@ -28,6 +28,9 @@ add_subdirectory(libs/tinygltf)
 set(SPDLOG_MASTER_PROJECT OFF CACHE BOOL "" FORCE)
 add_subdirectory(libs/spdlog)
 
+# EnTT
+add_subdirectory(libs/EnTT)
+
 # VMA
 add_subdirectory(libs/VulkanMemoryAllocator)
 
@@ -52,6 +55,7 @@ target_include_directories(${PROJECT_NAME}
             glfw
             VulkanMemoryAllocator
             tinygltf
+            EnTT::EnTT
 )
 
 target_link_libraries(${PROJECT_NAME}
@@ -65,6 +69,7 @@ target_link_libraries(${PROJECT_NAME}
             SDL2::SDL2
             SDL2::SDL2main
             tinygltf
+            EnTT::EnTT
 )
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE src/wrpch.h)
