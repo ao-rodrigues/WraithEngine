@@ -75,7 +75,8 @@ add_library(${PROJECT_NAME} STATIC
         ${PROJECT_SOURCE_DIR}/src/Scene/CommonComponents.h
         ${PROJECT_SOURCE_DIR}/src/wrpch.cpp
         ${PROJECT_SOURCE_DIR}/src/wrpch.h
-)
+        ${PROJECT_SOURCE_DIR}/include/WraithEngine/Core/PoolAllocator.h
+        ${PROJECT_SOURCE_DIR}/include/WraithEngine/Core/StackLinkedList.h)
 
 target_include_directories(${PROJECT_NAME}
         PUBLIC
