@@ -36,8 +36,8 @@ find_package(Vulkan REQUIRED COMPONENTS glslc)
 find_program(GLSLC_EXECUTABLE NAMES glslc HINTS Vulkan::glslc)
 
 add_library(${PROJECT_NAME} STATIC
-        ${PROJECT_SOURCE_DIR}/include/WraithEngine/Application.h
-        ${PROJECT_SOURCE_DIR}/include/WraithEngine/Utils/Singleton.h
+        ${PROJECT_SOURCE_DIR}/include/Wraith/Application.h
+        ${PROJECT_SOURCE_DIR}/include/Wraith/Singleton.h
         ${PROJECT_SOURCE_DIR}/src/Core/Core.h
         ${PROJECT_SOURCE_DIR}/src/Core/Logger.cpp
         ${PROJECT_SOURCE_DIR}/src/Core/Logger.h
@@ -81,7 +81,7 @@ target_include_directories(${PROJECT_NAME}
             spdlog
         PRIVATE
             ${PROJECT_SOURCE_DIR}/src
-            ${PROJECT_SOURCE_DIR}/include/WraithEngine
+            ${PROJECT_SOURCE_DIR}/include/Wraith
             ${Vulkan_INCLUDE_DIRS}
             glfw
             VulkanMemoryAllocator
