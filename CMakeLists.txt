@@ -104,6 +104,12 @@ file(GLOB_RECURSE GameAssets
         ${CMAKE_SOURCE_DIR}/${ASSETS_DIR}/*.jpeg
 )
 
+add_custom_command(
+        TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E make_directory ${BINARY_ASSETS_DIR}
+        COMMENT "Creating ${BINARY_ASSETS_DIR}"
+)
+
 foreach(asset IN LISTS GameAssets)
     add_custom_command(
             TARGET ${PROJECT_NAME} POST_BUILD
