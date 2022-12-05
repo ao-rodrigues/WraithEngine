@@ -46,6 +46,7 @@ namespace Wraith {
         _mouseButtonsPressed.reset();
         _mouseButtonsUp.reset();
         _mouseDelta = glm::vec2(0.0f, 0.0f);
+        _mouseWheel = glm::vec2(0.0f, 0.0f);
     }
 
     bool InputManager::IsKeyDown(Wraith::Input::KeyCode keyCode) const {

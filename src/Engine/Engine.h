@@ -54,6 +54,7 @@ namespace Wraith {
         glm::vec3 _cameraUp {0.0f, 1.0f, 0.0f};
 
         glm::vec2 _cameraLook {-90.0f, 0.0f};
+        float _fov = 70.0f;
     };
 
 #define WRAITH_ENGINE ::Wraith::Engine::Instance()

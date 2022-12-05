@@ -210,13 +210,18 @@ namespace Wraith {
         direction.y = sin(glm::radians(_cameraLook.y));
         direction.z = sin(glm::radians(_cameraLook.x)) * cos(glm::radians(_cameraLook.y));
         _cameraFront = glm::normalize(direction);
+
+        static const float zoomSpeed = 5500.0f;
+        float zoom = Input::GetMouseWheel().y;
+        _fov -= zoom * zoomSpeed * (float)Time::GetDeltaTime();
+        _fov = std::clamp(_fov, 1.0f, 70.0f);
     }
 
     void Engine::DrawRenderables(VkCommandBuffer commandBuffer, const std::vector<Renderable>& renderables) {
         glm::mat4 view = glm::lookAt(_cameraPos, _cameraPos + _cameraFront, _cameraUp);
 
         VkExtent2D windowExtent = _window->GetExtent();
-        glm::mat4 projection = glm::perspective(glm::radians(70.0f), static_cast<float>(windowExtent.width) / static_cast<float>(windowExtent.height), 0.1f, 200.0f);
+        glm::mat4 projection = glm::perspective(glm::radians(_fov), static_cast<float>(windowExtent.width) / static_cast<float>(windowExtent.height), 0.1f, 200.0f);
         projection[1][1] *= -1;
 
         std::shared_ptr<Mesh> lastMesh = nullptr;
