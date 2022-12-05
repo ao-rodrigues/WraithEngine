@@ -194,10 +194,10 @@ namespace Wraith {
             _cameraPos -= glm::normalize(glm::cross(_cameraFront, _cameraUp)) * movementSpeed * (float)Time::GetDeltaTime();
         }
 
-        static const float sensitivity = 0.3f;
+        static const float sensitivity = 160.0f;
         glm::vec2 mouseDelta = Input::GetMouseDelta();
-        _cameraLook.x += mouseDelta.x * sensitivity;
-        _cameraLook.y -= mouseDelta.y * sensitivity;
+        _cameraLook.x += mouseDelta.x * sensitivity * (float)Time::GetDeltaTime();
+        _cameraLook.y -= mouseDelta.y * sensitivity * (float)Time::GetDeltaTime();
 
         if (_cameraLook.y > 89.0f) {
             _cameraLook.y = 89.0f;
