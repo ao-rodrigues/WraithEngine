@@ -9,8 +9,8 @@
 
 #include <bitset>
 
-#include "Input.h"
-#include "Singleton.h"
+#include "Wraith/Input.h"
+#include "Wraith/Singleton.h"
 
 namespace Wraith {
     class InputManager : public Singleton<InputManager> {

@@ -85,7 +85,7 @@ target_include_directories(${PROJECT_NAME}
             spdlog
         PRIVATE
             ${PROJECT_SOURCE_DIR}/src
-            ${PROJECT_SOURCE_DIR}/include/Wraith
+            ${PROJECT_SOURCE_DIR}/include
             ${Vulkan_INCLUDE_DIRS}
             glfw
             VulkanMemoryAllocator
