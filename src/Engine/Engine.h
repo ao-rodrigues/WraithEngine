@@ -49,7 +49,7 @@ namespace Wraith {
         std::unordered_map<std::string, std::shared_ptr<Mesh>> _meshes;
         std::vector<Renderable> _renderables;
 
-        glm::vec3 _cameraPos {0.0f, 0.0f, 3.0f};
+        glm::vec3 _cameraPos {0.0f, 5.0f, 8.0f};
         glm::vec3 _cameraFront {0.0f, 0.0f, -1.0f};
         glm::vec3 _cameraUp {0.0f, 1.0f, 0.0f};
 
