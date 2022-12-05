@@ -21,6 +21,9 @@ namespace Wraith {
         void RegisterMouseButtonDown(Input::MouseButton mouseButton);
         void RegisterMouseButtonUp(Input::MouseButton mouseButton);
 
+        void RegisterMouseMotion(glm::vec2 mousePosition, glm::vec2 mouseDelta);
+        void RegisterMouseWheel(glm::vec2 mouseWheel);
+
         void ClearFrameEvents();
 
         inline bool IsKeyDown(Input::KeyCode keyCode) const;
@@ -31,6 +34,10 @@ namespace Wraith {
         inline bool IsMouseButtonUp(Input::MouseButton mouseButton) const;
         inline bool IsMouseButtonPressed(Input::MouseButton mouseButton) const;
 
+        inline glm::vec2 GetMousePosition() const;
+        inline glm::vec2 GetMouseDelta() const;
+        inline glm::vec2 GetMouseWheel() const;
+
     private:
         std::bitset<static_cast<size_t>(Input::KeyCode::Count)> _keysDown;
         std::bitset<static_cast<size_t>(Input::KeyCode::Count)> _keysUp;
@@ -39,5 +46,9 @@ namespace Wraith {
         std::bitset<static_cast<size_t>(Input::MouseButton::Count)> _mouseButtonsDown;
         std::bitset<static_cast<size_t>(Input::MouseButton::Count)> _mouseButtonsUp;
         std::bitset<static_cast<size_t>(Input::MouseButton::Count)> _mouseButtonsPressed;
+
+        glm::vec2 _mousePosition {0.0f, 0.0f};
+        glm::vec2 _mouseDelta {0.0f, 0.0f};
+        glm::vec2 _mouseWheel {0.0f, 0.0f};
     };
 }

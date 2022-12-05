@@ -129,4 +129,8 @@ namespace Wraith::Input {
     bool IsMouseButtonUp(Input::MouseButton mouseButton);
     bool IsMouseButtonPressed(Input::MouseButton mouseButton);
 
+    glm::vec2 GetMousePosition();
+    glm::vec2 GetMouseDelta();
+    glm::vec2 GetMouseWheel();
+
 }

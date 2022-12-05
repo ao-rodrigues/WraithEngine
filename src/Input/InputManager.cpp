@@ -31,11 +31,21 @@ namespace Wraith {
         _mouseButtonsDown[static_cast<int>(mouseButton)] = false;
     }
 
+    void InputManager::RegisterMouseMotion(glm::vec2 mousePosition, glm::vec2 mouseDelta) {
+        _mousePosition = mousePosition;
+        _mouseDelta = mouseDelta;
+    }
+
+    void InputManager::RegisterMouseWheel(glm::vec2 mouseWheel) {
+        _mouseWheel = mouseWheel;
+    }
+
     void InputManager::ClearFrameEvents() {
         _keysPressed.reset();
         _keysUp.reset();
         _mouseButtonsPressed.reset();
         _mouseButtonsUp.reset();
+        _mouseDelta = glm::vec2(0.0f, 0.0f);
     }
 
     bool InputManager::IsKeyDown(Wraith::Input::KeyCode keyCode) const {
@@ -62,6 +72,18 @@ namespace Wraith {
         return _mouseButtonsPressed[static_cast<int>(mouseButton)];
     }
 
+    glm::vec2 InputManager::GetMousePosition() const {
+        return _mousePosition;
+    }
+
+    glm::vec2 InputManager::GetMouseDelta() const {
+        return _mouseDelta;
+    }
+
+    glm::vec2 InputManager::GetMouseWheel() const {
+        return _mouseWheel;
+    }
+
     bool Input::IsKeyDown(Wraith::Input::KeyCode keyCode) {
         return InputManager::Instance().IsKeyDown(keyCode);
     }
@@ -86,5 +108,16 @@ namespace Wraith {
         return InputManager::Instance().IsMouseButtonPressed(mouseButton);
     }
 
+    glm::vec2 Input::GetMousePosition() {
+        return InputManager::Instance().GetMousePosition();
+    }
+
+    glm::vec2 Input::GetMouseDelta() {
+        return InputManager::Instance().GetMouseDelta();
+    }
+
+    glm::vec2 Input::GetMouseWheel() {
+        return InputManager::Instance().GetMouseWheel();
+    }
 
 }

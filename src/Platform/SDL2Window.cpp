@@ -102,8 +102,10 @@ namespace Wraith {
                 InputManager::Instance().RegisterMouseButtonUp(SDL2Input::TranslateMouseButton(event.button.button));
                 break;
             case SDL_MOUSEMOTION:
+                InputManager::Instance().RegisterMouseMotion({event.motion.x, event.motion.y}, {event.motion.xrel, event.motion.yrel});
                 break;
             case SDL_MOUSEWHEEL:
+                InputManager::Instance().RegisterMouseWheel({event.wheel.x, event.wheel.y});
                 break;
             default:
                 break;
