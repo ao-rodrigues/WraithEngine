@@ -5,6 +5,7 @@
 
 #include "Core/VulkanBase.h"
 #include "Core/Utils.h"
+#include "Core/TimeManager.h"
 
 #include "Platform/SDL2Window.h"
 
@@ -24,6 +25,8 @@ namespace Wraith {
     void Engine::Init(const EngineInitParams& initParams) {
         WRAITH_LOGGER.Init();
         WR_LOG_DEBUG("Staring Wraith Engine...")
+
+        TimeManager::Instance().Init();
 
         _window = std::make_unique<SDL2Window>(initParams.windowWidth, initParams.windowHeight, initParams.windowTitle);
         _device = std::make_unique<Device>(*_window);
@@ -55,6 +58,7 @@ namespace Wraith {
     void Engine::Run() {
         while (!_window->ShouldClose()) {
             InputManager::Instance().ClearFrameEvents();
+            TimeManager::Instance().Update();
             _window->PollEvents();
 
              // TODO Update game logic here

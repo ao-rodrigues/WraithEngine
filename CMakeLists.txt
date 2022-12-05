@@ -75,7 +75,10 @@ add_library(${PROJECT_NAME} STATIC
         ${PROJECT_SOURCE_DIR}/src/Input/InputManager.cpp
         ${PROJECT_SOURCE_DIR}/src/Input/InputManager.h
         ${PROJECT_SOURCE_DIR}/src/Platform/SDL2Input.cpp
-        ${PROJECT_SOURCE_DIR}/src/Platform/SDL2Input.h)
+        ${PROJECT_SOURCE_DIR}/src/Platform/SDL2Input.h
+        ${PROJECT_SOURCE_DIR}/include/Wraith/Time.h
+        ${PROJECT_SOURCE_DIR}/src/Core/TimeManager.cpp
+        ${PROJECT_SOURCE_DIR}/src/Core/TimeManager.h)
 
 target_include_directories(${PROJECT_NAME}
         PUBLIC

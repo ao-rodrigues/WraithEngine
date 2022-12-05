@@ -9,6 +9,7 @@
 #include <optional>
 #include <stdexcept>
 #include <fstream>
+#include <chrono>
 
 // Data structures
 #include <string>
