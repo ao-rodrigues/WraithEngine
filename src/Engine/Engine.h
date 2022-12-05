@@ -36,6 +36,7 @@ namespace Wraith {
         void LoadMeshes();
         void InitScene();
 
+        void UpdateLogic();
         void DrawRenderables(VkCommandBuffer commandBuffer, const std::vector<Renderable>& renderables);
 
         std::unique_ptr<Window> _window;
@@ -47,6 +48,12 @@ namespace Wraith {
         std::unordered_map<std::string, std::shared_ptr<Material>> _materials;
         std::unordered_map<std::string, std::shared_ptr<Mesh>> _meshes;
         std::vector<Renderable> _renderables;
+
+        glm::vec3 _cameraPos {0.0f, 0.0f, 3.0f};
+        glm::vec3 _cameraFront {0.0f, 0.0f, -1.0f};
+        glm::vec3 _cameraUp {0.0f, 1.0f, 0.0f};
+
+        glm::vec2 _cameraLook {-90.0f, 0.0f};
     };
 
 #define WRAITH_ENGINE ::Wraith::Engine::Instance()
