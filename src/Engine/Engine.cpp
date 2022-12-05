@@ -5,7 +5,10 @@
 
 #include "Core/VulkanBase.h"
 #include "Core/Utils.h"
+
 #include "Platform/SDL2Window.h"
+
+#include "Input/InputManager.h"
 
 #include "Graphics/Device.h"
 #include "Graphics/SwapChain.h"
@@ -51,6 +54,7 @@ namespace Wraith {
 
     void Engine::Run() {
         while (!_window->ShouldClose()) {
+            InputManager::Instance().ClearFrameEvents();
             _window->PollEvents();
 
              // TODO Update game logic here

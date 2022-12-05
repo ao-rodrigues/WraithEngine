@@ -7,6 +7,9 @@
 #include <SDL.h>
 #include <SDL_vulkan.h>
 
+#include "Input/InputManager.h"
+#include "Platform/SDL2Input.h"
+
 namespace Wraith {
 
     SDL2Window::SDL2Window(int width, int height, const std::string& title) : Window(width, height, title) {
@@ -79,6 +82,31 @@ namespace Wraith {
                     // TODO handle other window events
                     break;
             }
+        } else {
+            HandleInputEvent(event);
+        }
+    }
+
+    void SDL2Window::HandleInputEvent(SDL_Event event) {
+        switch (event.type) {
+            case SDL_KEYDOWN:
+                InputManager::Instance().RegisterKeyDown(SDL2Input::TranslateKeyCode(event.key.keysym.sym));
+                break;
+            case SDL_KEYUP:
+                InputManager::Instance().RegisterKeyUp(SDL2Input::TranslateKeyCode(event.key.keysym.sym));
+                break;
+            case SDL_MOUSEBUTTONDOWN:
+                InputManager::Instance().RegisterMouseButtonDown(SDL2Input::TranslateMouseButton(event.button.button));
+                break;
+            case SDL_MOUSEBUTTONUP:
+                InputManager::Instance().RegisterMouseButtonUp(SDL2Input::TranslateMouseButton(event.button.button));
+                break;
+            case SDL_MOUSEMOTION:
+                break;
+            case SDL_MOUSEWHEEL:
+                break;
+            default:
+                break;
         }
     }
 }

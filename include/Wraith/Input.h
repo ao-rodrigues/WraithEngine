@@ -121,4 +121,12 @@ namespace Wraith::Input {
         Count // Reserved: always keep as last
     };
 
+    bool IsKeyDown(Input::KeyCode keyCode);
+    bool IsKeyUp(Input::KeyCode keyCode);
+    bool IsKeyPressed(Input::KeyCode keyCode);
+
+    bool IsMouseButtonDown(Input::MouseButton mouseButton);
+    bool IsMouseButtonUp(Input::MouseButton mouseButton);
+    bool IsMouseButtonPressed(Input::MouseButton mouseButton);
+
 }
