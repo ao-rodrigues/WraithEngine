@@ -21,6 +21,7 @@ namespace Wraith {
             if (_window == nullptr) {
                 WR_LOG_ERROR("SDL Window creation failed! Error: %s", SDL_GetError());
             }
+            SDL_SetRelativeMouseMode(SDL_TRUE);
         }
     }
 
