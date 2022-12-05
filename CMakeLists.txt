@@ -72,6 +72,8 @@ add_library(${PROJECT_NAME} STATIC
         ${PROJECT_SOURCE_DIR}/src/wrpch.cpp
         ${PROJECT_SOURCE_DIR}/src/wrpch.h
         ${PROJECT_SOURCE_DIR}/include/Wraith/Input.h
+        ${PROJECT_SOURCE_DIR}/src/Platform/SDL2Input.cpp
+        ${PROJECT_SOURCE_DIR}/src/Platform/SDL2Input.h)
 
 target_include_directories(${PROJECT_NAME}
         PUBLIC
