@@ -160,8 +160,8 @@ namespace Wraith {
 
         _renderables.emplace_back(monke);
 
-        for (int x = -5; x <= 5; x++) {
-            for (int y = -5; y <= 5; y++) {
+        for (int x = -20; x <= 20; x += 2) {
+            for (int y = -20; y <= 20; y += 2) {
                 Renderable duck;
                 duck.mesh = GetMesh("Duck");
                 duck.material = GetMaterial("M_Default");
