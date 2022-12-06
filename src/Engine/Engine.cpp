@@ -26,7 +26,7 @@ namespace Wraith {
         WRAITH_LOGGER.Init();
         WR_LOG_DEBUG("Staring Wraith Engine...")
 
-        TimeManager::Instance().Init();
+        TimeManager::GetInstance().Init();
 
         _window = std::make_unique<SDL2Window>(initParams.windowWidth, initParams.windowHeight, initParams.windowTitle);
         _device = std::make_unique<Device>(*_window);
@@ -57,8 +57,8 @@ namespace Wraith {
 
     void Engine::Run() {
         while (!_window->ShouldClose()) {
-            InputManager::Instance().ClearFrameEvents();
-            TimeManager::Instance().Update();
+            InputManager::GetInstance().ClearFrameEvents();
+            TimeManager::GetInstance().Update();
             _window->PollEvents();
 
              // TODO Update game logic here

@@ -5,14 +5,14 @@
 
 namespace Wraith {
     Application::Application(int windowWidth, int windowHeight, const std::string& name) {
-        Engine::Instance().Init({windowWidth, windowHeight, name});
+        Engine::GetInstance().Init({windowWidth, windowHeight, name});
     }
 
     void Application::Run() {
-        Engine::Instance().Run();
+        Engine::GetInstance().Run();
     }
 
     void Application::Shutdown() {
-        Engine::Instance().Shutdown();
+        Engine::GetInstance().Shutdown();
     }
 }

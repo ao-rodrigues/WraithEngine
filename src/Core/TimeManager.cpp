@@ -49,15 +49,15 @@ namespace Wraith {
 
 
     Time::Timestep Time::GetTime() {
-        return TimeManager::Instance().GetTime();
+        return TimeManager::GetInstance().GetTime();
     }
 
     Time::Timestep Time::GetDeltaTime() {
-        return TimeManager::Instance().GetDeltaTime();
+        return TimeManager::GetInstance().GetDeltaTime();
     }
 
     Time::Timestep Time::GetFixedDeltaTime() {
-        return TimeManager::Instance().GetFixedDeltaTime();
+        return TimeManager::GetInstance().GetFixedDeltaTime();
     }
 
 }

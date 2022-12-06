@@ -15,7 +15,7 @@ namespace Wraith::Debug {
         bool HasLogger() const;
     };
 
-#define WRAITH_LOGGER ::Wraith::Debug::Logger::Instance()
+#define WRAITH_LOGGER ::Wraith::Debug::Logger::GetInstance()
 
 #ifdef WR_CONFIG_DEBUG
 

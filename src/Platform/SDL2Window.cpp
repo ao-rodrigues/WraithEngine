@@ -91,22 +91,22 @@ namespace Wraith {
     void SDL2Window::HandleInputEvent(SDL_Event event) {
         switch (event.type) {
             case SDL_KEYDOWN:
-                InputManager::Instance().RegisterKeyDown(SDL2Input::TranslateKeyCode(event.key.keysym.sym));
+                InputManager::GetInstance().RegisterKeyDown(SDL2Input::TranslateKeyCode(event.key.keysym.sym));
                 break;
             case SDL_KEYUP:
-                InputManager::Instance().RegisterKeyUp(SDL2Input::TranslateKeyCode(event.key.keysym.sym));
+                InputManager::GetInstance().RegisterKeyUp(SDL2Input::TranslateKeyCode(event.key.keysym.sym));
                 break;
             case SDL_MOUSEBUTTONDOWN:
-                InputManager::Instance().RegisterMouseButtonDown(SDL2Input::TranslateMouseButton(event.button.button));
+                InputManager::GetInstance().RegisterMouseButtonDown(SDL2Input::TranslateMouseButton(event.button.button));
                 break;
             case SDL_MOUSEBUTTONUP:
-                InputManager::Instance().RegisterMouseButtonUp(SDL2Input::TranslateMouseButton(event.button.button));
+                InputManager::GetInstance().RegisterMouseButtonUp(SDL2Input::TranslateMouseButton(event.button.button));
                 break;
             case SDL_MOUSEMOTION:
-                InputManager::Instance().RegisterMouseMotion({event.motion.x, event.motion.y}, {event.motion.xrel, event.motion.yrel});
+                InputManager::GetInstance().RegisterMouseMotion({event.motion.x, event.motion.y}, {event.motion.xrel, event.motion.yrel});
                 break;
             case SDL_MOUSEWHEEL:
-                InputManager::Instance().RegisterMouseWheel({event.wheel.x, event.wheel.y});
+                InputManager::GetInstance().RegisterMouseWheel({event.wheel.x, event.wheel.y});
                 break;
             default:
                 break;

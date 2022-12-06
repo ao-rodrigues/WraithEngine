@@ -86,39 +86,39 @@ namespace Wraith {
     }
 
     bool Input::IsKeyDown(Wraith::Input::KeyCode keyCode) {
-        return InputManager::Instance().IsKeyDown(keyCode);
+        return InputManager::GetInstance().IsKeyDown(keyCode);
     }
 
     bool Input::IsKeyUp(Wraith::Input::KeyCode keyCode) {
-        return InputManager::Instance().IsKeyUp(keyCode);
+        return InputManager::GetInstance().IsKeyUp(keyCode);
     }
 
     bool Input::IsKeyPressed(Wraith::Input::KeyCode keyCode) {
-        return InputManager::Instance().IsKeyPressed(keyCode);
+        return InputManager::GetInstance().IsKeyPressed(keyCode);
     }
 
     bool Input::IsMouseButtonDown(Wraith::Input::MouseButton mouseButton) {
-        return InputManager::Instance().IsMouseButtonDown(mouseButton);
+        return InputManager::GetInstance().IsMouseButtonDown(mouseButton);
     }
 
     bool Input::IsMouseButtonUp(Wraith::Input::MouseButton mouseButton) {
-        return InputManager::Instance().IsMouseButtonUp(mouseButton);
+        return InputManager::GetInstance().IsMouseButtonUp(mouseButton);
     }
 
     bool Input::IsMouseButtonPressed(Wraith::Input::MouseButton mouseButton) {
-        return InputManager::Instance().IsMouseButtonPressed(mouseButton);
+        return InputManager::GetInstance().IsMouseButtonPressed(mouseButton);
     }
 
     glm::vec2 Input::GetMousePosition() {
-        return InputManager::Instance().GetMousePosition();
+        return InputManager::GetInstance().GetMousePosition();
     }
 
     glm::vec2 Input::GetMouseDelta() {
-        return InputManager::Instance().GetMouseDelta();
+        return InputManager::GetInstance().GetMouseDelta();
     }
 
     glm::vec2 Input::GetMouseWheel() {
-        return InputManager::Instance().GetMouseWheel();
+        return InputManager::GetInstance().GetMouseWheel();
     }
 
 }
