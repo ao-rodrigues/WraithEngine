@@ -5,7 +5,11 @@
 
 #include "Core/VulkanBase.h"
 #include "Core/Utils.h"
+#include "Core/TimeManager.h"
+
 #include "Platform/SDL2Window.h"
+
+#include "Input/InputManager.h"
 
 #include "Graphics/Device.h"
 #include "Graphics/SwapChain.h"
@@ -21,6 +25,8 @@ namespace Wraith {
     void Engine::Init(const EngineInitParams& initParams) {
         WRAITH_LOGGER.Init();
         WR_LOG_DEBUG("Staring Wraith Engine...")
+
+        TimeManager::Instance().Init();
 
         _window = std::make_unique<SDL2Window>(initParams.windowWidth, initParams.windowHeight, initParams.windowTitle);
         _device = std::make_unique<Device>(*_window);
@@ -51,9 +57,12 @@ namespace Wraith {
 
     void Engine::Run() {
         while (!_window->ShouldClose()) {
+            InputManager::Instance().ClearFrameEvents();
+            TimeManager::Instance().Update();
             _window->PollEvents();
 
              // TODO Update game logic here
+             UpdateLogic();
 
              // TODO Draw frame using single call from Renderer
             if (VkCommandBuffer commandBuffer = _renderer->BeginFrame()) {
@@ -166,12 +175,53 @@ namespace Wraith {
         }
     }
 
+    void Engine::UpdateLogic() {
+        float movementSpeed = 12.0f;
+        static const float turboMultiplier = 2.5f;
+
+        if (Input::IsKeyDown(Input::KeyCode::LShift)) {
+            movementSpeed *= turboMultiplier;
+        }
+        if (Input::IsKeyDown(Input::KeyCode::W)) {
+            _cameraPos += _cameraFront * movementSpeed * (float)Time::GetDeltaTime();
+        } else if (Input::IsKeyDown(Input::KeyCode::S)) {
+            _cameraPos -= _cameraFront * movementSpeed * (float)Time::GetDeltaTime();
+        }
+
+        if (Input::IsKeyDown(Input::KeyCode::D)) {
+            _cameraPos += glm::normalize(glm::cross(_cameraFront, _cameraUp)) * movementSpeed * (float)Time::GetDeltaTime();
+        } else if (Input::IsKeyDown(Input::KeyCode::A)) {
+            _cameraPos -= glm::normalize(glm::cross(_cameraFront, _cameraUp)) * movementSpeed * (float)Time::GetDeltaTime();
+        }
+
+        static const float sensitivity = 160.0f;
+        glm::vec2 mouseDelta = Input::GetMouseDelta();
+        _cameraLook.x += mouseDelta.x * sensitivity * (float)Time::GetDeltaTime();
+        _cameraLook.y -= mouseDelta.y * sensitivity * (float)Time::GetDeltaTime();
+
+        if (_cameraLook.y > 89.0f) {
+            _cameraLook.y = 89.0f;
+        } else if (_cameraLook.y < -89.0f) {
+            _cameraLook.y = -89.0f;
+        }
+
+        glm::vec3 direction;
+        direction.x = cos(glm::radians(_cameraLook.x)) * cos(glm::radians(_cameraLook.y));
+        direction.y = sin(glm::radians(_cameraLook.y));
+        direction.z = sin(glm::radians(_cameraLook.x)) * cos(glm::radians(_cameraLook.y));
+        _cameraFront = glm::normalize(direction);
+
+        static const float zoomSpeed = 5500.0f;
+        float zoom = Input::GetMouseWheel().y;
+        _fov -= zoom * zoomSpeed * (float)Time::GetDeltaTime();
+        _fov = std::clamp(_fov, 1.0f, 70.0f);
+    }
+
     void Engine::DrawRenderables(VkCommandBuffer commandBuffer, const std::vector<Renderable>& renderables) {
-        glm::vec3 camPos = {0.0f, -6.0f, -10.0f};
-        glm::mat4 view = glm::translate(glm::mat4(1.0f), camPos);
+        glm::mat4 view = glm::lookAt(_cameraPos, _cameraPos + _cameraFront, _cameraUp);
 
         VkExtent2D windowExtent = _window->GetExtent();
-        glm::mat4 projection = glm::perspective(glm::radians(70.0f), static_cast<float>(windowExtent.width) / static_cast<float>(windowExtent.height), 0.1f, 200.0f);
+        glm::mat4 projection = glm::perspective(glm::radians(_fov), static_cast<float>(windowExtent.width) / static_cast<float>(windowExtent.height), 0.1f, 200.0f);
         projection[1][1] *= -1;
 
         std::shared_ptr<Mesh> lastMesh = nullptr;
