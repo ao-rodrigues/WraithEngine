@@ -78,7 +78,8 @@ add_library(${PROJECT_NAME} STATIC
         ${PROJECT_SOURCE_DIR}/src/Platform/SDL2Input.h
         ${PROJECT_SOURCE_DIR}/include/Wraith/Time.h
         ${PROJECT_SOURCE_DIR}/src/Core/TimeManager.cpp
-        ${PROJECT_SOURCE_DIR}/src/Core/TimeManager.h)
+        ${PROJECT_SOURCE_DIR}/src/Core/TimeManager.h
+        ${PROJECT_SOURCE_DIR}/include/Wraith/DeletionQueue.h)
 
 target_include_directories(${PROJECT_NAME}
         PUBLIC
