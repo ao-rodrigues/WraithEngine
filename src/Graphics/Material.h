@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "Core/VulkanBase.h"
+#include "Core/Vulkan.h"
 #include "Graphics/Pipeline.h"
 
 namespace Wraith {

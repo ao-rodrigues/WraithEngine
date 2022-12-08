@@ -3,7 +3,7 @@
 
 #include <glm/gtx/transform.hpp>
 
-#include "Core/VulkanBase.h"
+#include "Core/Vulkan.h"
 #include "Core/TimeManager.h"
 
 #include "Platform/SDL2Window.h"

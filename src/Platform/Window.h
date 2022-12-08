@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/VulkanBase.h"
+#include "Core/Vulkan.h"
 #include "Wraith/Object.h"
 
 namespace Wraith {

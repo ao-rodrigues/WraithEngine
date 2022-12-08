@@ -42,8 +42,8 @@ add_library(${PROJECT_NAME} STATIC
         ${PROJECT_SOURCE_DIR}/src/Core/Logger.cpp
         ${PROJECT_SOURCE_DIR}/src/Core/Logger.h
         ${PROJECT_SOURCE_DIR}/src/Core/Utils.h
-        ${PROJECT_SOURCE_DIR}/src/Core/VulkanBase.cpp
-        ${PROJECT_SOURCE_DIR}/src/Core/VulkanBase.h
+        ${PROJECT_SOURCE_DIR}/src/Core/Vulkan.cpp
+        ${PROJECT_SOURCE_DIR}/src/Core/Vulkan.h
         ${PROJECT_SOURCE_DIR}/src/Engine/Application.cpp
         ${PROJECT_SOURCE_DIR}/src/Engine/Engine.cpp
         ${PROJECT_SOURCE_DIR}/src/Engine/Engine.h
