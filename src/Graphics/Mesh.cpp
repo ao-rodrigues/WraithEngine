@@ -1,4 +1,11 @@
-﻿#include "wrpch.h"
+﻿//
+// Mesh.cpp
+// WraithEngine
+//
+// Created by Andre Rodrigues on 04/12/2022.
+//
+
+#include "wrpch.h"
 #include "Mesh.h"
 
 #define TINYGLTF_IMPLEMENTATION

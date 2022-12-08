@@ -1,3 +1,10 @@
+//
+// Device.h
+// WraithEngine
+//
+// Created by Andre Rodrigues on 04/12/2022.
+//
+
 #pragma once
 
 #include "Wraith/Object.h"

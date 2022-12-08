@@ -1,5 +1,5 @@
 //
-// Log.h
+// Logger.h
 // WraithEngine
 //
 // Created by Andre Rodrigues on 08/12/2022.

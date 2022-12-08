@@ -1,4 +1,11 @@
-﻿#pragma once
+﻿//
+// Mesh.h
+// WraithEngine
+//
+// Created by Andre Rodrigues on 04/12/2022.
+//
+
+#pragma once
 
 #include "Graphics/Vulkan.h"
 #include "Math/Math.h"

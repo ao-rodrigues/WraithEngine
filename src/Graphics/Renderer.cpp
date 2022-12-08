@@ -1,4 +1,11 @@
-﻿#include "wrpch.h"
+﻿//
+// Renderer.cpp
+// WraithEngine
+//
+// Created by Andre Rodrigues on 04/12/2022.
+//
+
+#include "wrpch.h"
 #include "Renderer.h"
 
 #include "Core/Assert.h"

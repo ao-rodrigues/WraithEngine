@@ -1,4 +1,11 @@
-﻿#pragma once
+﻿//
+// Engine.h
+// WraithEngine
+//
+// Created by Andre Rodrigues on 04/12/2022.
+//
+
+#pragma once
 
 #include "Wraith/DeletionQueue.h"
 #include "Wraith/Singleton.h"

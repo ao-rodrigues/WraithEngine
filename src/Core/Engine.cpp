@@ -1,4 +1,11 @@
-﻿#include "wrpch.h"
+﻿//
+// Engine.cpp
+// WraithEngine
+//
+// Created by Andre Rodrigues on 04/12/2022.
+//
+
+#include "wrpch.h"
 #include "Engine.h"
 
 #include <glm/gtx/transform.hpp>

@@ -1,3 +1,10 @@
+//
+// Window.h
+// WraithEngine
+//
+// Created by Andre Rodrigues on 07/12/2022.
+//
+
 #pragma once
 
 #include "Graphics/Vulkan.h"

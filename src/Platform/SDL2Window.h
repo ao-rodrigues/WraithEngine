@@ -1,4 +1,7 @@
 //
+// SDL2Window.h
+// WraithEngine
+//
 // Created by Andre Rodrigues on 14/06/2022.
 //
 
