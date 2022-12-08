@@ -10,9 +10,10 @@
 #include <stdexcept>
 #include <fstream>
 #include <chrono>
+#include <string>
 
 // Data structures
-#include <string>
+#include <array>
 #include <vector>
 #include <set>
 #include <unordered_map>

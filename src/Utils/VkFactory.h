@@ -26,6 +26,11 @@ namespace Wraith::VkFactory {
     VkImageCreateInfo ImageCreateInfo(VkFormat format, VkImageUsageFlags usageFlags, VkExtent3D extent);
     VkImageViewCreateInfo ImageViewCreateInfo(VkFormat format, VkImage image, VkImageAspectFlags aspectFlags);
 
+    VkFramebufferCreateInfo FramebufferCreateInfo(VkRenderPass renderPass, VkImageView* attachments, VkExtent2D swapChainExtent);
+
+    // Sync structures
+    VkFenceCreateInfo FenceCreateInfo();
+    VkSemaphoreCreateInfo SemaphoreCreateInfo();
 
     VkPipelineDepthStencilStateCreateInfo DepthStencilStateCreateInfo(bool depthTest, bool depthWrite, VkCompareOp compareOp);
 }
