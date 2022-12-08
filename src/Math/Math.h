@@ -1,6 +1,6 @@
 //
 // Math.h
-// WraithSandbox
+// WraithEngine
 //
 // Created by Andre Rodrigues on 08/12/2022.
 //

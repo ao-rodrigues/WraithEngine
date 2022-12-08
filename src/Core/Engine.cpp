@@ -3,15 +3,17 @@
 
 #include <glm/gtx/transform.hpp>
 
+#include "Asset/AssetManager.h"
+
 #include "Wraith/Logger.h"
 
-#include "Graphics/Vulkan.h"
 #include "Core/TimeManager.h"
 
 #include "Platform/SDL2Window.h"
 
 #include "Input/InputManager.h"
 
+#include "Graphics/Vulkan.h"
 #include "Graphics/Pipeline.h"
 #include "Graphics/PipelineBuilder.h"
 #include "Graphics/Mesh.h"

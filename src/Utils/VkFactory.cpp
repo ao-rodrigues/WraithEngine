@@ -4,10 +4,12 @@
 
 #include "VkFactory.h"
 
+#include "IO/IO.h"
+
 namespace Wraith::VkFactory {
 
     VkShaderModule ShaderModule(VkDevice device, const std::string& shaderPath) {
-        const std::vector<char> shaderCode = Utils::ReadFile(shaderPath);
+        const std::vector<char> shaderCode = IO::ReadFile(shaderPath);
 
         VkShaderModuleCreateInfo shaderInfo{};
         shaderInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;

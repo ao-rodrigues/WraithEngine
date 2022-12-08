@@ -17,6 +17,3 @@
 #include <vector>
 #include <set>
 #include <unordered_map>
-
-// Wraith Engine specific
-#include "Core/Core.h"
