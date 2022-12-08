@@ -12,7 +12,7 @@
 #include "Graphics/Material.h"
 #include "Graphics/Renderable.h"
 
-#include "Renderer/Renderer.h"
+#include "Graphics/Renderer.h"
 
 namespace Wraith {
     struct EngineInitParams {
@@ -43,10 +43,8 @@ namespace Wraith {
         void DrawRenderables(VkCommandBuffer commandBuffer, const std::vector<Renderable>& renderables);
 
         std::unique_ptr<Window> _window;
-        std::unique_ptr<Device> _device;
-        std::unique_ptr<SwapChain> _swapChain;
+        Device _device;
         std::shared_ptr<Pipeline> _meshPipeline;
-        std::unique_ptr<Renderer> _renderer;
 
         DeletionQueue _mainDeletionQueue;
 
