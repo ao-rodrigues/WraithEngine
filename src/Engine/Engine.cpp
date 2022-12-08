@@ -41,6 +41,8 @@ namespace Wraith {
     void Engine::Shutdown() {
         _device->FinishOperations();
 
+        _mainDeletionQueue.Flush();
+
         _renderer.reset();
         _meshPipeline.reset();
         _swapChain.reset();
@@ -76,6 +78,10 @@ namespace Wraith {
             }
         }
         Shutdown();
+    }
+
+    DeletionQueue& Engine::GetMainDeletionQueue() {
+        return _mainDeletionQueue;
     }
 
     std::shared_ptr<Material> Engine::CreateMaterial(std::shared_ptr<Pipeline> pipeline, const std::string& name) {

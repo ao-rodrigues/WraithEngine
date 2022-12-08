@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#include "Wraith/DeletionQueue.h"
 #include "Wraith/Singleton.h"
 
 #include "Platform/Window.h"
@@ -26,6 +27,8 @@ namespace Wraith {
         void Run();
         void Shutdown();
 
+        DeletionQueue& GetMainDeletionQueue();
+
         std::shared_ptr<Material> CreateMaterial(std::shared_ptr<Pipeline> pipeline, const std::string& name);
         std::shared_ptr<Material> GetMaterial(const std::string& name);
 
@@ -44,6 +47,8 @@ namespace Wraith {
         std::unique_ptr<SwapChain> _swapChain;
         std::shared_ptr<Pipeline> _meshPipeline;
         std::unique_ptr<Renderer> _renderer;
+
+        DeletionQueue _mainDeletionQueue;
 
         std::unordered_map<std::string, std::shared_ptr<Material>> _materials;
         std::unordered_map<std::string, std::shared_ptr<Mesh>> _meshes;
