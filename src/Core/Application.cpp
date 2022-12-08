@@ -1,7 +1,7 @@
 #include "wrpch.h"
 #include "Wraith/Application.h"
 
-#include "Engine/Engine.h"
+#include "Engine.h"
 
 namespace Wraith {
     Application::Application(int windowWidth, int windowHeight, const std::string& name) {

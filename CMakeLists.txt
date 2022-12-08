@@ -42,9 +42,9 @@ add_library(${PROJECT_NAME} STATIC
         ${PROJECT_SOURCE_DIR}/src/Core/Utils.h
         ${PROJECT_SOURCE_DIR}/src/Graphics/Vulkan.cpp
         ${PROJECT_SOURCE_DIR}/src/Graphics/Vulkan.h
-        ${PROJECT_SOURCE_DIR}/src/Engine/Application.cpp
-        ${PROJECT_SOURCE_DIR}/src/Engine/Engine.cpp
-        ${PROJECT_SOURCE_DIR}/src/Engine/Engine.h
+        ${PROJECT_SOURCE_DIR}/src/Core/Application.cpp
+        ${PROJECT_SOURCE_DIR}/src/Core/Engine.cpp
+        ${PROJECT_SOURCE_DIR}/src/Core/Engine.h
         ${PROJECT_SOURCE_DIR}/src/Graphics/Device.cpp
         ${PROJECT_SOURCE_DIR}/src/Graphics/Device.h
         ${PROJECT_SOURCE_DIR}/src/Graphics/Material.cpp
