@@ -4,7 +4,7 @@
 #include "Device.h"
 #include "Platform/Window.h"
 #include "Core/Engine.h"
-#include "Utils/VkFactory.h"
+#include "VkFactory.h"
 
 namespace Wraith {
 

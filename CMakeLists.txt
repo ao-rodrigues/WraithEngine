@@ -63,8 +63,8 @@ add_library(${PROJECT_NAME} STATIC
         ${PROJECT_SOURCE_DIR}/src/Platform/SDL2Window.h
         ${PROJECT_SOURCE_DIR}/src/Graphics/Renderer.cpp
         ${PROJECT_SOURCE_DIR}/src/Graphics/Renderer.h
-        ${PROJECT_SOURCE_DIR}/src/Utils/VkFactory.cpp
-        ${PROJECT_SOURCE_DIR}/src/Utils/VkFactory.h
+        ${PROJECT_SOURCE_DIR}/src/Graphics/VkFactory.cpp
+        ${PROJECT_SOURCE_DIR}/src/Graphics/VkFactory.h
         ${PROJECT_SOURCE_DIR}/src/wrpch.cpp
         ${PROJECT_SOURCE_DIR}/src/wrpch.h
         ${PROJECT_SOURCE_DIR}/include/Wraith/Input.h

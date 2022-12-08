@@ -5,7 +5,7 @@
 #include "Core/Engine.h"
 #include "Platform/Window.h"
 #include "Graphics/Device.h"
-#include "Utils/VkFactory.h"
+#include "VkFactory.h"
 
 namespace Wraith {
     void Renderer::Init(const Device& device, Window& window) {

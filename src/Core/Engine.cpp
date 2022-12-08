@@ -19,7 +19,7 @@
 #include "Graphics/Mesh.h"
 #include "Graphics/Renderer.h"
 
-#include "Utils/VkFactory.h"
+#include "Graphics/VkFactory.h"
 
 namespace Wraith {
     void Engine::Init(const EngineInitParams& initParams) {
