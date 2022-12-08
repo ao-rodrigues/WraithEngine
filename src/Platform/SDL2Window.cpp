@@ -2,6 +2,8 @@
 // Created by Andre Rodrigues on 14/06/2022.
 //
 
+#include "wrpch.h"
+
 #include "SDL2Window.h"
 
 #include <SDL.h>
@@ -12,7 +14,9 @@
 
 namespace Wraith {
 
-    SDL2Window::SDL2Window(int width, int height, const std::string& title) : Window(width, height, title) {
+    void SDL2Window::Create(int width, int height, const std::string& title) {
+        Window::Create(width, height, title);
+
         if (SDL_Init(SDL_INIT_VIDEO) < 0) {
             WR_LOG_ERROR("SDL init failed! Error: %s", SDL_GetError());
         } else {
@@ -25,7 +29,7 @@ namespace Wraith {
         }
     }
 
-    SDL2Window::~SDL2Window() {
+    void SDL2Window::Destroy() {
         SDL_DestroyWindow(_window);
         SDL_Quit();
     }
@@ -34,11 +38,11 @@ namespace Wraith {
         SDL_Vulkan_CreateSurface(_window, instance, surface);
     }
 
-    void SDL2Window::GetFramebufferSize(int* width, int* height) {
+    void SDL2Window::GetFramebufferSize(int* width, int* height) const {
         SDL_Vulkan_GetDrawableSize(_window, width, height);
     }
 
-    std::vector<const char*> SDL2Window::GetInstanceExtensions(unsigned int* count) {
+    std::vector<const char*> SDL2Window::GetInstanceExtensions(unsigned int* count) const {
         if (!SDL_Vulkan_GetInstanceExtensions(_window, count, nullptr)) {
             WR_LOG_ERROR("SDL: Failed to get instance extensions!");
         }

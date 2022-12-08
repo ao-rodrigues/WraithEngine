@@ -11,13 +11,13 @@ struct GLFWwindow;
 namespace Wraith {
     class GLFWWindow : public Window {
     public:
-        GLFWWindow(int width, int height, const std::string& title);
-        ~GLFWWindow() override;
+        void Create(int width, int height, const std::string& title) override;
+        void Destroy() override;
 
         void CreateSurface(VkInstance instance, VkSurfaceKHR* surface) override;
-        void GetFramebufferSize(int* width, int* height) override;
+        void GetFramebufferSize(int* width, int* height) const override;
 
-        std::vector<const char*> GetInstanceExtensions(unsigned int* count) override;
+        std::vector<const char*> GetInstanceExtensions(unsigned int* count) const override;
 
         void PollEvents() override;
         void WaitEvents() override;

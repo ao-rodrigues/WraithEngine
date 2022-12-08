@@ -7,19 +7,18 @@
 #include "Window.h"
 
 struct SDL_Window;
-struct SDL_Surface;
 union SDL_Event;
 
 namespace Wraith {
     class SDL2Window : public Window {
     public:
-        SDL2Window(int width, int height, const std::string& title);
-        ~SDL2Window() override;
+        void Create(int width, int height, const std::string& title) override;
+        void Destroy() override;
 
         void CreateSurface(VkInstance instance, VkSurfaceKHR* surface) override;
-        void GetFramebufferSize(int* width, int* height) override;
+        void GetFramebufferSize(int* width, int* height) const override;
 
-        std::vector<const char*> GetInstanceExtensions(unsigned int* count) override;
+        std::vector<const char*> GetInstanceExtensions(unsigned int* count) const override;
 
         void WaitEvents() override;
         void PollEvents() override;

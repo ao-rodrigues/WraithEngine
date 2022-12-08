@@ -81,6 +81,7 @@ add_library(${PROJECT_NAME} STATIC
         ${PROJECT_SOURCE_DIR}/src/Core/TimeManager.h
         ${PROJECT_SOURCE_DIR}/include/Wraith/DeletionQueue.h
         ${PROJECT_SOURCE_DIR}/include/Wraith/Object.h
+        ${PROJECT_SOURCE_DIR}/src/Platform/Window.cpp)
 
 target_include_directories(${PROJECT_NAME}
         PUBLIC

@@ -8,7 +8,9 @@
 
 namespace Wraith {
 
-    GLFWWindow::GLFWWindow(int width, int height, const std::string& title) : Window(width, height, title) {
+    void GLFWWindow::Create(int width, int height, const std::string& title) {
+        Window::Create(width, height, title);
+
         glfwInit();
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
@@ -18,7 +20,7 @@ namespace Wraith {
         glfwSetFramebufferSizeCallback(_window, OnFramebufferResized);
     }
 
-    GLFWWindow::~GLFWWindow() {
+    void GLFWWindow::Destroy() {
         glfwDestroyWindow(_window);
         glfwTerminate();
     }
@@ -30,11 +32,11 @@ namespace Wraith {
         WR_LOG_DEBUG("Created surface.")
     }
 
-    void GLFWWindow::GetFramebufferSize(int* width, int* height) {
+    void GLFWWindow::GetFramebufferSize(int* width, int* height) const {
         glfwGetFramebufferSize(_window, width, height);
     }
 
-    std::vector<const char*> GLFWWindow::GetInstanceExtensions(unsigned int* count) {
+    std::vector<const char*> GLFWWindow::GetInstanceExtensions(unsigned int* count) const {
         const char** extensionNames = glfwGetRequiredInstanceExtensions(count);
         return {extensionNames, extensionNames + *count};
     }
