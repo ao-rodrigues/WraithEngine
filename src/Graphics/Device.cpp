@@ -30,20 +30,18 @@ void DestroyDebugUtilsMessengerEXT(
 namespace Wraith {
     constexpr auto VULKAN_VERSION VK_API_VERSION_1_2;
 
-    Device::Device(Window& window) : _window(window) {
+    void Device::Create(Window& window) {
+        _window = window;
+
         CreateInstance();
         CreateSurface();
         PickPhysicalDevice();
         CreateLogicalDevice();
         CreateAllocator();
-        CreateCommandPools();
     }
 
-    Device::~Device() {
+    void Device::Destroy() {
         vmaDestroyAllocator(_allocator);
-
-        vkDestroyCommandPool(_device, _primaryCommandPool, nullptr);
-        vkDestroyCommandPool(_device, _transientCommandPool, nullptr);
 
         vkDestroyDevice(_device, nullptr);
 
@@ -53,6 +51,23 @@ namespace Wraith {
 
         vkDestroySurfaceKHR(_instance, _surface, nullptr);
         vkDestroyInstance(_instance, nullptr);
+    }
+
+    bool Device::IsUndefined() const {
+        return _device == VK_NULL_HANDLE;
+    }
+
+    VkCommandPool Device::CreateCommandPool() const {
+        const QueueFamilyIndices indices = FindQueueFamilies(_physicalDevice);
+
+        VkCommandPool commandPool;
+        VkCommandPoolCreateInfo primaryPoolInfo{};
+        primaryPoolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+        primaryPoolInfo.queueFamilyIndex = indices.graphicsFamily.value();
+        primaryPoolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT; // Optional
+
+        WR_VK_CHECK(vkCreateCommandPool(_device, &primaryPoolInfo, nullptr, &commandPool), "Failed to create command pool!")
+        return commandPool;
     }
 
     void Device::FinishOperations() const {
@@ -76,42 +91,6 @@ namespace Wraith {
         if (vmaCreateBuffer(_allocator, &bufferInfo, &allocInfo, &buffer, &allocation, nullptr) != VK_SUCCESS) {
             throw std::runtime_error("Failed to create vertex buffer!");
         }
-    }
-
-    void Device::CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size) {
-        VkCommandBufferAllocateInfo allocInfo{};
-        allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-        allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-        allocInfo.commandPool = _transientCommandPool;
-        allocInfo.commandBufferCount = 1;
-
-        VkCommandBuffer commandBuffer;
-        vkAllocateCommandBuffers(_device, &allocInfo, &commandBuffer);
-
-        VkCommandBufferBeginInfo beginInfo{};
-        beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-        beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-
-        vkBeginCommandBuffer(commandBuffer, &beginInfo);
-
-        VkBufferCopy copyRegion{};
-        copyRegion.srcOffset = 0; // Optional
-        copyRegion.dstOffset = 0; // Optional
-        copyRegion.size = size;
-        vkCmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, 1, &copyRegion);
-
-        vkEndCommandBuffer(commandBuffer);
-
-        VkSubmitInfo submitInfo{};
-        submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-        submitInfo.commandBufferCount = 1;
-        submitInfo.pCommandBuffers = &commandBuffer;
-
-        vkQueueSubmit(_graphicsQueue, 1, &submitInfo, VK_NULL_HANDLE);
-        vkQueueWaitIdle(
-                _graphicsQueue); // Optimization: use fences here so we can schedule multiple transfers simultaneously
-
-        vkFreeCommandBuffers(_device, _transientCommandPool, 1, &commandBuffer);
     }
 
     void Device::CreateInstance() {
@@ -167,7 +146,7 @@ namespace Wraith {
     }
 
     void Device::CreateSurface() {
-        _window.CreateSurface(_instance, &_surface);
+        _window->CreateSurface(_instance, &_surface);
     }
 
     void Device::PickPhysicalDevice() {
@@ -247,31 +226,6 @@ namespace Wraith {
         vmaCreateAllocator(&allocatorInfo, &_allocator);
     }
 
-    void Device::CreateCommandPools() {
-        const QueueFamilyIndices indices = FindQueueFamilies(_physicalDevice);
-
-        VkCommandPoolCreateInfo primaryPoolInfo{};
-        primaryPoolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-        primaryPoolInfo.queueFamilyIndex = indices.graphicsFamily.value();
-        primaryPoolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT; // Optional
-
-        if (vkCreateCommandPool(_device, &primaryPoolInfo, nullptr, &_primaryCommandPool) != VK_SUCCESS) {
-            throw std::runtime_error("Failed to create primary command pool!");
-        }
-        WR_LOG_DEBUG("Created primary command pool.")
-
-        VkCommandPoolCreateInfo transientPoolInfo{};
-        transientPoolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-        transientPoolInfo.queueFamilyIndex = indices.graphicsFamily.value();
-        transientPoolInfo.flags =
-                VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT | VK_COMMAND_POOL_CREATE_TRANSIENT_BIT; // Optional
-
-        if (vkCreateCommandPool(_device, &transientPoolInfo, nullptr, &_transientCommandPool) != VK_SUCCESS) {
-            throw std::runtime_error("Failed to create transient command pool!");
-        }
-        WR_LOG_DEBUG("Created transient command pool.")
-    }
-
     bool Device::CheckValidationLayerSupport() {
         uint32_t layerCount;
         vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
@@ -298,7 +252,7 @@ namespace Wraith {
 
     std::vector<const char*> Device::GetRequiredInstanceExtensions() {
         uint32_t extensionCount = 0;
-        std::vector<const char*> extensions = _window.GetInstanceExtensions(&extensionCount);
+        std::vector<const char*> extensions = _window->GetInstanceExtensions(&extensionCount);
         if (ENABLE_VALIDATION_LAYERS) {
             extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
         }
