@@ -22,7 +22,6 @@
 
 #include "Graphics/Vulkan.h"
 #include "Graphics/Pipeline.h"
-#include "Graphics/PipelineBuilder.h"
 #include "Graphics/Mesh.h"
 #include "Graphics/Renderer.h"
 
@@ -105,7 +104,7 @@ namespace Wraith {
                                                                   WR_ASSET("shaders/SimpleShader.frag.spv"));
 
         // Build pipeline
-        PipelineBuilder pipelineBuilder;
+        Pipeline::Builder pipelineBuilder;
         pipelineBuilder.shaderStages.emplace_back(
                 VkFactory::PipelineShaderStageCreateInfo(VK_SHADER_STAGE_VERTEX_BIT, vertShaderModule));
         pipelineBuilder.shaderStages.emplace_back(

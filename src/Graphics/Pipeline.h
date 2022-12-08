@@ -14,6 +14,24 @@ namespace Wraith {
 
     class Pipeline {
     public:
+        struct Builder {
+            Builder() = default;
+            ~Builder() = default;
+
+            VkPipeline Build(VkDevice device, VkRenderPass renderPass);
+
+            std::vector<VkPipelineShaderStageCreateInfo> shaderStages;
+            VkPipelineVertexInputStateCreateInfo vertexInputInfo;
+            VkPipelineInputAssemblyStateCreateInfo inputAssembly;
+            VkPipelineViewportStateCreateInfo viewportState;
+            VkPipelineRasterizationStateCreateInfo rasterizer;
+            VkPipelineMultisampleStateCreateInfo multisampling;
+            VkPipelineColorBlendStateCreateInfo colorBlending;
+            VkPipelineDepthStencilStateCreateInfo depthStencilInfo;
+            VkPipelineDynamicStateCreateInfo dynamicState;
+            VkPipelineLayout pipelineLayout;
+        };
+
         Pipeline(const Device& device, VkPipeline pipeline, VkPipelineLayout pipelineLayout);
         ~Pipeline();
 

@@ -51,8 +51,6 @@ add_library(${PROJECT_NAME} STATIC
         ${PROJECT_SOURCE_DIR}/src/Graphics/Mesh.h
         ${PROJECT_SOURCE_DIR}/src/Graphics/Pipeline.cpp
         ${PROJECT_SOURCE_DIR}/src/Graphics/Pipeline.h
-        ${PROJECT_SOURCE_DIR}/src/Graphics/PipelineBuilder.cpp
-        ${PROJECT_SOURCE_DIR}/src/Graphics/PipelineBuilder.h
         ${PROJECT_SOURCE_DIR}/src/Graphics/Renderable.cpp
         ${PROJECT_SOURCE_DIR}/src/Graphics/Renderable.h
         ${PROJECT_SOURCE_DIR}/src/Graphics/Swapchain.cpp
