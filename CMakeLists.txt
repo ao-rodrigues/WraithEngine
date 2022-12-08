@@ -39,8 +39,6 @@ add_library(${PROJECT_NAME} STATIC
         ${PROJECT_SOURCE_DIR}/include/Wraith/Application.h
         ${PROJECT_SOURCE_DIR}/include/Wraith/Singleton.h
         ${PROJECT_SOURCE_DIR}/src/Core/Core.h
-        ${PROJECT_SOURCE_DIR}/src/Core/Logger.cpp
-        ${PROJECT_SOURCE_DIR}/src/Core/Logger.h
         ${PROJECT_SOURCE_DIR}/src/Core/Utils.h
         ${PROJECT_SOURCE_DIR}/src/Core/Vulkan.cpp
         ${PROJECT_SOURCE_DIR}/src/Core/Vulkan.h
@@ -81,7 +79,9 @@ add_library(${PROJECT_NAME} STATIC
         ${PROJECT_SOURCE_DIR}/src/Core/TimeManager.h
         ${PROJECT_SOURCE_DIR}/include/Wraith/DeletionQueue.h
         ${PROJECT_SOURCE_DIR}/include/Wraith/Object.h
-        ${PROJECT_SOURCE_DIR}/src/Platform/Window.cpp)
+        ${PROJECT_SOURCE_DIR}/src/Platform/Window.cpp
+        ${PROJECT_SOURCE_DIR}/include/Wraith/Logger.h
+        ${PROJECT_SOURCE_DIR}/src/Core/Logger.cpp)
 
 target_include_directories(${PROJECT_NAME}
         PUBLIC

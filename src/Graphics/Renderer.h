@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include "Wraith/Singleton.h"
+
 #include "Core/Vulkan.h"
 
 #include "Graphics/Device.h"

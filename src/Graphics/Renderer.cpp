@@ -57,7 +57,7 @@ namespace Wraith {
             allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
             allocInfo.commandBufferCount = 1;
 
-            WR_VK_CHECK(vkAllocateCommandBuffers(_device->GetVkDevice(), &allocInfo, &frame.commandBuffer), "Failed to allocate command buffer!")
+            WR_VK_CHECK_MSG(vkAllocateCommandBuffers(_device->GetVkDevice(), &allocInfo, &frame.commandBuffer), "Failed to allocate command buffer!")
 
             Engine::GetInstance().GetMainDeletionQueue().Push([=]() {
                 vkDestroyCommandPool(_device->GetVkDevice(), frame.commandPool, nullptr);
@@ -131,7 +131,7 @@ namespace Wraith {
         renderPassInfo.dependencyCount = 2;
         renderPassInfo.pDependencies = &dependencies[0];
 
-        WR_VK_CHECK(vkCreateRenderPass(_device->GetVkDevice(), &renderPassInfo, nullptr, &_renderPass), "Failed to create render pass!")
+        WR_VK_CHECK_MSG(vkCreateRenderPass(_device->GetVkDevice(), &renderPassInfo, nullptr, &_renderPass), "Failed to create render pass!")
         WR_LOG_DEBUG("Created render pass!")
 
         Engine::GetInstance().GetMainDeletionQueue().Push([=]() {
@@ -151,7 +151,7 @@ namespace Wraith {
             };
 
             VkFramebufferCreateInfo framebufferInfo = VkFactory::FramebufferCreateInfo(_renderPass, attachments, swapChainExtent);
-            WR_VK_CHECK(vkCreateFramebuffer(_device->GetVkDevice(), &framebufferInfo, nullptr, &_framebuffers[i]), "Failed to create framebuffer!")
+            WR_VK_CHECK_MSG(vkCreateFramebuffer(_device->GetVkDevice(), &framebufferInfo, nullptr, &_framebuffers[i]), "Failed to create framebuffer!")
         }
         WR_LOG_DEBUG("Created Framebuffers!")
 
@@ -168,14 +168,14 @@ namespace Wraith {
         VkSemaphoreCreateInfo semaphoreInfo = VkFactory::SemaphoreCreateInfo();
 
         for (auto& frame : _frames) {
-            WR_VK_CHECK(vkCreateFence(_device->GetVkDevice(), &fenceInfo, nullptr, &frame.renderFence), "Failed to create Render fence!")
+            WR_VK_CHECK_MSG(vkCreateFence(_device->GetVkDevice(), &fenceInfo, nullptr, &frame.renderFence), "Failed to create Render fence!")
 
             Engine::GetInstance().GetMainDeletionQueue().Push([=]() {
                 vkDestroyFence(_device->GetVkDevice(), frame.renderFence, nullptr);
             });
 
-            WR_VK_CHECK(vkCreateSemaphore(_device->GetVkDevice(), &semaphoreInfo, nullptr, &frame.renderSemaphore), "Failed to create Render semaphore!")
-            WR_VK_CHECK(vkCreateSemaphore(_device->GetVkDevice(), &semaphoreInfo, nullptr, &frame.presentSemaphore), "Failed to create Present semaphore!")
+            WR_VK_CHECK_MSG(vkCreateSemaphore(_device->GetVkDevice(), &semaphoreInfo, nullptr, &frame.renderSemaphore), "Failed to create Render semaphore!")
+            WR_VK_CHECK_MSG(vkCreateSemaphore(_device->GetVkDevice(), &semaphoreInfo, nullptr, &frame.presentSemaphore), "Failed to create Present semaphore!")
 
             Engine::GetInstance().GetMainDeletionQueue().Push([=]() {
                 vkDestroySemaphore(_device->GetVkDevice(), frame.renderSemaphore, nullptr);
@@ -191,8 +191,8 @@ namespace Wraith {
 
     VkCommandBuffer Renderer::BeginFrame() {
         FrameData& frame = GetCurrentFrame();
-        WR_VK_CHECK(vkWaitForFences(_device->GetVkDevice(), 1, &frame.renderFence, true, 1000000000), "Unable to wait for Render fence!")
-        WR_VK_CHECK(vkResetFences(_device->GetVkDevice(), 1, &frame.renderFence), "Unable to reset Render fence!")
+        WR_VK_CHECK_MSG(vkWaitForFences(_device->GetVkDevice(), 1, &frame.renderFence, true, 1000000000), "Unable to wait for Render fence!")
+        WR_VK_CHECK_MSG(vkResetFences(_device->GetVkDevice(), 1, &frame.renderFence), "Unable to reset Render fence!")
 
         const VkResult result = _swapchain.AcquireNextImage(&_swapChainImageIndex, 1000000000, frame.presentSemaphore);
         if (result == VK_ERROR_OUT_OF_DATE_KHR) {
@@ -205,19 +205,19 @@ namespace Wraith {
         }
 
         VkCommandBuffer commandBuffer = GetCurrentFrame().commandBuffer;
-        WR_VK_CHECK(vkResetCommandBuffer(commandBuffer, 0), "Unable to reset command buffer!")
+        WR_VK_CHECK_MSG(vkResetCommandBuffer(commandBuffer, 0), "Unable to reset command buffer!")
 
         VkCommandBufferBeginInfo beginInfo{};
         beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
         beginInfo.flags = 0; // Optional
         beginInfo.pInheritanceInfo = nullptr; // Optional
 
-        WR_VK_CHECK(vkBeginCommandBuffer(commandBuffer, &beginInfo), "Failed to begin recording command buffer!")
+        WR_VK_CHECK_MSG(vkBeginCommandBuffer(commandBuffer, &beginInfo), "Failed to begin recording command buffer!")
         return commandBuffer;
     }
 
     void Renderer::BeginRenderPass(VkCommandBuffer commandBuffer) {
-        WR_ASSERT(commandBuffer == GetCurrentFrame().commandBuffer, "Can't begin render pass on a command buffer from a different frame!")
+        WR_ASSERT_MSG(commandBuffer == GetCurrentFrame().commandBuffer, "Can't begin render pass on a command buffer from a different frame!")
 
         VkRenderPassBeginInfo renderPassInfo{};
         renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
@@ -253,13 +253,13 @@ namespace Wraith {
     }
 
     void Renderer::EndRenderPass(VkCommandBuffer commandBuffer) {
-        WR_ASSERT(commandBuffer == GetCurrentFrame().commandBuffer, "Can't end render pass on a command buffer from a different frame!")
+        WR_ASSERT_MSG(commandBuffer == GetCurrentFrame().commandBuffer, "Can't end render pass on a command buffer from a different frame!")
         vkCmdEndRenderPass(commandBuffer);
     }
 
     void Renderer::EndFrame() {
         VkCommandBuffer commandBuffer = GetCurrentFrame().commandBuffer;
-        WR_VK_CHECK(vkEndCommandBuffer(commandBuffer), "Failed to record command buffer!")
+        WR_VK_CHECK_MSG(vkEndCommandBuffer(commandBuffer), "Failed to record command buffer!")
 
         SubmitCommandQueue();
 
@@ -295,6 +295,6 @@ namespace Wraith {
         submitInfo.signalSemaphoreCount = 1;
         submitInfo.pSignalSemaphores = &frame.renderSemaphore;
 
-        WR_VK_CHECK(vkQueueSubmit(_device->GetGraphicsQueue(), 1, &submitInfo, frame.renderFence), "Unable to submit command queue!")
+        WR_VK_CHECK_MSG(vkQueueSubmit(_device->GetGraphicsQueue(), 1, &submitInfo, frame.renderFence), "Unable to submit command queue!")
     }
 }

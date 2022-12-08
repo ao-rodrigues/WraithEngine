@@ -121,7 +121,7 @@ namespace Wraith {
 
     void Mesh::CreateVertexBuffers(const std::vector<Vertex>& vertices) {
         _vertexCount = static_cast<uint32_t>(vertices.size());
-        WR_ASSERT(_vertexCount >= 3, "Vertex count must be at least 3!")
+        WR_ASSERT_MSG(_vertexCount >= 3, "Vertex count must be at least 3!")
 
         const VkDeviceSize bufferSize = sizeof(vertices[0]) * _vertexCount;
         _device.CreateBuffer(

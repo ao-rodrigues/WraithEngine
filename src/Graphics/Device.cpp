@@ -66,7 +66,7 @@ namespace Wraith {
         primaryPoolInfo.queueFamilyIndex = indices.graphicsFamily.value();
         primaryPoolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT; // Optional
 
-        WR_VK_CHECK(vkCreateCommandPool(_device, &primaryPoolInfo, nullptr, &commandPool), "Failed to create command pool!")
+        WR_VK_CHECK_MSG(vkCreateCommandPool(_device, &primaryPoolInfo, nullptr, &commandPool), "Failed to create command pool!")
         return commandPool;
     }
 

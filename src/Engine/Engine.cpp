@@ -3,6 +3,8 @@
 
 #include <glm/gtx/transform.hpp>
 
+#include "Wraith/Logger.h"
+
 #include "Core/Vulkan.h"
 #include "Core/TimeManager.h"
 
@@ -10,7 +12,6 @@
 
 #include "Input/InputManager.h"
 
-#include "Graphics/Swapchain.h"
 #include "Graphics/Pipeline.h"
 #include "Graphics/PipelineBuilder.h"
 #include "Graphics/Mesh.h"
@@ -20,7 +21,8 @@
 
 namespace Wraith {
     void Engine::Init(const EngineInitParams& initParams) {
-        WRAITH_LOGGER.Init();
+        Logger::Init();
+
         WR_LOG_DEBUG("Staring Wraith Engine...")
 
         TimeManager::GetInstance().Init();
@@ -50,7 +52,7 @@ namespace Wraith {
         _device.Destroy();
         _window->Destroy();
 
-        WRAITH_LOGGER.Shutdown();
+        Logger::Shutdown();
     }
 
     void Engine::Run() {
@@ -128,7 +130,7 @@ namespace Wraith {
         };
         VkPipelineLayoutCreateInfo meshPipelineLayoutInfo = VkFactory::PipelineLayoutCreateInfo(pushConstantRanges);
         VkPipelineLayout  meshPipelineLayout;
-        WR_VK_CHECK(vkCreatePipelineLayout(_device.GetVkDevice(), &meshPipelineLayoutInfo, nullptr, &meshPipelineLayout), "Failed to create pipeline layout!")
+        WR_VK_CHECK_MSG(vkCreatePipelineLayout(_device.GetVkDevice(), &meshPipelineLayoutInfo, nullptr, &meshPipelineLayout), "Failed to create pipeline layout!")
 
         pipelineBuilder.pipelineLayout = meshPipelineLayout;
 
