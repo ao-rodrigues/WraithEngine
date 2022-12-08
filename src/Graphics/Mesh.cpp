@@ -1,4 +1,11 @@
-﻿#include "wrpch.h"
+﻿//
+// Mesh.cpp
+// WraithEngine
+//
+// Created by Andre Rodrigues on 04/12/2022.
+//
+
+#include "wrpch.h"
 #include "Mesh.h"
 
 #define TINYGLTF_IMPLEMENTATION
@@ -7,6 +14,8 @@
 #include <tiny_gltf.h>
 
 #include "Device.h"
+
+#include "Core/Assert.h"
 
 namespace Wraith {
     std::vector<VkVertexInputBindingDescription> Mesh::Vertex::GetBindingDescriptions() {
@@ -121,7 +130,7 @@ namespace Wraith {
 
     void Mesh::CreateVertexBuffers(const std::vector<Vertex>& vertices) {
         _vertexCount = static_cast<uint32_t>(vertices.size());
-        WR_ASSERT(_vertexCount >= 3, "Vertex count must be at least 3!")
+        WR_ASSERT_MSG(_vertexCount >= 3, "Vertex count must be at least 3!")
 
         const VkDeviceSize bufferSize = sizeof(vertices[0]) * _vertexCount;
         _device.CreateBuffer(

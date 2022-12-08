@@ -1,17 +1,25 @@
-﻿#pragma once
+﻿//
+// Engine.h
+// WraithEngine
+//
+// Created by Andre Rodrigues on 04/12/2022.
+//
 
+#pragma once
+
+#include "Wraith/DeletionQueue.h"
 #include "Wraith/Singleton.h"
 
 #include "Platform/Window.h"
 
 #include "Graphics/Device.h"
-#include "Graphics/SwapChain.h"
+#include "Graphics/Swapchain.h"
 #include "Graphics/Pipeline.h"
 #include "Graphics/Mesh.h"
 #include "Graphics/Material.h"
 #include "Graphics/Renderable.h"
 
-#include "Renderer/Renderer.h"
+#include "Graphics/Renderer.h"
 
 namespace Wraith {
     struct EngineInitParams {
@@ -25,6 +33,8 @@ namespace Wraith {
         void Init(const EngineInitParams& initParams);
         void Run();
         void Shutdown();
+
+        DeletionQueue& GetMainDeletionQueue();
 
         std::shared_ptr<Material> CreateMaterial(std::shared_ptr<Pipeline> pipeline, const std::string& name);
         std::shared_ptr<Material> GetMaterial(const std::string& name);
@@ -40,10 +50,10 @@ namespace Wraith {
         void DrawRenderables(VkCommandBuffer commandBuffer, const std::vector<Renderable>& renderables);
 
         std::unique_ptr<Window> _window;
-        std::unique_ptr<Device> _device;
-        std::unique_ptr<SwapChain> _swapChain;
+        Device _device;
         std::shared_ptr<Pipeline> _meshPipeline;
-        std::unique_ptr<Renderer> _renderer;
+
+        DeletionQueue _mainDeletionQueue;
 
         std::unordered_map<std::string, std::shared_ptr<Material>> _materials;
         std::unordered_map<std::string, std::shared_ptr<Mesh>> _meshes;

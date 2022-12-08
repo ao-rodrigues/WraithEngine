@@ -1,37 +1,45 @@
-﻿#include "wrpch.h"
+﻿//
+// Engine.cpp
+// WraithEngine
+//
+// Created by Andre Rodrigues on 04/12/2022.
+//
+
+#include "wrpch.h"
 #include "Engine.h"
 
 #include <glm/gtx/transform.hpp>
 
-#include "Core/VulkanBase.h"
-#include "Core/Utils.h"
+#include "Asset/AssetManager.h"
+
+#include "Wraith/Logger.h"
+
 #include "Core/TimeManager.h"
 
 #include "Platform/SDL2Window.h"
 
 #include "Input/InputManager.h"
 
-#include "Graphics/Device.h"
-#include "Graphics/SwapChain.h"
+#include "Graphics/Vulkan.h"
 #include "Graphics/Pipeline.h"
-#include "Graphics/PipelineBuilder.h"
 #include "Graphics/Mesh.h"
+#include "Graphics/Renderer.h"
 
-#include "Utils/VkFactory.h"
-
-#include "Renderer/Renderer.h"
+#include "Graphics/VkFactory.h"
 
 namespace Wraith {
     void Engine::Init(const EngineInitParams& initParams) {
-        WRAITH_LOGGER.Init();
+        Logger::Init();
+
         WR_LOG_DEBUG("Staring Wraith Engine...")
 
         TimeManager::GetInstance().Init();
 
-        _window = std::make_unique<SDL2Window>(initParams.windowWidth, initParams.windowHeight, initParams.windowTitle);
-        _device = std::make_unique<Device>(*_window);
-        _swapChain = std::make_unique<SwapChain>(*_device, *_window);
-        _renderer = std::make_unique<Renderer>(*_device, *_window);
+        _window = std::make_unique<SDL2Window>();
+        _window->Create(initParams.windowWidth, initParams.windowHeight, initParams.windowTitle);
+
+        _device.Create(*_window);
+        Renderer::GetInstance().Init(_device, *_window);
 
         InitPipelines();
         LoadMeshes();
@@ -39,20 +47,20 @@ namespace Wraith {
     }
 
     void Engine::Shutdown() {
-        _device->FinishOperations();
+        _device.FinishOperations();
 
-        _renderer.reset();
+        _mainDeletionQueue.Flush();
+
         _meshPipeline.reset();
-        _swapChain.reset();
 
         _materials.clear();
         _meshes.clear();
         _renderables.clear();
 
-        _device.reset();
-        _window.reset();
+        _device.Destroy();
+        _window->Destroy();
 
-        WRAITH_LOGGER.Shutdown();
+        Logger::Shutdown();
     }
 
     void Engine::Run() {
@@ -61,21 +69,16 @@ namespace Wraith {
             TimeManager::GetInstance().Update();
             _window->PollEvents();
 
-             // TODO Update game logic here
              UpdateLogic();
-
-             // TODO Draw frame using single call from Renderer
-            if (VkCommandBuffer commandBuffer = _renderer->BeginFrame()) {
-                _renderer->BeginSwapChainRenderPass(commandBuffer);
-
-                // TODO use ECS to get all entities with Renderable components
-                DrawRenderables(commandBuffer, _renderables);
-
-                _renderer->EndSwapChainRenderPass(commandBuffer);
-                _renderer->EndFrame();
-            }
+             Renderer::GetInstance().RenderFrame([=](VkCommandBuffer commandBuffer) {
+                 DrawRenderables(commandBuffer, _renderables);
+             });
         }
         Shutdown();
+    }
+
+    DeletionQueue& Engine::GetMainDeletionQueue() {
+        return _mainDeletionQueue;
     }
 
     std::shared_ptr<Material> Engine::CreateMaterial(std::shared_ptr<Pipeline> pipeline, const std::string& name) {
@@ -95,13 +98,13 @@ namespace Wraith {
 
     void Engine::InitPipelines() {
         // Init shaders
-        VkShaderModule vertShaderModule = VkFactory::ShaderModule(_device->GetVkDevice(),
+        VkShaderModule vertShaderModule = VkFactory::ShaderModule(_device.GetVkDevice(),
                                                                   WR_ASSET("shaders/SimpleShader.vert.spv"));
-        VkShaderModule fragShaderModule = VkFactory::ShaderModule(_device->GetVkDevice(),
+        VkShaderModule fragShaderModule = VkFactory::ShaderModule(_device.GetVkDevice(),
                                                                   WR_ASSET("shaders/SimpleShader.frag.spv"));
 
         // Build pipeline
-        PipelineBuilder pipelineBuilder;
+        Pipeline::Builder pipelineBuilder;
         pipelineBuilder.shaderStages.emplace_back(
                 VkFactory::PipelineShaderStageCreateInfo(VK_SHADER_STAGE_VERTEX_BIT, vertShaderModule));
         pipelineBuilder.shaderStages.emplace_back(
@@ -135,21 +138,21 @@ namespace Wraith {
         };
         VkPipelineLayoutCreateInfo meshPipelineLayoutInfo = VkFactory::PipelineLayoutCreateInfo(pushConstantRanges);
         VkPipelineLayout  meshPipelineLayout;
-        WR_VK_CHECK(vkCreatePipelineLayout(_device->GetVkDevice(), &meshPipelineLayoutInfo, nullptr, &meshPipelineLayout), "Failed to create pipeline layout!")
+        WR_VK_CHECK_MSG(vkCreatePipelineLayout(_device.GetVkDevice(), &meshPipelineLayoutInfo, nullptr, &meshPipelineLayout), "Failed to create pipeline layout!")
 
         pipelineBuilder.pipelineLayout = meshPipelineLayout;
 
-        _meshPipeline = std::make_shared<Pipeline>(*_device, pipelineBuilder.Build(_device->GetVkDevice(), _swapChain->GetRenderPass()), meshPipelineLayout);
+        _meshPipeline = std::make_shared<Pipeline>(_device, pipelineBuilder.Build(_device.GetVkDevice(), Renderer::GetInstance().GetRenderPass()), meshPipelineLayout);
 
-        vkDestroyShaderModule(_device->GetVkDevice(), vertShaderModule, nullptr);
-        vkDestroyShaderModule(_device->GetVkDevice(), fragShaderModule, nullptr);
+        vkDestroyShaderModule(_device.GetVkDevice(), vertShaderModule, nullptr);
+        vkDestroyShaderModule(_device.GetVkDevice(), fragShaderModule, nullptr);
 
         CreateMaterial(_meshPipeline, "M_Default");
     }
 
     void Engine::LoadMeshes() {
-        _meshes["Monke"] = std::make_shared<Mesh>(*_device, WR_ASSET("Suzanne.gltf"));
-        _meshes["Duck"] = std::make_shared<Mesh>(*_device, WR_ASSET("Duck.glb"), true);
+        _meshes["Monke"] = std::make_shared<Mesh>(_device, WR_ASSET("Suzanne.gltf"));
+        _meshes["Duck"] = std::make_shared<Mesh>(_device, WR_ASSET("Duck.glb"), true);
     }
 
     void Engine::InitScene() {

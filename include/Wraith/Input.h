@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include "Math/Math.h"
+
 namespace Wraith::Input {
 
     enum class KeyCode : int {

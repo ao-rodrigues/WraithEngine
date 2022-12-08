@@ -1,10 +1,13 @@
 //
+// VkFactory.h
+// WraithEngine
+//
 // Created by Andre Rodrigues on 16/06/2022.
 //
 
 #pragma once
 
-#include "Core/VulkanBase.h"
+#include "Graphics/Vulkan.h"
 
 namespace Wraith::VkFactory {
     VkShaderModule ShaderModule(VkDevice device, const std::string& shaderPath);
@@ -26,6 +29,11 @@ namespace Wraith::VkFactory {
     VkImageCreateInfo ImageCreateInfo(VkFormat format, VkImageUsageFlags usageFlags, VkExtent3D extent);
     VkImageViewCreateInfo ImageViewCreateInfo(VkFormat format, VkImage image, VkImageAspectFlags aspectFlags);
 
+    VkFramebufferCreateInfo FramebufferCreateInfo(VkRenderPass renderPass, VkImageView* attachments, VkExtent2D swapChainExtent);
+
+    // Sync structures
+    VkFenceCreateInfo FenceCreateInfo();
+    VkSemaphoreCreateInfo SemaphoreCreateInfo();
 
     VkPipelineDepthStencilStateCreateInfo DepthStencilStateCreateInfo(bool depthTest, bool depthWrite, VkCompareOp compareOp);
 }

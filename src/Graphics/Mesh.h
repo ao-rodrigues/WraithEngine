@@ -1,6 +1,14 @@
-﻿#pragma once
+﻿//
+// Mesh.h
+// WraithEngine
+//
+// Created by Andre Rodrigues on 04/12/2022.
+//
 
-#include "Core/VulkanBase.h"
+#pragma once
+
+#include "Graphics/Vulkan.h"
+#include "Math/Math.h"
 
 namespace Wraith {
     class Device;

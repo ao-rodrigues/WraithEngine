@@ -1,3 +1,10 @@
+//
+// Singleton.h
+// WraithEngine
+//
+// Created by Andre Rodrigues on 04/12/2022.
+//
+
 #pragma once
 
 namespace Wraith {

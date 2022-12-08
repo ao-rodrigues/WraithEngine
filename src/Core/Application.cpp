@@ -1,7 +1,14 @@
+//
+// Application.cpp
+// WraithEngine
+//
+// Created by Andre Rodrigues on 04/12/2022.
+//
+
 #include "wrpch.h"
 #include "Wraith/Application.h"
 
-#include "Engine/Engine.h"
+#include "Core/Engine.h"
 
 namespace Wraith {
     Application::Application(int windowWidth, int windowHeight, const std::string& name) {

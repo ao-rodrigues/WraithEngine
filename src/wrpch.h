@@ -1,4 +1,11 @@
-﻿#pragma once
+﻿//
+// wrpch.h
+// WraithEngine
+//
+// Created by Andre Rodrigues on 04/12/2022.
+//
+
+#pragma once
 
 // Generic stuff
 #include <iostream>
@@ -10,12 +17,10 @@
 #include <stdexcept>
 #include <fstream>
 #include <chrono>
+#include <string>
 
 // Data structures
-#include <string>
+#include <array>
 #include <vector>
 #include <set>
 #include <unordered_map>
-
-// Wraith Engine specific
-#include "Core/Core.h"

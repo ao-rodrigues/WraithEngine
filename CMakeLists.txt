@@ -38,15 +38,11 @@ find_program(GLSLC_EXECUTABLE NAMES glslc HINTS Vulkan::glslc)
 add_library(${PROJECT_NAME} STATIC
         ${PROJECT_SOURCE_DIR}/include/Wraith/Application.h
         ${PROJECT_SOURCE_DIR}/include/Wraith/Singleton.h
-        ${PROJECT_SOURCE_DIR}/src/Core/Core.h
-        ${PROJECT_SOURCE_DIR}/src/Core/Logger.cpp
-        ${PROJECT_SOURCE_DIR}/src/Core/Logger.h
-        ${PROJECT_SOURCE_DIR}/src/Core/Utils.h
-        ${PROJECT_SOURCE_DIR}/src/Core/VulkanBase.cpp
-        ${PROJECT_SOURCE_DIR}/src/Core/VulkanBase.h
-        ${PROJECT_SOURCE_DIR}/src/Engine/Application.cpp
-        ${PROJECT_SOURCE_DIR}/src/Engine/Engine.cpp
-        ${PROJECT_SOURCE_DIR}/src/Engine/Engine.h
+        ${PROJECT_SOURCE_DIR}/src/Graphics/Vulkan.cpp
+        ${PROJECT_SOURCE_DIR}/src/Graphics/Vulkan.h
+        ${PROJECT_SOURCE_DIR}/src/Core/Application.cpp
+        ${PROJECT_SOURCE_DIR}/src/Core/Engine.cpp
+        ${PROJECT_SOURCE_DIR}/src/Core/Engine.h
         ${PROJECT_SOURCE_DIR}/src/Graphics/Device.cpp
         ${PROJECT_SOURCE_DIR}/src/Graphics/Device.h
         ${PROJECT_SOURCE_DIR}/src/Graphics/Material.cpp
@@ -55,20 +51,18 @@ add_library(${PROJECT_NAME} STATIC
         ${PROJECT_SOURCE_DIR}/src/Graphics/Mesh.h
         ${PROJECT_SOURCE_DIR}/src/Graphics/Pipeline.cpp
         ${PROJECT_SOURCE_DIR}/src/Graphics/Pipeline.h
-        ${PROJECT_SOURCE_DIR}/src/Graphics/PipelineBuilder.cpp
-        ${PROJECT_SOURCE_DIR}/src/Graphics/PipelineBuilder.h
         ${PROJECT_SOURCE_DIR}/src/Graphics/Renderable.cpp
         ${PROJECT_SOURCE_DIR}/src/Graphics/Renderable.h
-        ${PROJECT_SOURCE_DIR}/src/Graphics/SwapChain.cpp
-        ${PROJECT_SOURCE_DIR}/src/Graphics/SwapChain.h
+        ${PROJECT_SOURCE_DIR}/src/Graphics/Swapchain.cpp
+        ${PROJECT_SOURCE_DIR}/src/Graphics/Swapchain.h
         ${PROJECT_SOURCE_DIR}/src/Platform/GLFWWindow.cpp
         ${PROJECT_SOURCE_DIR}/src/Platform/GLFWWindow.h
         ${PROJECT_SOURCE_DIR}/src/Platform/SDL2Window.cpp
         ${PROJECT_SOURCE_DIR}/src/Platform/SDL2Window.h
-        ${PROJECT_SOURCE_DIR}/src/Renderer/Renderer.cpp
-        ${PROJECT_SOURCE_DIR}/src/Renderer/Renderer.h
-        ${PROJECT_SOURCE_DIR}/src/Utils/VkFactory.cpp
-        ${PROJECT_SOURCE_DIR}/src/Utils/VkFactory.h
+        ${PROJECT_SOURCE_DIR}/src/Graphics/Renderer.cpp
+        ${PROJECT_SOURCE_DIR}/src/Graphics/Renderer.h
+        ${PROJECT_SOURCE_DIR}/src/Graphics/VkFactory.cpp
+        ${PROJECT_SOURCE_DIR}/src/Graphics/VkFactory.h
         ${PROJECT_SOURCE_DIR}/src/wrpch.cpp
         ${PROJECT_SOURCE_DIR}/src/wrpch.h
         ${PROJECT_SOURCE_DIR}/include/Wraith/Input.h
@@ -78,7 +72,14 @@ add_library(${PROJECT_NAME} STATIC
         ${PROJECT_SOURCE_DIR}/src/Platform/SDL2Input.h
         ${PROJECT_SOURCE_DIR}/include/Wraith/Time.h
         ${PROJECT_SOURCE_DIR}/src/Core/TimeManager.cpp
-        ${PROJECT_SOURCE_DIR}/src/Core/TimeManager.h)
+        ${PROJECT_SOURCE_DIR}/src/Core/TimeManager.h
+        ${PROJECT_SOURCE_DIR}/include/Wraith/DeletionQueue.h
+        ${PROJECT_SOURCE_DIR}/include/Wraith/Object.h
+        ${PROJECT_SOURCE_DIR}/src/Platform/Window.cpp
+        ${PROJECT_SOURCE_DIR}/include/Wraith/Logger.h
+        ${PROJECT_SOURCE_DIR}/src/Core/Logger.cpp
+        ${PROJECT_SOURCE_DIR}/src/Core/Assert.h
+        ${PROJECT_SOURCE_DIR}/src/Math/Math.h src/IO/IO.h src/Asset/AssetManager.h)
 
 target_include_directories(${PROJECT_NAME}
         PUBLIC

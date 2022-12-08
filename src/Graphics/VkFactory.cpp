@@ -1,13 +1,18 @@
 //
+// VkFactory.h
+// WraithEngine
+//
 // Created by Andre Rodrigues on 16/06/2022.
 //
 
 #include "VkFactory.h"
 
+#include "IO/IO.h"
+
 namespace Wraith::VkFactory {
 
     VkShaderModule ShaderModule(VkDevice device, const std::string& shaderPath) {
-        const std::vector<char> shaderCode = Utils::ReadFile(shaderPath);
+        const std::vector<char> shaderCode = IO::ReadFile(shaderPath);
 
         VkShaderModuleCreateInfo shaderInfo{};
         shaderInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
@@ -175,6 +180,34 @@ namespace Wraith::VkFactory {
         createInfo.subresourceRange.levelCount = 1;
         createInfo.subresourceRange.baseArrayLayer = 0;
         createInfo.subresourceRange.layerCount = 1;
+
+        return createInfo;
+    }
+
+    VkFramebufferCreateInfo FramebufferCreateInfo(VkRenderPass renderPass, VkImageView* attachments, VkExtent2D swapChainExtent) {
+        VkFramebufferCreateInfo createInfo{};
+        createInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+        createInfo.renderPass = renderPass;
+        createInfo.attachmentCount = 2;
+        createInfo.pAttachments = attachments;
+        createInfo.width = swapChainExtent.width;
+        createInfo.height = swapChainExtent.height;
+        createInfo.layers = 1;
+
+        return createInfo;
+    }
+
+    VkFenceCreateInfo FenceCreateInfo() {
+        VkFenceCreateInfo createInfo{};
+        createInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+        createInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
+
+        return createInfo;
+    }
+
+    VkSemaphoreCreateInfo SemaphoreCreateInfo() {
+        VkSemaphoreCreateInfo createInfo{};
+        createInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
 
         return createInfo;
     }
