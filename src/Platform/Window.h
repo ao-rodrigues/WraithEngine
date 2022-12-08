@@ -1,29 +1,39 @@
+//
+// Window.h
+// WraithEngine
+//
+// Created by Andre Rodrigues on 07/12/2022.
+//
+
 #pragma once
 
-#include "Core/VulkanBase.h"
+#include "Graphics/Vulkan.h"
+#include "Wraith/Object.h"
 
 namespace Wraith {
-    class Window {
+    class Window : public Object<Window> {
     public:
-        Window(int width, int height, const std::string& title) : _width(width), _height(height), _title(title) {}
-
+        Window() = default;
         virtual ~Window() = default;
 
         Window(const Window&) = delete;
         Window& operator=(const Window&) = delete;
 
-        virtual void CreateSurface(VkInstance instance, VkSurfaceKHR* surface) = 0;
-        virtual void GetFramebufferSize(int* width, int* height) = 0;
-        virtual std::vector<const char*> GetInstanceExtensions(unsigned int* count) = 0;
+        virtual void Create(int width, int height, const std::string& title);
+        virtual void Destroy();
 
-        VkExtent2D GetExtent() const { return {static_cast<uint32_t>(_width), static_cast<uint32_t>(_height)}; }
+        virtual void CreateSurface(VkInstance instance, VkSurfaceKHR* surface);
+        virtual void GetFramebufferSize(int* width, int* height) const;
+        virtual std::vector<const char*> GetInstanceExtensions(unsigned int* count) const;
 
-        virtual void PollEvents() = 0;
-        virtual void WaitEvents() = 0;
-        virtual bool ShouldClose() const = 0;
+        VkExtent2D GetExtent() const;
 
-        bool WasResized() const { return _windowResized; }
-        void ResetWindowResizedFlag() { _windowResized = false; }
+        virtual void PollEvents();
+        virtual void WaitEvents();
+        virtual bool ShouldClose() const;
+
+        bool WasResized() const;
+        void ResetWindowResizedFlag();
 
     protected:
         int _width = 800;

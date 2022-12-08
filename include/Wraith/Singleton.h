@@ -1,3 +1,10 @@
+//
+// Singleton.h
+// WraithEngine
+//
+// Created by Andre Rodrigues on 04/12/2022.
+//
+
 #pragma once
 
 namespace Wraith {
@@ -8,7 +15,7 @@ namespace Wraith {
 
         Singleton& operator=(const Singleton&) = delete;
 
-        static T& Instance() {
+        static T& GetInstance() {
             static T instance;
             return instance;
         }

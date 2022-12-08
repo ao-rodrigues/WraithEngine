@@ -1,15 +1,25 @@
 //
+// SDL2Window.cpp
+// WraithEngine
+//
 // Created by Andre Rodrigues on 14/06/2022.
 //
+
+#include "wrpch.h"
 
 #include "SDL2Window.h"
 
 #include <SDL.h>
 #include <SDL_vulkan.h>
 
+#include "Input/InputManager.h"
+#include "Platform/SDL2Input.h"
+
 namespace Wraith {
 
-    SDL2Window::SDL2Window(int width, int height, const std::string& title) : Window(width, height, title) {
+    void SDL2Window::Create(int width, int height, const std::string& title) {
+        Window::Create(width, height, title);
+
         if (SDL_Init(SDL_INIT_VIDEO) < 0) {
             WR_LOG_ERROR("SDL init failed! Error: %s", SDL_GetError());
         } else {
@@ -18,10 +28,11 @@ namespace Wraith {
             if (_window == nullptr) {
                 WR_LOG_ERROR("SDL Window creation failed! Error: %s", SDL_GetError());
             }
+            SDL_SetRelativeMouseMode(SDL_TRUE);
         }
     }
 
-    SDL2Window::~SDL2Window() {
+    void SDL2Window::Destroy() {
         SDL_DestroyWindow(_window);
         SDL_Quit();
     }
@@ -30,11 +41,11 @@ namespace Wraith {
         SDL_Vulkan_CreateSurface(_window, instance, surface);
     }
 
-    void SDL2Window::GetFramebufferSize(int* width, int* height) {
+    void SDL2Window::GetFramebufferSize(int* width, int* height) const {
         SDL_Vulkan_GetDrawableSize(_window, width, height);
     }
 
-    std::vector<const char*> SDL2Window::GetInstanceExtensions(unsigned int* count) {
+    std::vector<const char*> SDL2Window::GetInstanceExtensions(unsigned int* count) const {
         if (!SDL_Vulkan_GetInstanceExtensions(_window, count, nullptr)) {
             WR_LOG_ERROR("SDL: Failed to get instance extensions!");
         }
@@ -79,6 +90,33 @@ namespace Wraith {
                     // TODO handle other window events
                     break;
             }
+        } else {
+            HandleInputEvent(event);
+        }
+    }
+
+    void SDL2Window::HandleInputEvent(SDL_Event event) {
+        switch (event.type) {
+            case SDL_KEYDOWN:
+                InputManager::GetInstance().RegisterKeyDown(SDL2Input::TranslateKeyCode(event.key.keysym.sym));
+                break;
+            case SDL_KEYUP:
+                InputManager::GetInstance().RegisterKeyUp(SDL2Input::TranslateKeyCode(event.key.keysym.sym));
+                break;
+            case SDL_MOUSEBUTTONDOWN:
+                InputManager::GetInstance().RegisterMouseButtonDown(SDL2Input::TranslateMouseButton(event.button.button));
+                break;
+            case SDL_MOUSEBUTTONUP:
+                InputManager::GetInstance().RegisterMouseButtonUp(SDL2Input::TranslateMouseButton(event.button.button));
+                break;
+            case SDL_MOUSEMOTION:
+                InputManager::GetInstance().RegisterMouseMotion({event.motion.x, event.motion.y}, {event.motion.xrel, event.motion.yrel});
+                break;
+            case SDL_MOUSEWHEEL:
+                InputManager::GetInstance().RegisterMouseWheel({event.wheel.x, event.wheel.y});
+                break;
+            default:
+                break;
         }
     }
 }

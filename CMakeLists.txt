@@ -35,9 +35,51 @@ add_subdirectory(libs/VulkanMemoryAllocator)
 find_package(Vulkan REQUIRED COMPONENTS glslc)
 find_program(GLSLC_EXECUTABLE NAMES glslc HINTS Vulkan::glslc)
 
-file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.h")
-
-add_library(${PROJECT_NAME} STATIC ${SOURCES})
+add_library(${PROJECT_NAME} STATIC
+        ${PROJECT_SOURCE_DIR}/include/Wraith/Application.h
+        ${PROJECT_SOURCE_DIR}/include/Wraith/Singleton.h
+        ${PROJECT_SOURCE_DIR}/src/Graphics/Vulkan.cpp
+        ${PROJECT_SOURCE_DIR}/src/Graphics/Vulkan.h
+        ${PROJECT_SOURCE_DIR}/src/Core/Application.cpp
+        ${PROJECT_SOURCE_DIR}/src/Core/Engine.cpp
+        ${PROJECT_SOURCE_DIR}/src/Core/Engine.h
+        ${PROJECT_SOURCE_DIR}/src/Graphics/Device.cpp
+        ${PROJECT_SOURCE_DIR}/src/Graphics/Device.h
+        ${PROJECT_SOURCE_DIR}/src/Graphics/Material.cpp
+        ${PROJECT_SOURCE_DIR}/src/Graphics/Material.h
+        ${PROJECT_SOURCE_DIR}/src/Graphics/Mesh.cpp
+        ${PROJECT_SOURCE_DIR}/src/Graphics/Mesh.h
+        ${PROJECT_SOURCE_DIR}/src/Graphics/Pipeline.cpp
+        ${PROJECT_SOURCE_DIR}/src/Graphics/Pipeline.h
+        ${PROJECT_SOURCE_DIR}/src/Graphics/Renderable.cpp
+        ${PROJECT_SOURCE_DIR}/src/Graphics/Renderable.h
+        ${PROJECT_SOURCE_DIR}/src/Graphics/Swapchain.cpp
+        ${PROJECT_SOURCE_DIR}/src/Graphics/Swapchain.h
+        ${PROJECT_SOURCE_DIR}/src/Platform/GLFWWindow.cpp
+        ${PROJECT_SOURCE_DIR}/src/Platform/GLFWWindow.h
+        ${PROJECT_SOURCE_DIR}/src/Platform/SDL2Window.cpp
+        ${PROJECT_SOURCE_DIR}/src/Platform/SDL2Window.h
+        ${PROJECT_SOURCE_DIR}/src/Graphics/Renderer.cpp
+        ${PROJECT_SOURCE_DIR}/src/Graphics/Renderer.h
+        ${PROJECT_SOURCE_DIR}/src/Graphics/VkFactory.cpp
+        ${PROJECT_SOURCE_DIR}/src/Graphics/VkFactory.h
+        ${PROJECT_SOURCE_DIR}/src/wrpch.cpp
+        ${PROJECT_SOURCE_DIR}/src/wrpch.h
+        ${PROJECT_SOURCE_DIR}/include/Wraith/Input.h
+        ${PROJECT_SOURCE_DIR}/src/Input/InputManager.cpp
+        ${PROJECT_SOURCE_DIR}/src/Input/InputManager.h
+        ${PROJECT_SOURCE_DIR}/src/Platform/SDL2Input.cpp
+        ${PROJECT_SOURCE_DIR}/src/Platform/SDL2Input.h
+        ${PROJECT_SOURCE_DIR}/include/Wraith/Time.h
+        ${PROJECT_SOURCE_DIR}/src/Core/TimeManager.cpp
+        ${PROJECT_SOURCE_DIR}/src/Core/TimeManager.h
+        ${PROJECT_SOURCE_DIR}/include/Wraith/DeletionQueue.h
+        ${PROJECT_SOURCE_DIR}/include/Wraith/Object.h
+        ${PROJECT_SOURCE_DIR}/src/Platform/Window.cpp
+        ${PROJECT_SOURCE_DIR}/include/Wraith/Logger.h
+        ${PROJECT_SOURCE_DIR}/src/Core/Logger.cpp
+        ${PROJECT_SOURCE_DIR}/src/Core/Assert.h
+        ${PROJECT_SOURCE_DIR}/src/Math/Math.h src/IO/IO.h src/Asset/AssetManager.h)
 
 target_include_directories(${PROJECT_NAME}
         PUBLIC
@@ -47,7 +89,7 @@ target_include_directories(${PROJECT_NAME}
             spdlog
         PRIVATE
             ${PROJECT_SOURCE_DIR}/src
-            ${PROJECT_SOURCE_DIR}/include/WraithEngine
+            ${PROJECT_SOURCE_DIR}/include
             ${Vulkan_INCLUDE_DIRS}
             glfw
             VulkanMemoryAllocator
@@ -102,6 +144,12 @@ file(GLOB_RECURSE GameAssets
         ${CMAKE_SOURCE_DIR}/${ASSETS_DIR}/*.png
         ${CMAKE_SOURCE_DIR}/${ASSETS_DIR}/*.jpg
         ${CMAKE_SOURCE_DIR}/${ASSETS_DIR}/*.jpeg
+)
+
+add_custom_command(
+        TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E make_directory ${BINARY_ASSETS_DIR}
+        COMMENT "Creating ${BINARY_ASSETS_DIR}"
 )
 
 foreach(asset IN LISTS GameAssets)

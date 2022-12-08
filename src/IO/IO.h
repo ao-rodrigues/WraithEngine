@@ -1,8 +1,17 @@
+//
+// IO.h
+// WraithEngine
+//
+// Created by Andre Rodrigues on 08/12/2022.
+//
+
 #pragma once
 
-#define WR_ASSET(path) WR_ASSETS_DIR"""/"path
+#include <vector>
+#include <string>
+#include <fstream>
 
-namespace Wraith::Utils {
+namespace Wraith::IO {
     inline std::vector<char> ReadFile(const std::string& fileName) {
         std::ifstream file(fileName, std::ios::ate | std::ios::binary);
         if (!file.is_open()) {

@@ -1,10 +1,18 @@
+//
+// Device.h
+// WraithEngine
+//
+// Created by Andre Rodrigues on 04/12/2022.
+//
+
 #pragma once
 
-#include "Core/VulkanBase.h"
+#include "Wraith/Object.h"
+#include "Graphics/Vulkan.h"
 #include "Platform/Window.h"
 
 namespace Wraith {
-    class Device {
+    class Device : public Object<Device> {
     public:
         struct QueueFamilyIndices {
             std::optional<uint32_t> graphicsFamily;
@@ -21,22 +29,23 @@ namespace Wraith {
             std::vector<VkPresentModeKHR> presentModes;
         };
 
-        explicit Device(Window& window);
-        ~Device();
+        Device() = default;
 
-        Device(const Device&) = delete;
-        Device& operator=(const Device&) = delete;
+        void Create(Window& window);
+        void Destroy();
 
+        bool IsUndefined() const override;
 
         VkDevice GetVkDevice() const { return _device; }
         VkPhysicalDevice GetPhysicalDevice() const { return _physicalDevice; }
         VkSurfaceKHR GetSurface() const { return _surface; }
-        VkCommandPool GetCommandPool() const { return _primaryCommandPool; }
         VkQueue GetGraphicsQueue() const { return _graphicsQueue; }
         VkQueue GetPresentQueue() const { return _presentQueue; }
         VmaAllocator GetAllocator() const { return _allocator; }
         QueueFamilyIndices GetQueueFamilyIndices() const { return FindQueueFamilies(_physicalDevice); }
         SwapChainSupportDetails GetSwapChainSupport() const { return QuerySwapChainSupport(_physicalDevice); }
+
+        VkCommandPool CreateCommandPool() const;
 
         void FinishOperations() const;
 
@@ -53,7 +62,6 @@ namespace Wraith {
         void PickPhysicalDevice();
         void CreateLogicalDevice();
         void CreateAllocator();
-        void CreateCommandPools();
 
         // Validation layer setup helpers
         bool CheckValidationLayerSupport();
@@ -88,7 +96,7 @@ namespace Wraith {
                 VK_KHR_SWAPCHAIN_EXTENSION_NAME
         };
 
-        Window& _window;
+        Window::MutableRef _window;
 
         VkInstance _instance = VK_NULL_HANDLE;
         VkSurfaceKHR _surface = VK_NULL_HANDLE;
@@ -100,9 +108,6 @@ namespace Wraith {
 
         VkQueue _graphicsQueue = VK_NULL_HANDLE;
         VkQueue _presentQueue = VK_NULL_HANDLE;
-
-        VkCommandPool _primaryCommandPool = VK_NULL_HANDLE;
-        VkCommandPool _transientCommandPool = VK_NULL_HANDLE;
 
         VmaAllocator _allocator = nullptr;
     };
