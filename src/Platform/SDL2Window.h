@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "Window.h"
+#include "Platform/Window.h"
 
 struct SDL_Window;
 union SDL_Event;

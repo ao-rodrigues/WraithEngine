@@ -12,7 +12,7 @@
 #include "Core/Engine.h"
 #include "Platform/Window.h"
 #include "Graphics/Device.h"
-#include "VkFactory.h"
+#include "Graphics/VkFactory.h"
 
 namespace Wraith {
     void Renderer::Init(const Device& device, Window& window) {

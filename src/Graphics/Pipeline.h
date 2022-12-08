@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "Vulkan.h"
+#include "Graphics/Vulkan.h"
 
 namespace Wraith {
     class Device;

@@ -8,7 +8,7 @@
 #include "wrpch.h"
 #include "Pipeline.h"
 
-#include "Device.h"
+#include "Graphics/Device.h"
 
 namespace Wraith {
     Pipeline::Pipeline(Device& device, VkPipeline pipeline, VkPipelineLayout pipelineLayout)

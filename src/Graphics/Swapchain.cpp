@@ -8,10 +8,9 @@
 #include "wrpch.h"
 #include "Swapchain.h"
 
-#include "Device.h"
+#include "Graphics/Device.h"
+#include "Graphics/VkFactory.h"
 #include "Platform/Window.h"
-#include "Core/Engine.h"
-#include "VkFactory.h"
 
 namespace Wraith {
 

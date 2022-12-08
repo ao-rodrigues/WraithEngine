@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "Window.h"
+#include "Platform/Window.h"
 
 struct GLFWwindow;
 
