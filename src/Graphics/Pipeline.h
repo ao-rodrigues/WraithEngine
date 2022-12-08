@@ -7,14 +7,14 @@
 
 #pragma once
 
+#include "Graphics/Device.h"
 #include "Graphics/Vulkan.h"
 
 namespace Wraith {
-    class Device;
 
     class Pipeline {
     public:
-        Pipeline(Device& device, VkPipeline pipeline, VkPipelineLayout pipelineLayout);
+        Pipeline(const Device& device, VkPipeline pipeline, VkPipelineLayout pipelineLayout);
         ~Pipeline();
 
         Pipeline(const Pipeline&) = delete;
@@ -26,7 +26,7 @@ namespace Wraith {
         VkPipelineLayout GetPipelineLayout() const { return _pipelineLayout; }
 
     private:
-        Device& _device;
+        Device::Ref _device;
 
         VkPipeline _pipeline = VK_NULL_HANDLE;
         VkPipelineLayout _pipelineLayout = VK_NULL_HANDLE;
