@@ -8,6 +8,8 @@
 
 #include "Device.h"
 
+#include "Core/Assert.h"
+
 namespace Wraith {
     std::vector<VkVertexInputBindingDescription> Mesh::Vertex::GetBindingDescriptions() {
         std::vector<VkVertexInputBindingDescription> bindingDescriptions(1);

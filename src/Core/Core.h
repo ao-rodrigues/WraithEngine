@@ -7,26 +7,6 @@
 #include "Wraith/Logger.h"
 #include "Utils.h"
 
-#ifdef WR_CONFIG_DEBUG
-
-#define WR_ASSERT(x)                            \
-    if (!(x)) {                                 \
-        WR_LOG_FATAL("Assert {} failed!");      \
-        abort();                                \
-    }                                           \
-
-#define WR_ASSERT_MSG(x, msg)                                                           \
-    if (!(x)) {                                                                         \
-        WR_LOG_FATAL("[{}:{}] Assert {} failed: {}", __FILE__, __LINE__, #x, msg);      \
-        abort();                                                                        \
-    }                                                                                   \
-
-#else
-
-#define WR_ASSERT(x)
-#define WR_ASSERT_MSG(x, msg)
-
-#endif
 
 #define WR_VK_CHECK(x)                                                          \
 {                                                                               \

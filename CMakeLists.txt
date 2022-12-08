@@ -81,7 +81,8 @@ add_library(${PROJECT_NAME} STATIC
         ${PROJECT_SOURCE_DIR}/include/Wraith/Object.h
         ${PROJECT_SOURCE_DIR}/src/Platform/Window.cpp
         ${PROJECT_SOURCE_DIR}/include/Wraith/Logger.h
-        ${PROJECT_SOURCE_DIR}/src/Core/Logger.cpp)
+        ${PROJECT_SOURCE_DIR}/src/Core/Logger.cpp
+        ${PROJECT_SOURCE_DIR}/src/Core/Assert.h)
 
 target_include_directories(${PROJECT_NAME}
         PUBLIC
