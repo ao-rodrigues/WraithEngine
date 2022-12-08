@@ -40,8 +40,8 @@ add_library(${PROJECT_NAME} STATIC
         ${PROJECT_SOURCE_DIR}/include/Wraith/Singleton.h
         ${PROJECT_SOURCE_DIR}/src/Core/Core.h
         ${PROJECT_SOURCE_DIR}/src/Core/Utils.h
-        ${PROJECT_SOURCE_DIR}/src/Core/Vulkan.cpp
-        ${PROJECT_SOURCE_DIR}/src/Core/Vulkan.h
+        ${PROJECT_SOURCE_DIR}/src/Graphics/Vulkan.cpp
+        ${PROJECT_SOURCE_DIR}/src/Graphics/Vulkan.h
         ${PROJECT_SOURCE_DIR}/src/Engine/Application.cpp
         ${PROJECT_SOURCE_DIR}/src/Engine/Engine.cpp
         ${PROJECT_SOURCE_DIR}/src/Engine/Engine.h

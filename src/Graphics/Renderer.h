@@ -2,7 +2,7 @@
 
 #include "Wraith/Singleton.h"
 
-#include "Core/Vulkan.h"
+#include "Vulkan.h"
 
 #include "Graphics/Device.h"
 #include "Graphics/Swapchain.h"

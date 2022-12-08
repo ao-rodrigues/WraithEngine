@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "Core/Vulkan.h"
+#include "Vulkan.h"
 #include "Graphics/Device.h"
 #include "Wraith/Object.h"
 

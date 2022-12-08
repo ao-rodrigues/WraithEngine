@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "Core/Vulkan.h"
+#include "Graphics/Vulkan.h"
 
 namespace Wraith::VkFactory {
     VkShaderModule ShaderModule(VkDevice device, const std::string& shaderPath);

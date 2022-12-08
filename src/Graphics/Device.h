@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Wraith/Object.h"
-#include "Core/Vulkan.h"
+#include "Vulkan.h"
 #include "Platform/Window.h"
 
 namespace Wraith {

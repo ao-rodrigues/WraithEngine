@@ -5,7 +5,7 @@
 
 #include "Wraith/Logger.h"
 
-#include "Core/Vulkan.h"
+#include "Graphics/Vulkan.h"
 #include "Core/TimeManager.h"
 
 #include "Platform/SDL2Window.h"
