@@ -3,7 +3,7 @@
 #include "Core/VulkanBase.h"
 
 #include "Graphics/Device.h"
-#include "Graphics/SwapChain.h"
+#include "Graphics/Swapchain.h"
 #include "Graphics/Renderable.h"
 
 #include "Platform/Window.h"
@@ -28,7 +28,7 @@ namespace Wraith {
             VkCommandBuffer commandBuffer = VK_NULL_HANDLE;
         };
 
-        void RecreateSwapChain();
+        void RecreateSwapchain();
         void CreateCommandBuffers();
         void CreateRenderPass();
         void CreateFramebuffers();
@@ -42,13 +42,12 @@ namespace Wraith {
         void EndFrame();
         void SubmitCommandQueue();
 
-
         static constexpr int MAX_FRAMES_IN_FLIGHT = 2;
 
         Device::Ref _device;
         Window::MutableRef _window;
 
-        SwapChain _swapChain;
+        Swapchain _swapchain;
 
         std::vector<VkFramebuffer> _framebuffers;
         VkRenderPass _renderPass = VK_NULL_HANDLE;

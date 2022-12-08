@@ -14,7 +14,7 @@ namespace Wraith {
         _device = device;
         _window = window;
 
-        RecreateSwapChain();
+        RecreateSwapchain();
         CreateCommandBuffers();
         CreateRenderPass();
         CreateFramebuffers();
@@ -33,18 +33,18 @@ namespace Wraith {
         }
     }
 
-    void Renderer::RecreateSwapChain() {
+    void Renderer::RecreateSwapchain() {
         auto extent = _window->GetExtent();
         while (extent.width == 0 || extent.height == 0) {
             extent = _window->GetExtent();
             _window->WaitEvents();
         }
 
-        if (!_swapChain.IsUndefined()) {
+        if (!_swapchain.IsUndefined()) {
             _device->FinishOperations();
-            _swapChain.Destroy();
+            _swapchain.Destroy();
         }
-        _swapChain.Create(_device, _window);
+        _swapchain.Create(_device, _window);
     }
 
     void Renderer::CreateCommandBuffers() {
@@ -68,7 +68,7 @@ namespace Wraith {
 
     void Renderer::CreateRenderPass() {
         VkAttachmentDescription colorAttachment{};
-        colorAttachment.format = _swapChain.GetImageFormat();
+        colorAttachment.format = _swapchain.GetImageFormat();
         colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
         colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
         colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
@@ -82,7 +82,7 @@ namespace Wraith {
         colorAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
         VkAttachmentDescription depthAttachment{};
-        depthAttachment.format = _swapChain.GetDepthImageFormat();
+        depthAttachment.format = _swapchain.GetDepthImageFormat();
         depthAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
         depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
         depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
@@ -140,14 +140,14 @@ namespace Wraith {
     }
 
     void Renderer::CreateFramebuffers() {
-        const auto& imageViews = _swapChain.GetImageViews();
-        auto swapChainExtent = _swapChain.GetExtent();
+        const auto& imageViews = _swapchain.GetImageViews();
+        auto swapChainExtent = _swapchain.GetExtent();
 
         _framebuffers.resize(imageViews.size());
         for (size_t i = 0; i < imageViews.size(); i++) {
             VkImageView attachments[2] = {
                     imageViews[i],
-                    _swapChain.GetDepthImageView()
+                    _swapchain.GetDepthImageView()
             };
 
             VkFramebufferCreateInfo framebufferInfo = VkFactory::FramebufferCreateInfo(_renderPass, attachments, swapChainExtent);
@@ -156,7 +156,7 @@ namespace Wraith {
         WR_LOG_DEBUG("Created Framebuffers!")
 
         Engine::GetInstance().GetMainDeletionQueue().Push([=]() {
-            _swapChain.Destroy();
+            _swapchain.Destroy();
             for (auto& framebuffer : _framebuffers) {
                 vkDestroyFramebuffer(_device->GetVkDevice(), framebuffer, nullptr);
             }
@@ -194,9 +194,9 @@ namespace Wraith {
         WR_VK_CHECK(vkWaitForFences(_device->GetVkDevice(), 1, &frame.renderFence, true, 1000000000), "Unable to wait for Render fence!")
         WR_VK_CHECK(vkResetFences(_device->GetVkDevice(), 1, &frame.renderFence), "Unable to reset Render fence!")
 
-        const VkResult result = _swapChain.AcquireNextImage(&_swapChainImageIndex, 1000000000, frame.presentSemaphore);
+        const VkResult result = _swapchain.AcquireNextImage(&_swapChainImageIndex, 1000000000, frame.presentSemaphore);
         if (result == VK_ERROR_OUT_OF_DATE_KHR) {
-            RecreateSwapChain();
+            RecreateSwapchain();
             return nullptr;
         }
         if (result != VK_SUCCESS) {
@@ -224,7 +224,7 @@ namespace Wraith {
         renderPassInfo.renderPass = _renderPass;
         renderPassInfo.framebuffer = _framebuffers[_swapChainImageIndex];
         renderPassInfo.renderArea.offset = {0, 0};
-        renderPassInfo.renderArea.extent = _swapChain.GetExtent();
+        renderPassInfo.renderArea.extent = _swapchain.GetExtent();
 
         VkClearValue clearColor;
         clearColor.color = {0.0f, 0.0f, 0.0f};
@@ -241,12 +241,12 @@ namespace Wraith {
         VkViewport viewport{};
         viewport.x = 0.0f;
         viewport.y = 0.0f;
-        viewport.width = static_cast<float>(_swapChain.GetExtent().width);
-        viewport.height = static_cast<float>(_swapChain.GetExtent().height);
+        viewport.width = static_cast<float>(_swapchain.GetExtent().width);
+        viewport.height = static_cast<float>(_swapchain.GetExtent().height);
         viewport.minDepth = 0.0f;
         viewport.maxDepth = 1.0f;
 
-        const VkRect2D scissor{{0, 0}, _swapChain.GetExtent()};
+        const VkRect2D scissor{{0, 0}, _swapchain.GetExtent()};
 
         vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
         vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
@@ -263,10 +263,10 @@ namespace Wraith {
 
         SubmitCommandQueue();
 
-        VkResult result = _swapChain.Present(GetCurrentFrame().renderSemaphore, &_swapChainImageIndex);
+        VkResult result = _swapchain.Present(GetCurrentFrame().renderSemaphore, &_swapChainImageIndex);
         if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || _window->WasResized()) {
             _window->ResetWindowResizedFlag();
-            RecreateSwapChain();
+            RecreateSwapchain();
         } else if (result != VK_SUCCESS) {
             WR_LOG_ERROR("Failed to present swap chain image!")
             abort();

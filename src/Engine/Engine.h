@@ -6,7 +6,7 @@
 #include "Platform/Window.h"
 
 #include "Graphics/Device.h"
-#include "Graphics/SwapChain.h"
+#include "Graphics/Swapchain.h"
 #include "Graphics/Pipeline.h"
 #include "Graphics/Mesh.h"
 #include "Graphics/Material.h"

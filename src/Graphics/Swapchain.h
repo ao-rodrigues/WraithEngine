@@ -6,26 +6,26 @@
 
 namespace Wraith {
 
-    class SwapChain : public Object<SwapChain> {
+    class Swapchain : public Object<Swapchain> {
     public:
-        SwapChain() = default;
+        Swapchain() = default;
 
         void Create(const Device& device, const Window& window);
         void Destroy();
 
         bool IsUndefined() const override;
 
-        VkExtent2D GetExtent() const { return _swapChainExtent; }
-        VkFormat GetImageFormat() const { return _swapChainImageFormat; }
+        VkExtent2D GetExtent() const { return _extent; }
+        VkFormat GetImageFormat() const { return _imageFormat; }
         VkFormat GetDepthImageFormat() const { return _depthImageFormat; }
-        const std::vector<VkImageView>& GetImageViews() const { return _swapChainImageViews; }
+        const std::vector<VkImageView>& GetImageViews() const { return _imageViews; }
         VkImageView GetDepthImageView() const { return _depthImageView; }
 
         VkResult AcquireNextImage(uint32_t* imageIndex, uint64_t timeout, VkSemaphore signalSemaphore) const;
         VkResult Present(VkSemaphore waitSemaphore, const uint32_t* imageIndex);
 
     private:
-        void CreateSwapChain();
+        void CreateSwapchain();
         void CreateImageViews();
         void CreateDepthImage();
 
@@ -36,16 +36,16 @@ namespace Wraith {
         Device::Ref _device;
         Window::Ref _window;
 
-        VkSwapchainKHR _swapChain = VK_NULL_HANDLE;
+        VkSwapchainKHR _swapchain = VK_NULL_HANDLE;
 
-        std::vector<VkImage> _swapChainImages;
+        std::vector<VkImage> _images;
         VkImage _depthImage{};
 
-        VkFormat _swapChainImageFormat{};
+        VkFormat _imageFormat{};
         VkFormat _depthImageFormat{};
 
-        VkExtent2D _swapChainExtent{};
-        std::vector<VkImageView> _swapChainImageViews;
+        VkExtent2D _extent{};
+        std::vector<VkImageView> _imageViews;
 
         VkImageView _depthImageView{};
         VmaAllocation _depthImageAllocation = VK_NULL_HANDLE;

@@ -59,8 +59,8 @@ add_library(${PROJECT_NAME} STATIC
         ${PROJECT_SOURCE_DIR}/src/Graphics/PipelineBuilder.h
         ${PROJECT_SOURCE_DIR}/src/Graphics/Renderable.cpp
         ${PROJECT_SOURCE_DIR}/src/Graphics/Renderable.h
-        ${PROJECT_SOURCE_DIR}/src/Graphics/SwapChain.cpp
-        ${PROJECT_SOURCE_DIR}/src/Graphics/SwapChain.h
+        ${PROJECT_SOURCE_DIR}/src/Graphics/Swapchain.cpp
+        ${PROJECT_SOURCE_DIR}/src/Graphics/Swapchain.h
         ${PROJECT_SOURCE_DIR}/src/Platform/GLFWWindow.cpp
         ${PROJECT_SOURCE_DIR}/src/Platform/GLFWWindow.h
         ${PROJECT_SOURCE_DIR}/src/Platform/SDL2Window.cpp

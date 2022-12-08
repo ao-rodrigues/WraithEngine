@@ -10,7 +10,7 @@
 
 #include "Input/InputManager.h"
 
-#include "Graphics/SwapChain.h"
+#include "Graphics/Swapchain.h"
 #include "Graphics/Pipeline.h"
 #include "Graphics/PipelineBuilder.h"
 #include "Graphics/Mesh.h"
