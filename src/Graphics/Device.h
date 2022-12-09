@@ -50,8 +50,7 @@ namespace Wraith {
         void FinishOperations() const;
 
         // Buffer helper functions
-        void CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkBuffer& buffer, VmaMemoryUsage memoryUsage,
-                          VmaAllocation& allocation);
+        AllocatedBuffer CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VmaMemoryUsage memoryUsage);
         void CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 
     private:

@@ -81,11 +81,7 @@ namespace Wraith {
         vkDeviceWaitIdle(_device);
     }
 
-    void Device::CreateBuffer(VkDeviceSize size,
-                              VkBufferUsageFlags usage,
-                              VkBuffer& buffer,
-                              VmaMemoryUsage memoryUsage,
-                              VmaAllocation& allocation) {
+    AllocatedBuffer Device::CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VmaMemoryUsage memoryUsage) {
         VkBufferCreateInfo bufferInfo{};
         bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
         bufferInfo.size = size;
@@ -95,9 +91,9 @@ namespace Wraith {
         VmaAllocationCreateInfo allocInfo{};
         allocInfo.usage = memoryUsage;
 
-        if (vmaCreateBuffer(_allocator, &bufferInfo, &allocInfo, &buffer, &allocation, nullptr) != VK_SUCCESS) {
-            throw std::runtime_error("Failed to create vertex buffer!");
-        }
+        AllocatedBuffer newBuffer;
+        WR_VK_CHECK_MSG(vmaCreateBuffer(_allocator, &bufferInfo, &allocInfo, &newBuffer.buffer, &newBuffer.allocation, nullptr), "Failed to create buffer!")
+        return newBuffer;
     }
 
     void Device::CreateInstance() {

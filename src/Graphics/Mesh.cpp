@@ -111,17 +111,17 @@ namespace Wraith {
     }
 
     Mesh::~Mesh() {
-        vmaDestroyBuffer(_device.GetAllocator(), _vertexBuffer, _vertexBufferAllocation);
-        vmaDestroyBuffer(_device.GetAllocator(), _indexBuffer, _indexBufferAllocation);
+        vmaDestroyBuffer(_device.GetAllocator(), _vertexBuffer.buffer, _vertexBuffer.allocation);
+        vmaDestroyBuffer(_device.GetAllocator(), _indexBuffer.buffer, _indexBuffer.allocation);
     }
 
     void Mesh::Bind(VkCommandBuffer commandBuffer) {
         const VkBuffer buffers[] = {
-                _vertexBuffer
+                _vertexBuffer.buffer
         };
         const VkDeviceSize offsets[] = {0};
         vkCmdBindVertexBuffers(commandBuffer, 0, 1, buffers, offsets);
-        vkCmdBindIndexBuffer(commandBuffer, _indexBuffer, 0, VK_INDEX_TYPE_UINT16);
+        vkCmdBindIndexBuffer(commandBuffer, _indexBuffer.buffer, 0, VK_INDEX_TYPE_UINT16);
     }
 
     void Mesh::Draw(VkCommandBuffer commandBuffer) {
@@ -133,34 +133,22 @@ namespace Wraith {
         WR_ASSERT_MSG(_vertexCount >= 3, "Vertex count must be at least 3!")
 
         const VkDeviceSize bufferSize = sizeof(vertices[0]) * _vertexCount;
-        _device.CreateBuffer(
-                bufferSize,
-                VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
-                _vertexBuffer,
-                VMA_MEMORY_USAGE_CPU_TO_GPU,
-                _vertexBufferAllocation
-        );
+        _vertexBuffer = _device.CreateBuffer(bufferSize, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VMA_MEMORY_USAGE_CPU_TO_GPU);
 
         void* data;
-        vmaMapMemory(_device.GetAllocator(), _vertexBufferAllocation, &data);
+        vmaMapMemory(_device.GetAllocator(), _vertexBuffer.allocation, &data);
         memcpy(data, vertices.data(), static_cast<size_t>(bufferSize));
-        vmaUnmapMemory(_device.GetAllocator(), _vertexBufferAllocation);
+        vmaUnmapMemory(_device.GetAllocator(), _vertexBuffer.allocation);
     }
 
     void Mesh::CreateIndexBuffers(const std::vector<uint16_t>& indices) {
         _indexCount = static_cast<uint32_t>(indices.size());
         const VkDeviceSize bufferSize = sizeof(indices[0]) * _indexCount;
-        _device.CreateBuffer(
-                bufferSize,
-                VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
-                _indexBuffer,
-                VMA_MEMORY_USAGE_CPU_TO_GPU,
-                _indexBufferAllocation
-        );
+        _indexBuffer = _device.CreateBuffer(bufferSize, VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VMA_MEMORY_USAGE_CPU_TO_GPU);
 
         void* data;
-        vmaMapMemory(_device.GetAllocator(), _indexBufferAllocation, &data);
+        vmaMapMemory(_device.GetAllocator(), _indexBuffer.allocation, &data);
         memcpy(data, indices.data(), static_cast<size_t>(bufferSize));
-        vmaUnmapMemory(_device.GetAllocator(), _indexBufferAllocation);
+        vmaUnmapMemory(_device.GetAllocator(), _indexBuffer.allocation);
     }
 }

@@ -32,3 +32,13 @@
         abort();                                                                \
     }                                                                           \
 }                                                                               \
+
+
+namespace Wraith {
+
+    struct AllocatedBuffer {
+        VkBuffer buffer = VK_NULL_HANDLE;
+        VmaAllocation allocation = VK_NULL_HANDLE;
+    };
+
+}
