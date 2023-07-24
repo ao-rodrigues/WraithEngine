@@ -132,11 +132,13 @@ namespace Wraith {
         };
         pipelineBuilder.dynamicState = VkFactory::PipelineDynamicStateCreateInfo(dynamicStates);
 
-
+        const std::vector<VkDescriptorSetLayout> descriptorSetLayouts = {
+                Renderer::GetInstance().GetGlobalDescriptorSetLayout()
+        };
         const std::vector<VkPushConstantRange> pushConstantRanges = {
                 VkFactory::PushConstantRange(0, sizeof(Mesh::PushConstants), VK_SHADER_STAGE_VERTEX_BIT)
         };
-        VkPipelineLayoutCreateInfo meshPipelineLayoutInfo = VkFactory::PipelineLayoutCreateInfo(pushConstantRanges);
+        VkPipelineLayoutCreateInfo meshPipelineLayoutInfo = VkFactory::PipelineLayoutCreateInfo(descriptorSetLayouts, pushConstantRanges);
         VkPipelineLayout  meshPipelineLayout;
         WR_VK_CHECK_MSG(vkCreatePipelineLayout(_device.GetVkDevice(), &meshPipelineLayoutInfo, nullptr, &meshPipelineLayout), "Failed to create pipeline layout!")
 
@@ -227,6 +229,16 @@ namespace Wraith {
         glm::mat4 projection = glm::perspective(glm::radians(_fov), static_cast<float>(windowExtent.width) / static_cast<float>(windowExtent.height), 0.1f, 200.0f);
         projection[1][1] *= -1;
 
+        Renderer::GPUCameraData cameraData{};
+        cameraData.proj = projection;
+        cameraData.view = view;
+        cameraData.viewProj = projection * view;
+
+        void* data;
+        vmaMapMemory(_device.GetAllocator(), Renderer::GetInstance().GetCurrentFrame().cameraBuffer.allocation, &data);
+        memcpy(data, &cameraData, sizeof(Renderer::GPUCameraData));
+        vmaUnmapMemory(_device.GetAllocator(), Renderer::GetInstance().GetCurrentFrame().cameraBuffer.allocation);
+
         std::shared_ptr<Mesh> lastMesh = nullptr;
         std::shared_ptr<Material> lastMaterial = nullptr;
         for(const auto& renderable : renderables) {
@@ -234,13 +246,12 @@ namespace Wraith {
             if (renderable.material != lastMaterial) {
                 renderable.material->pipeline->Bind(commandBuffer);
                 lastMaterial = renderable.material;
+
+                vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, renderable.material->pipeline->GetPipelineLayout(), 0, 1, &Renderer::GetInstance().GetCurrentFrame().globalDescriptor, 0, nullptr);
             }
 
-            glm::mat4 model = renderable.transform;
-            glm::mat4 meshMatrix = projection * view * model;
-
             Mesh::PushConstants pushConstants{};
-            pushConstants.renderMatrix = meshMatrix;
+            pushConstants.renderMatrix = renderable.transform;
 
             vkCmdPushConstants(commandBuffer, renderable.material->pipeline->GetPipelineLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(Mesh::PushConstants), &pushConstants);
 

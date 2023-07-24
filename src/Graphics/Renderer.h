@@ -21,13 +21,11 @@ namespace Wraith {
 
     class Renderer : public Singleton<Renderer> {
     public:
-        void Init(const Device& device, Window& window);
-
-        void RenderFrame(std::function<void(VkCommandBuffer)>&& drawRenderables);
-
-        VkRenderPass GetRenderPass() const { return _renderPass; }
-
-    private:
+        struct GPUCameraData {
+            glm::mat4 view;
+            glm::mat4 proj;
+            glm::mat4 viewProj;
+        };
         struct FrameData {
             VkSemaphore renderSemaphore = VK_NULL_HANDLE;
             VkSemaphore presentSemaphore = VK_NULL_HANDLE;
@@ -35,15 +33,28 @@ namespace Wraith {
 
             VkCommandPool commandPool = VK_NULL_HANDLE;
             VkCommandBuffer commandBuffer = VK_NULL_HANDLE;
+
+            AllocatedBuffer cameraBuffer;
+
+            VkDescriptorSet globalDescriptor = VK_NULL_HANDLE;
         };
 
+        void Init(const Device& device, Window& window);
+
+        void RenderFrame(std::function<void(VkCommandBuffer)>&& drawRenderables);
+
+        VkRenderPass GetRenderPass() const { return _renderPass; }
+        VkDescriptorSetLayout GetGlobalDescriptorSetLayout() const { return _globalSetLayout; }
+        FrameData& GetCurrentFrame();
+
+    private:
         void RecreateSwapchain();
         void CreateCommandBuffers();
         void CreateRenderPass();
         void CreateFramebuffers();
         void CreateSyncStructures();
+        void CreateDescriptors();
 
-        FrameData& GetCurrentFrame();
 
         VkCommandBuffer BeginFrame();
         void BeginRenderPass(VkCommandBuffer commandBuffer);
@@ -64,5 +75,8 @@ namespace Wraith {
 
         uint32_t _swapChainImageIndex = 0;
         size_t _frameIndex = 0;
+
+        VkDescriptorSetLayout _globalSetLayout = VK_NULL_HANDLE;
+        VkDescriptorPool _descriptorPool = VK_NULL_HANDLE;
     };
 }

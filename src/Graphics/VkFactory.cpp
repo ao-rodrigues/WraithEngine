@@ -137,14 +137,34 @@ namespace Wraith::VkFactory {
         return pushConstantRange;
     }
 
-    VkPipelineLayoutCreateInfo PipelineLayoutCreateInfo(const std::vector<VkPushConstantRange>& pushConstantRanges) {
+    VkPipelineLayoutCreateInfo PipelineLayoutCreateInfo(const std::vector<VkDescriptorSetLayout>& descriptorSetLayouts, const std::vector<VkPushConstantRange>& pushConstantRanges) {
         VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
         pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-        pipelineLayoutInfo.setLayoutCount = 0; // Optional
-        pipelineLayoutInfo.pSetLayouts = nullptr; // Optional
+        pipelineLayoutInfo.setLayoutCount = descriptorSetLayouts.size(); // Optional
+        pipelineLayoutInfo.pSetLayouts = descriptorSetLayouts.data(); // Optional
         pipelineLayoutInfo.pushConstantRangeCount = pushConstantRanges.size(); // Optional
         pipelineLayoutInfo.pPushConstantRanges = pushConstantRanges.data(); // Optional
         return pipelineLayoutInfo;
+    }
+
+    VkDescriptorSetLayoutCreateInfo DescriptorSetLayoutCreateInfo(uint32_t bindingCount, VkDescriptorSetLayoutBinding* bindings) {
+        VkDescriptorSetLayoutCreateInfo createInfo{};
+        createInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+        createInfo.pNext = nullptr;
+        createInfo.bindingCount = bindingCount;
+        createInfo.flags = 0;
+        createInfo.pBindings = bindings;
+        return createInfo;
+    }
+
+    VkDescriptorPoolCreateInfo DescriptorPoolCreateInfo(uint32_t maxSets, const std::vector<VkDescriptorPoolSize>& poolSizes) {
+        VkDescriptorPoolCreateInfo createInfo{};
+        createInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+        createInfo.flags = 0;
+        createInfo.maxSets = maxSets;
+        createInfo.poolSizeCount = (uint32_t)poolSizes.size();
+        createInfo.pPoolSizes = poolSizes.data();
+        return createInfo;
     }
 
     // Image factories

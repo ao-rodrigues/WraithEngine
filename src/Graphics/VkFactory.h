@@ -23,7 +23,11 @@ namespace Wraith::VkFactory {
     VkPipelineColorBlendStateCreateInfo PipelineColorBlendStateCreateInfo(const std::vector<VkPipelineColorBlendAttachmentState>& colorBlendAttachments);
     VkPipelineDynamicStateCreateInfo PipelineDynamicStateCreateInfo(const std::vector<VkDynamicState>& dynamicStates);
     VkPushConstantRange PushConstantRange(uint32_t offset, uint32_t size, VkShaderStageFlags stageFlags);
-    VkPipelineLayoutCreateInfo PipelineLayoutCreateInfo(const std::vector<VkPushConstantRange>& pushConstantRanges);
+    VkPipelineLayoutCreateInfo PipelineLayoutCreateInfo(const std::vector<VkDescriptorSetLayout>& descriptorSetLayouts,
+                                                        const std::vector<VkPushConstantRange>& pushConstantRanges);
+
+    VkDescriptorSetLayoutCreateInfo DescriptorSetLayoutCreateInfo(uint32_t bindingCount, VkDescriptorSetLayoutBinding* bindings);
+    VkDescriptorPoolCreateInfo DescriptorPoolCreateInfo(uint32_t maxSets, const std::vector<VkDescriptorPoolSize>& poolSizes);
 
     // Image creation
     VkImageCreateInfo ImageCreateInfo(VkFormat format, VkImageUsageFlags usageFlags, VkExtent3D extent);

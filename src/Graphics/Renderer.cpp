@@ -24,6 +24,7 @@ namespace Wraith {
         CreateRenderPass();
         CreateFramebuffers();
         CreateSyncStructures();
+        CreateDescriptors();
     }
 
     void Renderer::RenderFrame(std::function<void(VkCommandBuffer)>&& drawRenderables) {
@@ -188,6 +189,62 @@ namespace Wraith {
             });
         }
         WR_LOG_DEBUG("Created Sync Structures!")
+    }
+
+    void Renderer::CreateDescriptors() {
+        VkDescriptorSetLayoutBinding camBufferBinding{};
+        camBufferBinding.binding = 0;
+        camBufferBinding.descriptorCount = 1;
+        camBufferBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        camBufferBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+
+        VkDescriptorSetLayoutCreateInfo setInfo = VkFactory::DescriptorSetLayoutCreateInfo(1, &camBufferBinding);
+        WR_VK_CHECK_MSG(vkCreateDescriptorSetLayout(_device->GetVkDevice(), &setInfo, nullptr, &_globalSetLayout), "Unable to create Descriptor set layout!")
+
+        const std::vector<VkDescriptorPoolSize> poolSizes = {
+                { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 10 }
+        };
+        VkDescriptorPoolCreateInfo poolInfo = VkFactory::DescriptorPoolCreateInfo(10, poolSizes);
+        WR_VK_CHECK_MSG(vkCreateDescriptorPool(_device->GetVkDevice(), &poolInfo, nullptr, &_descriptorPool), "Unable to create Descriptor pool!")
+
+        Engine::GetInstance().GetMainDeletionQueue().Push([=]() {
+            vkDestroyDescriptorSetLayout(_device->GetVkDevice(), _globalSetLayout, nullptr);
+            vkDestroyDescriptorPool(_device->GetVkDevice(), _descriptorPool, nullptr);
+        });
+
+        for (auto& frame : _frames) {
+            frame.cameraBuffer = _device->CreateBuffer(sizeof(GPUCameraData), VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VMA_MEMORY_USAGE_CPU_TO_GPU);
+            Engine::GetInstance().GetMainDeletionQueue().Push([=]() {
+                vmaDestroyBuffer(_device->GetAllocator(), frame.cameraBuffer.buffer, frame.cameraBuffer.allocation);
+            });
+
+            VkDescriptorSetAllocateInfo allocInfo{};
+            allocInfo.pNext = nullptr;
+            allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+            allocInfo.descriptorPool = _descriptorPool;
+            allocInfo.descriptorSetCount = 1;
+            allocInfo.pSetLayouts = &_globalSetLayout;
+
+            WR_VK_CHECK_MSG(vkAllocateDescriptorSets(_device->GetVkDevice(), &allocInfo, &frame.globalDescriptor), "Unable to allocate Descriptor set!")
+
+            VkDescriptorBufferInfo bufferInfo{};
+            bufferInfo.buffer = frame.cameraBuffer.buffer;
+            bufferInfo.offset = 0;
+            bufferInfo.range = sizeof(GPUCameraData);
+
+            VkWriteDescriptorSet setWrite{};
+            setWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+            setWrite.pNext = nullptr;
+            setWrite.dstBinding = 0;
+            setWrite.dstSet = frame.globalDescriptor;
+            setWrite.descriptorCount = 1;
+            setWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+            setWrite.pBufferInfo = &bufferInfo;
+
+            vkUpdateDescriptorSets(_device->GetVkDevice(), 1, &setWrite, 0, nullptr);
+        }
+
+        WR_LOG_DEBUG("Created Descriptors!")
     }
 
     Renderer::FrameData& Renderer::GetCurrentFrame() {
