@@ -81,7 +81,7 @@ namespace Wraith {
         vkDeviceWaitIdle(_device);
     }
 
-    AllocatedBuffer Device::CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VmaMemoryUsage memoryUsage) {
+    AllocatedBuffer Device::CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VmaMemoryUsage memoryUsage) const {
         VkBufferCreateInfo bufferInfo{};
         bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
         bufferInfo.size = size;
@@ -172,6 +172,10 @@ namespace Wraith {
             throw std::runtime_error("Failed to find a suitable GPU!");
         }
         WR_LOG_DEBUG("Found physical device.")
+
+        VkPhysicalDeviceProperties gpuProperties;
+        vkGetPhysicalDeviceProperties(_physicalDevice, &gpuProperties);
+        WR_LOG_INFO("GPU Info:\n\t- Model: {}\n\t- Max bound descriptor Sets: {}\n\t- Minimum buffer alignment: {}", gpuProperties.deviceName, gpuProperties.limits.maxBoundDescriptorSets, gpuProperties.limits.minUniformBufferOffsetAlignment)
     }
 
     void Device::CreateLogicalDevice() {
