@@ -173,9 +173,8 @@ namespace Wraith {
         }
         WR_LOG_DEBUG("Found physical device.")
 
-        VkPhysicalDeviceProperties gpuProperties;
-        vkGetPhysicalDeviceProperties(_physicalDevice, &gpuProperties);
-        WR_LOG_INFO("GPU Info:\n\t- Model: {}\n\t- Max bound descriptor Sets: {}\n\t- Minimum buffer alignment: {}", gpuProperties.deviceName, gpuProperties.limits.maxBoundDescriptorSets, gpuProperties.limits.minUniformBufferOffsetAlignment)
+        vkGetPhysicalDeviceProperties(_physicalDevice, &_physicalDeviceProperties);
+        WR_LOG_INFO("GPU Info:\n\t- Model: {}\n\t- Max bound descriptor Sets: {}\n\t- Minimum buffer alignment: {}", _physicalDeviceProperties.deviceName, _physicalDeviceProperties.limits.maxBoundDescriptorSets, _physicalDeviceProperties.limits.minUniformBufferOffsetAlignment)
     }
 
     void Device::CreateLogicalDevice() {

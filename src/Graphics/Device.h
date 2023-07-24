@@ -38,6 +38,7 @@ namespace Wraith {
 
         VkDevice GetVkDevice() const { return _device; }
         VkPhysicalDevice GetPhysicalDevice() const { return _physicalDevice; }
+        VkPhysicalDeviceProperties GetPhysicalDeviceProperties() const { return _physicalDeviceProperties; }
         VkSurfaceKHR GetSurface() const { return _surface; }
         VkQueue GetGraphicsQueue() const { return _graphicsQueue; }
         VkQueue GetPresentQueue() const { return _presentQueue; }
@@ -103,6 +104,8 @@ namespace Wraith {
 
         VkPhysicalDevice _physicalDevice = VK_NULL_HANDLE;
         VkDevice _device = VK_NULL_HANDLE;
+
+        VkPhysicalDeviceProperties _physicalDeviceProperties;
 
         VkQueue _graphicsQueue = VK_NULL_HANDLE;
         VkQueue _presentQueue = VK_NULL_HANDLE;
