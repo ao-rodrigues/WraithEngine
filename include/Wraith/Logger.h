@@ -46,6 +46,6 @@ namespace Wraith {
 #define WR_RELEASE_LOG_DEBUG(...)           SPDLOG_LOGGER_DEBUG(spdlog::get(WR_LOGGER_NAME), __VA_ARGS__);
 #define WR_RELEASE_LOG_INFO(...)            SPDLOG_LOGGER_INFO(spdlog::get(WR_LOGGER_NAME), __VA_ARGS__);
 #define WR_RELEASE_LOG_TRACE(...)           SPDLOG_LOGGER_TRACE(spdlog::get(WR_LOGGER_NAME), __VA_ARGS__);
-#define WR_RELEASE_LOG_WARNING(...)         SPDLOG_LOGGER_WARNING(spdlog::get(WR_LOGGER_NAME), __VA_ARGS__);
+#define WR_RELEASE_LOG_WARNING(...)         SPDLOG_LOGGER_WARN(spdlog::get(WR_LOGGER_NAME), __VA_ARGS__);
 #define WR_RELEASE_LOG_ERROR(...)           SPDLOG_LOGGER_ERROR(spdlog::get(WR_LOGGER_NAME), __VA_ARGS__);
-#define WR_RELEASE_LOG_FATAL(...)           SPDLOG_LOGGER_FATAL(spdlog::get(WR_LOGGER_NAME), __VA_ARGS__);
+#define WR_RELEASE_LOG_FATAL(...)           SPDLOG_LOGGER_CRITICAL(spdlog::get(WR_LOGGER_NAME), __VA_ARGS__);
