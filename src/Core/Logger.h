@@ -10,9 +10,11 @@
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 #include <spdlog/spdlog.h>
 
-namespace Wraith {
+namespace Wraith
+{
 
-    class Logger {
+    class Logger
+    {
     public:
         static void Init();
         static void Shutdown();

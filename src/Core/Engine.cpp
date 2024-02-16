@@ -5,8 +5,8 @@
 // Created by Andre Rodrigues on 04/12/2022.
 //
 
-#include "wrpch.h"
 #include "Engine.h"
+#include "wrpch.h"
 
 #include <glm/gtx/transform.hpp>
 
@@ -20,238 +20,280 @@
 
 #include "Input/InputManager.h"
 
-#include "Graphics/Vulkan.h"
-#include "Graphics/Pipeline.h"
 #include "Graphics/Mesh.h"
+#include "Graphics/Pipeline.h"
 #include "Graphics/Renderer.h"
+#include "Graphics/Vulkan.h"
 
 #include "Graphics/VkFactory.h"
 
-namespace Wraith {
-    void Engine::Init(const EngineInitParams& initParams) {
+namespace Wraith
+{
+    void Engine::Init(const EngineInitParams& initParams)
+    {
         Logger::Init();
 
         WR_LOG_DEBUG("Staring Wraith Engine...")
 
         TimeManager::GetInstance().Init();
 
-        _window = std::make_unique<SDL2Window>();
-        _window->Create(initParams.windowWidth, initParams.windowHeight, initParams.windowTitle);
+        m_Window = std::make_unique<SDL2Window>();
+        m_Window->Create(initParams.WindowWidth, initParams.WindowHeight, initParams.WindowTitle);
 
-        _device.Create(*_window);
-        Renderer::GetInstance().Init(_device, *_window);
+        m_Device.Create(*m_Window);
+        Renderer::GetInstance().Init(m_Device, *m_Window);
 
         InitPipelines();
         LoadMeshes();
         InitScene();
     }
 
-    void Engine::Shutdown() {
-        _device.FinishOperations();
+    void Engine::Shutdown()
+    {
+        m_Device.FinishOperations();
 
-        _mainDeletionQueue.Flush();
+        m_MainDeletionQueue.Flush();
 
-        _meshPipeline.reset();
+        m_MeshPipeline.reset();
 
-        _materials.clear();
-        _meshes.clear();
-        _renderables.clear();
+        m_Materials.clear();
+        m_Meshes.clear();
+        m_Renderables.clear();
 
-        _device.Destroy();
-        _window->Destroy();
+        m_Device.Destroy();
+        m_Window->Destroy();
 
         Logger::Shutdown();
     }
 
-    void Engine::Run() {
-        while (!_window->ShouldClose()) {
+    void Engine::Run()
+    {
+        while (!m_Window->ShouldClose())
+        {
             InputManager::GetInstance().ClearFrameEvents();
             TimeManager::GetInstance().Update();
-            _window = nullptr;
-            _window->PollEvents();
+            m_Window = nullptr;
+            m_Window->PollEvents();
 
-             UpdateLogic();
-             Renderer::GetInstance().RenderFrame([=](VkCommandBuffer commandBuffer) {
-                 DrawRenderables(commandBuffer, _renderables);
-             });
+            UpdateLogic();
+            Renderer::GetInstance().RenderFrame([=](VkCommandBuffer commandBuffer)
+            {
+                DrawRenderables(commandBuffer, m_Renderables);
+            });
         }
         Shutdown();
     }
 
-    DeletionQueue& Engine::GetMainDeletionQueue() {
-        return _mainDeletionQueue;
+    DeletionQueue& Engine::GetMainDeletionQueue()
+    {
+        return m_MainDeletionQueue;
     }
 
-    std::shared_ptr<Material> Engine::CreateMaterial(std::shared_ptr<Pipeline> pipeline, const std::string& name) {
-        _materials[name] = std::make_shared<Material>(Material{std::move(pipeline)});
-        return _materials[name];
+    std::shared_ptr<Material> Engine::CreateMaterial(std::shared_ptr<Pipeline> pipeline, const std::string& name)
+    {
+        m_Materials[name] = std::make_shared<Material>(Material{std::move(pipeline)});
+        return m_Materials[name];
     }
 
-    std::shared_ptr<Material> Engine::GetMaterial(const std::string& name) {
-        auto it = _materials.find(name);
-        return it != _materials.end() ? (*it).second : nullptr;
+    std::shared_ptr<Material> Engine::GetMaterial(const std::string& name)
+    {
+        auto it = m_Materials.find(name);
+        return it != m_Materials.end() ? (*it).second : nullptr;
     }
 
-    std::shared_ptr<Mesh> Engine::GetMesh(const std::string& name) {
-        auto it = _meshes.find(name);
-        return it != _meshes.end() ? (*it).second : nullptr;
+    std::shared_ptr<Mesh> Engine::GetMesh(const std::string& name)
+    {
+        auto it = m_Meshes.find(name);
+        return it != m_Meshes.end() ? (*it).second : nullptr;
     }
 
-    void Engine::InitPipelines() {
+    void Engine::InitPipelines()
+    {
         // Init shaders
-        VkShaderModule vertShaderModule = VkFactory::ShaderModule(_device.GetVkDevice(),
-                                                                  WR_ASSET("shaders/SimpleShader.vert.spv"));
-        VkShaderModule fragShaderModule = VkFactory::ShaderModule(_device.GetVkDevice(),
-                                                                  WR_ASSET("shaders/SimpleShader.frag.spv"));
+        const VkShaderModule vertShaderModule = VkFactory::ShaderModule(m_Device.GetVkDevice(),
+                                                                        WR_ASSET("shaders/SimpleShader.vert.spv"));
+        const VkShaderModule fragShaderModule = VkFactory::ShaderModule(m_Device.GetVkDevice(),
+                                                                        WR_ASSET("shaders/SimpleShader.frag.spv"));
 
         // Build pipeline
         Pipeline::Builder pipelineBuilder;
-        pipelineBuilder.shaderStages.emplace_back(
-                VkFactory::PipelineShaderStageCreateInfo(VK_SHADER_STAGE_VERTEX_BIT, vertShaderModule));
-        pipelineBuilder.shaderStages.emplace_back(
-                VkFactory::PipelineShaderStageCreateInfo(VK_SHADER_STAGE_FRAGMENT_BIT, fragShaderModule));
+        pipelineBuilder.ShaderStages.emplace_back(
+            VkFactory::PipelineShaderStageCreateInfo(VK_SHADER_STAGE_VERTEX_BIT, vertShaderModule));
+        pipelineBuilder.ShaderStages.emplace_back(
+            VkFactory::PipelineShaderStageCreateInfo(VK_SHADER_STAGE_FRAGMENT_BIT, fragShaderModule));
 
-        auto bindingDescriptions = Mesh::Vertex::GetBindingDescriptions();
-        auto attributeDescriptions = Mesh::Vertex::GetAttributeDescriptions();
-        pipelineBuilder.vertexInputInfo = VkFactory::PipelineVertexInputStateCreateInfo(bindingDescriptions, attributeDescriptions);
+        const auto bindingDescriptions = Mesh::Vertex::GetBindingDescriptions();
+        const auto attributeDescriptions = Mesh::Vertex::GetAttributeDescriptions();
+        pipelineBuilder.VertexInputInfo = VkFactory::PipelineVertexInputStateCreateInfo(
+            bindingDescriptions, attributeDescriptions);
 
-        pipelineBuilder.inputAssembly = VkFactory::PipelineInputAssemblyStateCreateInfo(VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
-        pipelineBuilder.viewportState = VkFactory::PipelineViewportStateCreateInfo();
-        pipelineBuilder.rasterizer = VkFactory::PipelineRasterizationStateCreateInfo(VK_POLYGON_MODE_FILL);
-        pipelineBuilder.multisampling = VkFactory::PipelineMultisampleStateCreateInfo();
+        pipelineBuilder.InputAssembly = VkFactory::PipelineInputAssemblyStateCreateInfo(
+            VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
+        pipelineBuilder.ViewportState = VkFactory::PipelineViewportStateCreateInfo();
+        pipelineBuilder.Rasterizer = VkFactory::PipelineRasterizationStateCreateInfo(VK_POLYGON_MODE_FILL);
+        pipelineBuilder.Multisampling = VkFactory::PipelineMultisampleStateCreateInfo();
 
         const std::vector<VkPipelineColorBlendAttachmentState> colorBlendAttachments = {
-                VkFactory::PipelineColorBlendAttachmentState()
+            VkFactory::PipelineColorBlendAttachmentState()
         };
-        pipelineBuilder.colorBlending = VkFactory::PipelineColorBlendStateCreateInfo(colorBlendAttachments);
+        pipelineBuilder.ColorBlending = VkFactory::PipelineColorBlendStateCreateInfo(colorBlendAttachments);
 
-        pipelineBuilder.depthStencilInfo = VkFactory::DepthStencilStateCreateInfo(true, true, VK_COMPARE_OP_LESS_OR_EQUAL);
+        pipelineBuilder.DepthStencilInfo = VkFactory::DepthStencilStateCreateInfo(
+            true, true, VK_COMPARE_OP_LESS_OR_EQUAL);
 
         const std::vector<VkDynamicState> dynamicStates = {
-                VK_DYNAMIC_STATE_VIEWPORT,
-                VK_DYNAMIC_STATE_SCISSOR
+            VK_DYNAMIC_STATE_VIEWPORT,
+            VK_DYNAMIC_STATE_SCISSOR
         };
-        pipelineBuilder.dynamicState = VkFactory::PipelineDynamicStateCreateInfo(dynamicStates);
+        pipelineBuilder.DynamicState = VkFactory::PipelineDynamicStateCreateInfo(dynamicStates);
 
 
         const std::vector<VkPushConstantRange> pushConstantRanges = {
-                VkFactory::PushConstantRange(0, sizeof(Mesh::PushConstants), VK_SHADER_STAGE_VERTEX_BIT)
+            VkFactory::PushConstantRange(0, sizeof(Mesh::PushConstants), VK_SHADER_STAGE_VERTEX_BIT)
         };
         VkPipelineLayoutCreateInfo meshPipelineLayoutInfo = VkFactory::PipelineLayoutCreateInfo(pushConstantRanges);
-        VkPipelineLayout  meshPipelineLayout;
-        WR_VK_CHECK_MSG(vkCreatePipelineLayout(_device.GetVkDevice(), &meshPipelineLayoutInfo, nullptr, &meshPipelineLayout), "Failed to create pipeline layout!")
+        VkPipelineLayout meshPipelineLayout;
+        WR_VK_CHECK_MSG(
+            vkCreatePipelineLayout(m_Device.GetVkDevice(), &meshPipelineLayoutInfo, nullptr, &meshPipelineLayout),
+            "Failed to create pipeline layout!")
 
-        pipelineBuilder.pipelineLayout = meshPipelineLayout;
+        pipelineBuilder.PipelineLayout = meshPipelineLayout;
 
-        _meshPipeline = std::make_shared<Pipeline>(_device, pipelineBuilder.Build(_device.GetVkDevice(), Renderer::GetInstance().GetRenderPass()), meshPipelineLayout);
+        m_MeshPipeline = std::make_shared<Pipeline>(
+            m_Device, pipelineBuilder.Build(m_Device.GetVkDevice(), Renderer::GetInstance().GetRenderPass()),
+            meshPipelineLayout);
 
-        vkDestroyShaderModule(_device.GetVkDevice(), vertShaderModule, nullptr);
-        vkDestroyShaderModule(_device.GetVkDevice(), fragShaderModule, nullptr);
+        vkDestroyShaderModule(m_Device.GetVkDevice(), vertShaderModule, nullptr);
+        vkDestroyShaderModule(m_Device.GetVkDevice(), fragShaderModule, nullptr);
 
-        CreateMaterial(_meshPipeline, "M_Default");
+        CreateMaterial(m_MeshPipeline, "M_Default");
     }
 
-    void Engine::LoadMeshes() {
-        _meshes["Monke"] = std::make_shared<Mesh>(_device, WR_ASSET("Suzanne.gltf"));
-        _meshes["Duck"] = std::make_shared<Mesh>(_device, WR_ASSET("Duck.glb"), true);
+    void Engine::LoadMeshes()
+    {
+        m_Meshes["Monke"] = std::make_shared<Mesh>(m_Device, WR_ASSET("Suzanne.gltf"));
+        m_Meshes["Duck"] = std::make_shared<Mesh>(m_Device, WR_ASSET("Duck.glb"), true);
     }
 
-    void Engine::InitScene() {
+    void Engine::InitScene()
+    {
         Renderable monke;
-        monke.mesh = GetMesh("Monke");
-        monke.material = GetMaterial("M_Default");
-        monke.transform = glm::mat4{1.0f} * glm::translate(glm::mat4{1.0f}, glm::vec3(0, 5, 0));
+        monke.Mesh = GetMesh("Monke");
+        monke.Material = GetMaterial("M_Default");
+        monke.Transform = glm::mat4{1.0f} * glm::translate(glm::mat4{1.0f}, glm::vec3(0, 5, 0));
 
-        _renderables.emplace_back(monke);
+        m_Renderables.emplace_back(monke);
 
-        for (int x = -20; x <= 20; x += 2) {
-            for (int y = -20; y <= 20; y += 2) {
+        for (int x = -20; x <= 20; x += 2)
+        {
+            for (int y = -20; y <= 20; y += 2)
+            {
                 Renderable duck;
-                duck.mesh = GetMesh("Duck");
-                duck.material = GetMaterial("M_Default");
+                duck.Mesh = GetMesh("Duck");
+                duck.Material = GetMaterial("M_Default");
 
                 glm::mat4 translation = glm::translate(glm::mat4{1.0f}, glm::vec3(x, 0, y));
                 glm::mat4 scale = glm::scale(glm::mat4{1.0}, glm::vec3(0.01f, 0.01f, 0.01f));
-                duck.transform = translation * scale;
+                duck.Transform = translation * scale;
 
-                _renderables.emplace_back(duck);
+                m_Renderables.emplace_back(duck);
             }
         }
     }
 
-    void Engine::UpdateLogic() {
+    void Engine::UpdateLogic()
+    {
         float movementSpeed = 12.0f;
-        static const float turboMultiplier = 2.5f;
+        static constexpr float k_TurboMultiplier = 2.5f;
 
-        if (Input::IsKeyDown(Input::KeyCode::LShift)) {
-            movementSpeed *= turboMultiplier;
+        if (Input::IsKeyDown(Input::EKeyCode::LShift))
+        {
+            movementSpeed *= k_TurboMultiplier;
         }
-        if (Input::IsKeyDown(Input::KeyCode::W)) {
-            _cameraPos += _cameraFront * movementSpeed * (float)Time::GetDeltaTime();
-        } else if (Input::IsKeyDown(Input::KeyCode::S)) {
-            _cameraPos -= _cameraFront * movementSpeed * (float)Time::GetDeltaTime();
+        if (Input::IsKeyDown(Input::EKeyCode::W))
+        {
+            m_CameraPos += m_CameraFront * movementSpeed * static_cast<float>(Time::GetDeltaTime());
         }
-
-        if (Input::IsKeyDown(Input::KeyCode::D)) {
-            _cameraPos += glm::normalize(glm::cross(_cameraFront, _cameraUp)) * movementSpeed * (float)Time::GetDeltaTime();
-        } else if (Input::IsKeyDown(Input::KeyCode::A)) {
-            _cameraPos -= glm::normalize(glm::cross(_cameraFront, _cameraUp)) * movementSpeed * (float)Time::GetDeltaTime();
+        else if (Input::IsKeyDown(Input::EKeyCode::S))
+        {
+            m_CameraPos -= m_CameraFront * movementSpeed * static_cast<float>(Time::GetDeltaTime());
         }
 
-        static const float sensitivity = 160.0f;
-        glm::vec2 mouseDelta = Input::GetMouseDelta();
-        _cameraLook.x += mouseDelta.x * sensitivity * (float)Time::GetDeltaTime();
-        _cameraLook.y -= mouseDelta.y * sensitivity * (float)Time::GetDeltaTime();
+        if (Input::IsKeyDown(Input::EKeyCode::D))
+        {
+            m_CameraPos += glm::normalize(glm::cross(m_CameraFront, m_CameraUp)) * movementSpeed * (float)
+                Time::GetDeltaTime();
+        }
+        else if (Input::IsKeyDown(Input::EKeyCode::A))
+        {
+            m_CameraPos -= glm::normalize(glm::cross(m_CameraFront, m_CameraUp)) * movementSpeed * (float)
+                Time::GetDeltaTime();
+        }
 
-        if (_cameraLook.y > 89.0f) {
-            _cameraLook.y = 89.0f;
-        } else if (_cameraLook.y < -89.0f) {
-            _cameraLook.y = -89.0f;
+        static constexpr float k_Sensitivity = 160.0f;
+        const glm::vec2 mouseDelta = Input::GetMouseDelta();
+        m_CameraLook.x += mouseDelta.x * k_Sensitivity * (float)Time::GetDeltaTime();
+        m_CameraLook.y -= mouseDelta.y * k_Sensitivity * (float)Time::GetDeltaTime();
+
+        if (m_CameraLook.y > 89.0f)
+        {
+            m_CameraLook.y = 89.0f;
+        }
+        else if (m_CameraLook.y < -89.0f)
+        {
+            m_CameraLook.y = -89.0f;
         }
 
         glm::vec3 direction;
-        direction.x = cos(glm::radians(_cameraLook.x)) * cos(glm::radians(_cameraLook.y));
-        direction.y = sin(glm::radians(_cameraLook.y));
-        direction.z = sin(glm::radians(_cameraLook.x)) * cos(glm::radians(_cameraLook.y));
-        _cameraFront = glm::normalize(direction);
+        direction.x = cos(glm::radians(m_CameraLook.x)) * cos(glm::radians(m_CameraLook.y));
+        direction.y = sin(glm::radians(m_CameraLook.y));
+        direction.z = sin(glm::radians(m_CameraLook.x)) * cos(glm::radians(m_CameraLook.y));
+        m_CameraFront = glm::normalize(direction);
 
-        static const float zoomSpeed = 5500.0f;
+        static constexpr float k_ZoomSpeed = 5500.0f;
         float zoom = Input::GetMouseWheel().y;
-        _fov -= zoom * zoomSpeed * (float)Time::GetDeltaTime();
-        _fov = std::clamp(_fov, 1.0f, 70.0f);
+        m_Fov -= zoom * k_ZoomSpeed * static_cast<float>(Time::GetDeltaTime());
+        m_Fov = std::clamp(m_Fov, 1.0f, 70.0f);
     }
 
-    void Engine::DrawRenderables(VkCommandBuffer commandBuffer, const std::vector<Renderable>& renderables) {
-        glm::mat4 view = glm::lookAt(_cameraPos, _cameraPos + _cameraFront, _cameraUp);
+    void Engine::DrawRenderables(VkCommandBuffer commandBuffer, const std::vector<Renderable>& renderables)
+    {
+        const glm::mat4 view = glm::lookAt(m_CameraPos, m_CameraPos + m_CameraFront, m_CameraUp);
 
-        VkExtent2D windowExtent = _window->GetExtent();
-        glm::mat4 projection = glm::perspective(glm::radians(_fov), static_cast<float>(windowExtent.width) / static_cast<float>(windowExtent.height), 0.1f, 200.0f);
+        const VkExtent2D windowExtent = m_Window->GetExtent();
+        glm::mat4 projection = glm::perspective(glm::radians(m_Fov),
+                                                static_cast<float>(windowExtent.width) / static_cast<float>(windowExtent
+                                                    .height), 0.1f, 200.0f);
         projection[1][1] *= -1;
 
         std::shared_ptr<Mesh> lastMesh = nullptr;
         std::shared_ptr<Material> lastMaterial = nullptr;
-        for(const auto& renderable : renderables) {
+        for (const auto& renderable : renderables)
+        {
             // Only bind the pipeline if it doesn't match with the one already bound
-            if (renderable.material != lastMaterial) {
-                renderable.material->pipeline->Bind(commandBuffer);
-                lastMaterial = renderable.material;
+            if (renderable.Material != lastMaterial)
+            {
+                renderable.Material->Pipeline->Bind(commandBuffer);
+                lastMaterial = renderable.Material;
             }
 
-            glm::mat4 model = renderable.transform;
+            glm::mat4 model = renderable.Transform;
             glm::mat4 meshMatrix = projection * view * model;
 
             Mesh::PushConstants pushConstants{};
-            pushConstants.renderMatrix = meshMatrix;
+            pushConstants.RenderMatrix = meshMatrix;
 
-            vkCmdPushConstants(commandBuffer, renderable.material->pipeline->GetPipelineLayout(), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(Mesh::PushConstants), &pushConstants);
+            vkCmdPushConstants(commandBuffer, renderable.Material->Pipeline->GetPipelineLayout(),
+                               VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(Mesh::PushConstants), &pushConstants);
 
             // Only bind the mesh if it's different from last bind
-            if (renderable.mesh != lastMesh) {
-                renderable.mesh->Bind(commandBuffer);
-                lastMesh = renderable.mesh;
+            if (renderable.Mesh != lastMesh)
+            {
+                renderable.Mesh->Bind(commandBuffer);
+                lastMesh = renderable.Mesh;
             }
 
-            renderable.mesh->Draw(commandBuffer);
+            renderable.Mesh->Draw(commandBuffer);
         }
     }
 }

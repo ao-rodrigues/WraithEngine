@@ -31,7 +31,7 @@ namespace Wraith {
         void HandleEvent(SDL_Event event);
         void HandleInputEvent(SDL_Event event);
 
-        SDL_Window* _window = nullptr;
-        bool _shouldClose = false;
+        SDL_Window* m_Window = nullptr;
+        bool m_ShouldClose = false;
     };
 }

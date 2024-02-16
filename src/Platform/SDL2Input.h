@@ -15,8 +15,8 @@ namespace Wraith {
 
     class SDL2Input {
     public:
-        static Input::KeyCode TranslateKeyCode(SDL_Keycode sdlKeyCode);
-        static Input::MouseButton TranslateMouseButton(Uint8 sdlMouseButton);
+        static Input::EKeyCode TranslateKeyCode(SDL_Keycode sdlKeyCode);
+        static Input::EMouseButton TranslateMouseButton(Uint8 sdlMouseButton);
     };
 
 }

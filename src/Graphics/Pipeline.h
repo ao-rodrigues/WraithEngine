@@ -20,16 +20,16 @@ namespace Wraith {
 
             VkPipeline Build(VkDevice device, VkRenderPass renderPass);
 
-            std::vector<VkPipelineShaderStageCreateInfo> shaderStages;
-            VkPipelineVertexInputStateCreateInfo vertexInputInfo;
-            VkPipelineInputAssemblyStateCreateInfo inputAssembly;
-            VkPipelineViewportStateCreateInfo viewportState;
-            VkPipelineRasterizationStateCreateInfo rasterizer;
-            VkPipelineMultisampleStateCreateInfo multisampling;
-            VkPipelineColorBlendStateCreateInfo colorBlending;
-            VkPipelineDepthStencilStateCreateInfo depthStencilInfo;
-            VkPipelineDynamicStateCreateInfo dynamicState;
-            VkPipelineLayout pipelineLayout;
+            std::vector<VkPipelineShaderStageCreateInfo> ShaderStages;
+            VkPipelineVertexInputStateCreateInfo VertexInputInfo;
+            VkPipelineInputAssemblyStateCreateInfo InputAssembly;
+            VkPipelineViewportStateCreateInfo ViewportState;
+            VkPipelineRasterizationStateCreateInfo Rasterizer;
+            VkPipelineMultisampleStateCreateInfo Multisampling;
+            VkPipelineColorBlendStateCreateInfo ColorBlending;
+            VkPipelineDepthStencilStateCreateInfo DepthStencilInfo;
+            VkPipelineDynamicStateCreateInfo DynamicState;
+            VkPipelineLayout PipelineLayout;
         };
 
         Pipeline(const Device& device, VkPipeline pipeline, VkPipelineLayout pipelineLayout);
@@ -40,13 +40,13 @@ namespace Wraith {
 
         void Bind(VkCommandBuffer commandBuffer) const;
 
-        VkPipeline GetVkPipeline() const { return _pipeline; }
-        VkPipelineLayout GetPipelineLayout() const { return _pipelineLayout; }
+        VkPipeline GetVkPipeline() const { return m_Pipeline; }
+        VkPipelineLayout GetPipelineLayout() const { return m_PipelineLayout; }
 
     private:
-        Device::Ref _device;
+        Device::Ref m_Device;
 
-        VkPipeline _pipeline = VK_NULL_HANDLE;
-        VkPipelineLayout _pipelineLayout = VK_NULL_HANDLE;
+        VkPipeline m_Pipeline = VK_NULL_HANDLE;
+        VkPipelineLayout m_PipelineLayout = VK_NULL_HANDLE;
     };
 }

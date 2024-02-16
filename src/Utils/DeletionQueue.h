@@ -10,21 +10,24 @@
 #include <deque>
 #include <functional>
 
-namespace Wraith {
-
-    struct DeletionQueue {
-        void Push(std::function<void()>&& function) {
-            deletors.push_back(function);
+namespace Wraith
+{
+    struct DeletionQueue
+    {
+        void Push(std::function<void()>&& function)
+        {
+            Deletors.push_back(function);
         }
 
-        void Flush() {
-            for (auto& deletor : deletors) {
+        void Flush()
+        {
+            for (auto& deletor : Deletors)
+            {
                 deletor();
             }
-            deletors.clear();
+            Deletors.clear();
         }
 
-        std::deque<std::function<void()>> deletors;
+        std::deque<std::function<void()>> Deletors;
     };
-
 }

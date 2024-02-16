@@ -25,16 +25,16 @@ namespace Wraith {
 
         void RenderFrame(std::function<void(VkCommandBuffer)>&& drawRenderables);
 
-        VkRenderPass GetRenderPass() const { return _renderPass; }
+        VkRenderPass GetRenderPass() const { return m_RenderPass; }
 
     private:
         struct FrameData {
-            VkSemaphore renderSemaphore = VK_NULL_HANDLE;
-            VkSemaphore presentSemaphore = VK_NULL_HANDLE;
-            VkFence renderFence = VK_NULL_HANDLE;
+            VkSemaphore RenderSemaphore = VK_NULL_HANDLE;
+            VkSemaphore PresentSemaphore = VK_NULL_HANDLE;
+            VkFence RenderFence = VK_NULL_HANDLE;
 
-            VkCommandPool commandPool = VK_NULL_HANDLE;
-            VkCommandBuffer commandBuffer = VK_NULL_HANDLE;
+            VkCommandPool CommandPool = VK_NULL_HANDLE;
+            VkCommandBuffer CommandBuffer = VK_NULL_HANDLE;
         };
 
         void RecreateSwapchain();
@@ -51,18 +51,18 @@ namespace Wraith {
         void EndFrame();
         void SubmitCommandQueue();
 
-        static constexpr int MAX_FRAMES_IN_FLIGHT = 2;
+        static constexpr int k_MaxFramesInFlight = 2;
 
-        Device::Ref _device;
-        Window::MutableRef _window;
+        Device::Ref m_Device;
+        Window::MutableRef m_Window;
 
-        Swapchain _swapchain;
+        Swapchain m_Swapchain;
 
-        std::vector<VkFramebuffer> _framebuffers;
-        VkRenderPass _renderPass = VK_NULL_HANDLE;
-        std::array<FrameData, MAX_FRAMES_IN_FLIGHT> _frames;
+        std::vector<VkFramebuffer> m_Framebuffers;
+        VkRenderPass m_RenderPass = VK_NULL_HANDLE;
+        std::array<FrameData, k_MaxFramesInFlight> m_Frames;
 
-        uint32_t _swapChainImageIndex = 0;
-        size_t _frameIndex = 0;
+        uint32_t m_SwapChainImageIndex = 0;
+        size_t m_FrameIndex = 0;
     };
 }

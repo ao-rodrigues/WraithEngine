@@ -13,9 +13,9 @@
 namespace Wraith {
 
     struct Renderable {
-        std::shared_ptr<Mesh> mesh;
-        std::shared_ptr<Material> material;
-        glm::mat4 transform;
+        std::shared_ptr<Mesh> Mesh;
+        std::shared_ptr<Material> Material;
+        glm::mat4 Transform;
     };
 }
 

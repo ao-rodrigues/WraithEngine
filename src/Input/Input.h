@@ -11,7 +11,7 @@
 
 namespace Wraith::Input {
 
-    enum class KeyCode : int {
+    enum class EKeyCode : int {
         A,
         B,
         C,
@@ -112,8 +112,8 @@ namespace Wraith::Input {
 
         Count // Reserved: always keep as last
     };
-    
-    enum class MouseButton : int {
+
+    enum class EMouseButton : int {
         Left,
         Right,
         Middle,
@@ -123,13 +123,13 @@ namespace Wraith::Input {
         Count // Reserved: always keep as last
     };
 
-    bool IsKeyDown(Input::KeyCode keyCode);
-    bool IsKeyUp(Input::KeyCode keyCode);
-    bool IsKeyPressed(Input::KeyCode keyCode);
+    bool IsKeyDown(Input::EKeyCode keyCode);
+    bool IsKeyUp(Input::EKeyCode keyCode);
+    bool IsKeyPressed(Input::EKeyCode keyCode);
 
-    bool IsMouseButtonDown(Input::MouseButton mouseButton);
-    bool IsMouseButtonUp(Input::MouseButton mouseButton);
-    bool IsMouseButtonPressed(Input::MouseButton mouseButton);
+    bool IsMouseButtonDown(Input::EMouseButton mouseButton);
+    bool IsMouseButtonUp(Input::EMouseButton mouseButton);
+    bool IsMouseButtonPressed(Input::EMouseButton mouseButton);
 
     glm::vec2 GetMousePosition();
     glm::vec2 GetMouseDelta();

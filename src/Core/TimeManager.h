@@ -10,9 +10,10 @@
 #include "Utils/Singleton.h"
 #include "Core/Time.h"
 
-namespace Wraith {
-
-    class TimeManager : public Singleton<TimeManager> {
+namespace Wraith
+{
+    class TimeManager : public Singleton<TimeManager>
+    {
     public:
         void Init();
         void Update();
@@ -22,13 +23,12 @@ namespace Wraith {
         Time::Timestep GetFixedDeltaTime() const;
 
     private:
-        Time::Timestep _time = 0.0;
-        Time::Timestep _deltaTime = 0.0;
-        Time::Timestep _fixedDeltaTime = 0.0;
+        Time::Timestep m_Time = 0.0;
+        Time::Timestep m_DeltaTime = 0.0;
+        Time::Timestep m_FixedDeltaTime = 0.0;
 
-        Time::Timestep _timeAccumulator = 0.0;
-        Time::Timestamp _lastFrameTimestamp;
-        Time::Timestamp _lastFixedFrameTimestamp;
+        Time::Timestep m_TimeAccumulator = 0.0;
+        Time::Timestamp m_LastFrameTimestamp;
+        Time::Timestamp m_LastFixedFrameTimestamp;
     };
-
 }

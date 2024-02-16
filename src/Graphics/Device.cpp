@@ -35,10 +35,10 @@ void DestroyDebugUtilsMessengerEXT(
 }
 
 namespace Wraith {
-    constexpr auto VULKAN_VERSION VK_API_VERSION_1_2;
+    constexpr auto k_VulkanVersion VK_API_VERSION_1_2;
 
     void Device::Create(Window& window) {
-        _window = window;
+        m_Window = window;
 
         CreateInstance();
         CreateSurface();
@@ -48,37 +48,37 @@ namespace Wraith {
     }
 
     void Device::Destroy() {
-        vmaDestroyAllocator(_allocator);
+        vmaDestroyAllocator(m_Allocator);
 
-        vkDestroyDevice(_device, nullptr);
+        vkDestroyDevice(m_Device, nullptr);
 
-        if constexpr (ENABLE_VALIDATION_LAYERS) {
-            DestroyDebugUtilsMessengerEXT(_instance, _debugMessenger, nullptr);
+        if constexpr (k_EnableValidationLayers) {
+            DestroyDebugUtilsMessengerEXT(m_Instance, m_DebugMessenger, nullptr);
         }
 
-        vkDestroySurfaceKHR(_instance, _surface, nullptr);
-        vkDestroyInstance(_instance, nullptr);
+        vkDestroySurfaceKHR(m_Instance, m_Surface, nullptr);
+        vkDestroyInstance(m_Instance, nullptr);
     }
 
     bool Device::IsUndefined() const {
-        return _device == VK_NULL_HANDLE;
+        return m_Device == VK_NULL_HANDLE;
     }
 
     VkCommandPool Device::CreateCommandPool() const {
-        const QueueFamilyIndices indices = FindQueueFamilies(_physicalDevice);
+        const QueueFamilyIndices indices = FindQueueFamilies(m_PhysicalDevice);
 
         VkCommandPool commandPool;
         VkCommandPoolCreateInfo primaryPoolInfo{};
         primaryPoolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-        primaryPoolInfo.queueFamilyIndex = indices.graphicsFamily.value();
+        primaryPoolInfo.queueFamilyIndex = indices.GraphicsFamily.value();
         primaryPoolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT; // Optional
 
-        WR_VK_CHECK_MSG(vkCreateCommandPool(_device, &primaryPoolInfo, nullptr, &commandPool), "Failed to create command pool!")
+        WR_VK_CHECK_MSG(vkCreateCommandPool(m_Device, &primaryPoolInfo, nullptr, &commandPool), "Failed to create command pool!")
         return commandPool;
     }
 
     void Device::FinishOperations() const {
-        vkDeviceWaitIdle(_device);
+        vkDeviceWaitIdle(m_Device);
     }
 
     void Device::CreateBuffer(VkDeviceSize size,
@@ -95,13 +95,13 @@ namespace Wraith {
         VmaAllocationCreateInfo allocInfo{};
         allocInfo.usage = memoryUsage;
 
-        if (vmaCreateBuffer(_allocator, &bufferInfo, &allocInfo, &buffer, &allocation, nullptr) != VK_SUCCESS) {
+        if (vmaCreateBuffer(m_Allocator, &bufferInfo, &allocInfo, &buffer, &allocation, nullptr) != VK_SUCCESS) {
             throw std::runtime_error("Failed to create vertex buffer!");
         }
     }
 
     void Device::CreateInstance() {
-        if (ENABLE_VALIDATION_LAYERS && !CheckValidationLayerSupport()) {
+        if (k_EnableValidationLayers && !CheckValidationLayerSupport()) {
             throw std::runtime_error("Validation layers requested, but not available!");
         }
 
@@ -111,7 +111,7 @@ namespace Wraith {
         appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
         appInfo.pEngineName = "Wraith Engine";
         appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
-        appInfo.apiVersion = VULKAN_VERSION;
+        appInfo.apiVersion = k_VulkanVersion;
 
         VkInstanceCreateInfo createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
@@ -122,9 +122,9 @@ namespace Wraith {
         createInfo.ppEnabledExtensionNames = extensions.data();
 
         VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo{};
-        if (ENABLE_VALIDATION_LAYERS) {
-            createInfo.enabledLayerCount = static_cast<uint32_t>(VALIDATION_LAYERS.size());
-            createInfo.ppEnabledLayerNames = VALIDATION_LAYERS.data();
+        if (k_EnableValidationLayers) {
+            createInfo.enabledLayerCount = static_cast<uint32_t>(k_ValidationLayers.size());
+            createInfo.ppEnabledLayerNames = k_ValidationLayers.data();
 
             PopulateDebugMessengerCreateInfo(debugCreateInfo);
             createInfo.pNext = &debugCreateInfo;
@@ -133,7 +133,7 @@ namespace Wraith {
             createInfo.pNext = nullptr;
         }
 
-        if (vkCreateInstance(&createInfo, nullptr, &_instance) != VK_SUCCESS) {
+        if (vkCreateInstance(&createInfo, nullptr, &m_Instance) != VK_SUCCESS) {
             throw std::runtime_error("Failed to create Vulkan instance!");
         }
 
@@ -141,50 +141,50 @@ namespace Wraith {
     }
 
     void Device::SetupDebugMessenger() {
-        if constexpr (!ENABLE_VALIDATION_LAYERS) return;
+        if constexpr (!k_EnableValidationLayers) return;
 
         VkDebugUtilsMessengerCreateInfoEXT createInfo{};
         PopulateDebugMessengerCreateInfo(createInfo);
 
-        if (CreateDebugUtilsMessengerEXT(_instance, &createInfo, nullptr, &_debugMessenger) != VK_SUCCESS) {
+        if (CreateDebugUtilsMessengerEXT(m_Instance, &createInfo, nullptr, &m_DebugMessenger) != VK_SUCCESS) {
             throw std::runtime_error("Failed to set up debug messenger!");
         }
         WR_LOG_DEBUG("Debug messenger setup done.")
     }
 
     void Device::CreateSurface() {
-        _window->CreateSurface(_instance, &_surface);
+        m_Window->CreateSurface(m_Instance, &m_Surface);
     }
 
     void Device::PickPhysicalDevice() {
         uint32_t deviceCount = 0;
-        vkEnumeratePhysicalDevices(_instance, &deviceCount, nullptr);
+        vkEnumeratePhysicalDevices(m_Instance, &deviceCount, nullptr);
         if (deviceCount == 0) {
             throw std::runtime_error("Failed to find GPUs with Vulkan support!");
         }
 
         std::vector<VkPhysicalDevice> devices{deviceCount};
-        vkEnumeratePhysicalDevices(_instance, &deviceCount, devices.data());
+        vkEnumeratePhysicalDevices(m_Instance, &deviceCount, devices.data());
         for (const auto& device: devices) {
             if (IsDeviceSuitable(device)) {
-                _physicalDevice = device;
+                m_PhysicalDevice = device;
                 break;
             }
         }
 
-        if (_physicalDevice == VK_NULL_HANDLE) {
+        if (m_PhysicalDevice == VK_NULL_HANDLE) {
             throw std::runtime_error("Failed to find a suitable GPU!");
         }
         WR_LOG_DEBUG("Found physical device.")
     }
 
     void Device::CreateLogicalDevice() {
-        const QueueFamilyIndices indices = FindQueueFamilies(_physicalDevice);
+        const QueueFamilyIndices indices = FindQueueFamilies(m_PhysicalDevice);
 
         std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
         std::set<uint32_t> uniqueQueueFamilies = {
-                indices.graphicsFamily.value(),
-                indices.presentFamily.value()
+                indices.GraphicsFamily.value(),
+                indices.PresentFamily.value()
         };
 
         float queuePriority = 1.0f;
@@ -204,33 +204,33 @@ namespace Wraith {
         createInfo.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());
         createInfo.pQueueCreateInfos = queueCreateInfos.data();
         createInfo.pEnabledFeatures = &deviceFeatures;
-        createInfo.enabledExtensionCount = static_cast<uint32_t>(DEVICE_EXTENSIONS.size());
-        createInfo.ppEnabledExtensionNames = DEVICE_EXTENSIONS.data();
+        createInfo.enabledExtensionCount = static_cast<uint32_t>(k_DeviceExtensions.size());
+        createInfo.ppEnabledExtensionNames = k_DeviceExtensions.data();
 
-        if (ENABLE_VALIDATION_LAYERS) {
-            createInfo.enabledLayerCount = static_cast<uint32_t>(VALIDATION_LAYERS.size());
-            createInfo.ppEnabledLayerNames = VALIDATION_LAYERS.data();
+        if (k_EnableValidationLayers) {
+            createInfo.enabledLayerCount = static_cast<uint32_t>(k_ValidationLayers.size());
+            createInfo.ppEnabledLayerNames = k_ValidationLayers.data();
         } else {
             createInfo.enabledLayerCount = 0;
         }
 
-        if (vkCreateDevice(_physicalDevice, &createInfo, nullptr, &_device) != VK_SUCCESS) {
+        if (vkCreateDevice(m_PhysicalDevice, &createInfo, nullptr, &m_Device) != VK_SUCCESS) {
             throw std::runtime_error("Failed to create logical device!");
         }
         WR_LOG_DEBUG("Created logical device.")
 
-        vkGetDeviceQueue(_device, indices.graphicsFamily.value(), 0, &_graphicsQueue);
-        vkGetDeviceQueue(_device, indices.presentFamily.value(), 0, &_presentQueue);
+        vkGetDeviceQueue(m_Device, indices.GraphicsFamily.value(), 0, &m_GraphicsQueue);
+        vkGetDeviceQueue(m_Device, indices.PresentFamily.value(), 0, &m_PresentQueue);
     }
 
     void Device::CreateAllocator() {
         VmaAllocatorCreateInfo allocatorInfo{};
-        allocatorInfo.vulkanApiVersion = VULKAN_VERSION;
-        allocatorInfo.physicalDevice = _physicalDevice;
-        allocatorInfo.device = _device;
-        allocatorInfo.instance = _instance;
+        allocatorInfo.vulkanApiVersion = k_VulkanVersion;
+        allocatorInfo.physicalDevice = m_PhysicalDevice;
+        allocatorInfo.device = m_Device;
+        allocatorInfo.instance = m_Instance;
 
-        vmaCreateAllocator(&allocatorInfo, &_allocator);
+        vmaCreateAllocator(&allocatorInfo, &m_Allocator);
     }
 
     bool Device::CheckValidationLayerSupport() {
@@ -240,7 +240,7 @@ namespace Wraith {
         std::vector<VkLayerProperties> availableLayers(layerCount);
         vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
 
-        for (const auto& layerName: VALIDATION_LAYERS) {
+        for (const auto& layerName: k_ValidationLayers) {
             bool layerFound = false;
             for (const auto& layerProperties: availableLayers) {
                 if (strcmp(layerName, layerProperties.layerName) == 0) {
@@ -259,8 +259,8 @@ namespace Wraith {
 
     std::vector<const char*> Device::GetRequiredInstanceExtensions() {
         uint32_t extensionCount = 0;
-        std::vector<const char*> extensions = _window->GetInstanceExtensions(&extensionCount);
-        if (ENABLE_VALIDATION_LAYERS) {
+        std::vector<const char*> extensions = m_Window->GetInstanceExtensions(&extensionCount);
+        if (k_EnableValidationLayers) {
             extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
         }
 
@@ -301,7 +301,7 @@ namespace Wraith {
         bool swapChainAdequate = false;
         if (extensionsSupported) {
             const SwapChainSupportDetails swapChainSupport = QuerySwapChainSupport(device);
-            swapChainAdequate |= !swapChainSupport.formats.empty() && !swapChainSupport.presentModes.empty();
+            swapChainAdequate |= !swapChainSupport.Formats.empty() && !swapChainSupport.PresentModes.empty();
         }
 
         return indices.IsComplete() && extensionsSupported && swapChainAdequate;
@@ -319,13 +319,13 @@ namespace Wraith {
         int i = 0;
         for (const auto& queueFamily: queueFamilies) {
             if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
-                indices.graphicsFamily = i;
+                indices.GraphicsFamily = i;
             }
 
             VkBool32 presentSupport = false;
-            vkGetPhysicalDeviceSurfaceSupportKHR(device, i, _surface, &presentSupport);
+            vkGetPhysicalDeviceSurfaceSupportKHR(device, i, m_Surface, &presentSupport);
             if (presentSupport) {
-                indices.presentFamily = i;
+                indices.PresentFamily = i;
             }
 
             if (indices.IsComplete()) {
@@ -344,7 +344,7 @@ namespace Wraith {
         std::vector<VkExtensionProperties> availableExtensions(extensionCount);
         vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, availableExtensions.data());
 
-        std::set<std::string> requiredExtensions(DEVICE_EXTENSIONS.begin(), DEVICE_EXTENSIONS.end());
+        std::set<std::string> requiredExtensions(k_DeviceExtensions.begin(), k_DeviceExtensions.end());
         for (const auto& extension: availableExtensions) {
             requiredExtensions.erase(extension.extensionName);
         }
@@ -354,20 +354,20 @@ namespace Wraith {
 
     Device::SwapChainSupportDetails Device::QuerySwapChainSupport(VkPhysicalDevice device) const {
         SwapChainSupportDetails details;
-        vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, _surface, &details.capabilities);
+        vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, m_Surface, &details.Capabilities);
 
         uint32_t formatCount = 0;
-        vkGetPhysicalDeviceSurfaceFormatsKHR(device, _surface, &formatCount, nullptr);
+        vkGetPhysicalDeviceSurfaceFormatsKHR(device, m_Surface, &formatCount, nullptr);
         if (formatCount != 0) {
-            details.formats.resize(formatCount);
-            vkGetPhysicalDeviceSurfaceFormatsKHR(device, _surface, &formatCount, details.formats.data());
+            details.Formats.resize(formatCount);
+            vkGetPhysicalDeviceSurfaceFormatsKHR(device, m_Surface, &formatCount, details.Formats.data());
         }
 
         uint32_t presentModeCount = 0;
-        vkGetPhysicalDeviceSurfacePresentModesKHR(device, _surface, &presentModeCount, nullptr);
+        vkGetPhysicalDeviceSurfacePresentModesKHR(device, m_Surface, &presentModeCount, nullptr);
         if (presentModeCount != 0) {
-            details.presentModes.resize(presentModeCount);
-            vkGetPhysicalDeviceSurfacePresentModesKHR(device, _surface, &presentModeCount, details.presentModes.data());
+            details.PresentModes.resize(presentModeCount);
+            vkGetPhysicalDeviceSurfacePresentModesKHR(device, m_Surface, &presentModeCount, details.PresentModes.data());
         }
 
         return details;
@@ -375,7 +375,7 @@ namespace Wraith {
 
     uint32_t Device::FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) const {
         VkPhysicalDeviceMemoryProperties memoryProperties;
-        vkGetPhysicalDeviceMemoryProperties(_physicalDevice, &memoryProperties);
+        vkGetPhysicalDeviceMemoryProperties(m_PhysicalDevice, &memoryProperties);
         for (uint32_t i = 0; i < memoryProperties.memoryTypeCount; i++) {
             if ((typeFilter & (1 << i)) && (memoryProperties.memoryTypes[i].propertyFlags & properties) == properties) {
                 return i;

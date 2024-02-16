@@ -30,6 +30,6 @@ namespace Wraith {
     private:
         static void OnFramebufferResized(GLFWwindow* window, int newWidth, int newHeight);
 
-        GLFWwindow* _window = nullptr;
+        GLFWwindow* m_Window = nullptr;
     };
 }

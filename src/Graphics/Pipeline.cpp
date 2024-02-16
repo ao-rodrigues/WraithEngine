@@ -15,17 +15,17 @@ namespace Wraith {
     VkPipeline Pipeline::Builder::Build(VkDevice device, VkRenderPass renderPass) {
         VkGraphicsPipelineCreateInfo pipelineInfo{};
         pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
-        pipelineInfo.stageCount = shaderStages.size();
-        pipelineInfo.pStages = shaderStages.data();
-        pipelineInfo.pVertexInputState = &vertexInputInfo;
-        pipelineInfo.pInputAssemblyState = &inputAssembly;
-        pipelineInfo.pViewportState = &viewportState;
-        pipelineInfo.pRasterizationState = &rasterizer;
-        pipelineInfo.pMultisampleState = &multisampling;
-        pipelineInfo.pDepthStencilState = &depthStencilInfo; // Optional
-        pipelineInfo.pColorBlendState = &colorBlending;
-        pipelineInfo.pDynamicState = &dynamicState; // Optional
-        pipelineInfo.layout = pipelineLayout;
+        pipelineInfo.stageCount = ShaderStages.size();
+        pipelineInfo.pStages = ShaderStages.data();
+        pipelineInfo.pVertexInputState = &VertexInputInfo;
+        pipelineInfo.pInputAssemblyState = &InputAssembly;
+        pipelineInfo.pViewportState = &ViewportState;
+        pipelineInfo.pRasterizationState = &Rasterizer;
+        pipelineInfo.pMultisampleState = &Multisampling;
+        pipelineInfo.pDepthStencilState = &DepthStencilInfo; // Optional
+        pipelineInfo.pColorBlendState = &ColorBlending;
+        pipelineInfo.pDynamicState = &DynamicState; // Optional
+        pipelineInfo.layout = PipelineLayout;
         pipelineInfo.renderPass = renderPass;
         pipelineInfo.subpass = 0;
         pipelineInfo.basePipelineHandle = VK_NULL_HANDLE; // Optional
@@ -40,14 +40,14 @@ namespace Wraith {
     }
 
     Pipeline::Pipeline(const Device& device, VkPipeline pipeline, VkPipelineLayout pipelineLayout)
-        : _device(device), _pipeline(pipeline), _pipelineLayout(pipelineLayout) {}
+        : m_Device(device), m_Pipeline(pipeline), m_PipelineLayout(pipelineLayout) {}
 
     Pipeline::~Pipeline() {
-        vkDestroyPipeline(_device->GetVkDevice(), _pipeline, nullptr);
-        vkDestroyPipelineLayout(_device->GetVkDevice(), _pipelineLayout, nullptr);
+        vkDestroyPipeline(m_Device->GetVkDevice(), m_Pipeline, nullptr);
+        vkDestroyPipelineLayout(m_Device->GetVkDevice(), m_PipelineLayout, nullptr);
     }
 
     void Pipeline::Bind(VkCommandBuffer commandBuffer) const {
-        vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, _pipeline);
+        vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_Pipeline);
     }
 }

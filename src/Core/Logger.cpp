@@ -14,9 +14,11 @@
 // [Log Type] [Date] [File:Line] <message>
 #define LOGGER_PATTERN "%^[%l] [%H:%M:%S] [%s:%#]%$ %v"
 
-namespace Wraith {
+namespace Wraith
+{
 
-    void Logger::Init() {
+    void Logger::Init()
+    {
         const auto sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
         sink->set_pattern(LOGGER_PATTERN);
 
@@ -27,11 +29,13 @@ namespace Wraith {
         spdlog::register_logger(logger);
     }
 
-    void Logger::Shutdown() {
+    void Logger::Shutdown()
+    {
         spdlog::shutdown();
     }
 
-    bool Logger::HasLogger() {
+    bool Logger::HasLogger()
+    {
         return spdlog::get(WR_LOGGER_NAME) != nullptr;
     }
 

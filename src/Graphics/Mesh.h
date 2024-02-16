@@ -16,13 +16,13 @@ namespace Wraith {
     class Mesh {
     public:
         struct PushConstants {
-            glm::vec4 data;
-            glm::mat4 renderMatrix;
+            glm::vec4 Data;
+            glm::mat4 RenderMatrix;
         };
 
         struct Vertex {
-            glm::vec3 position;
-            glm::vec3 color;
+            glm::vec3 Position;
+            glm::vec3 Color;
 
             static std::vector<VkVertexInputBindingDescription> GetBindingDescriptions();
             static std::vector<VkVertexInputAttributeDescription> GetAttributeDescriptions();
@@ -42,15 +42,15 @@ namespace Wraith {
         void CreateVertexBuffers(const std::vector<Vertex>& vertices);
         void CreateIndexBuffers(const std::vector<uint16_t>& indices);
 
-        Device& _device;
+        Device& m_Device;
 
-        VmaAllocation _vertexBufferAllocation = VK_NULL_HANDLE;
-        VkBuffer _vertexBuffer = VK_NULL_HANDLE;
-        uint32_t _vertexCount = 0;
+        VmaAllocation m_VertexBufferAllocation = VK_NULL_HANDLE;
+        VkBuffer m_VertexBuffer = VK_NULL_HANDLE;
+        uint32_t m_VertexCount = 0;
 
 
-        VmaAllocation _indexBufferAllocation = VK_NULL_HANDLE;
-        VkBuffer _indexBuffer = VK_NULL_HANDLE;
-        uint32_t _indexCount = 0;
+        VmaAllocation m_IndexBufferAllocation = VK_NULL_HANDLE;
+        VkBuffer m_IndexBuffer = VK_NULL_HANDLE;
+        uint32_t m_IndexCount = 0;
     };
 }

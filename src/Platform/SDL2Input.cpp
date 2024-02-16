@@ -9,20 +9,20 @@
 
 namespace Wraith {
 
-    Input::KeyCode Wraith::SDL2Input::TranslateKeyCode(SDL_Keycode sdlKeyCode) {
+    Input::EKeyCode Wraith::SDL2Input::TranslateKeyCode(SDL_Keycode sdlKeyCode) {
         switch (sdlKeyCode) {
             case SDLK_UNKNOWN:
                 break;
             case SDLK_RETURN:
-                return Input::KeyCode::Return;
+                return Input::EKeyCode::Return;
             case SDLK_ESCAPE:
                 break;
             case SDLK_BACKSPACE:
-                return Input::KeyCode::Backspace;
+                return Input::EKeyCode::Backspace;
             case SDLK_TAB:
-                return Input::KeyCode::Tab;
+                return Input::EKeyCode::Tab;
             case SDLK_SPACE:
-                return Input::KeyCode::Space;
+                return Input::EKeyCode::Space;
             case SDLK_EXCLAIM:
                 break;
             case SDLK_QUOTEDBL:
@@ -54,25 +54,25 @@ namespace Wraith {
             case SDLK_SLASH:
                 break;
             case SDLK_0:
-                return Input::KeyCode::Num0;
+                return Input::EKeyCode::Num0;
             case SDLK_1:
-                return Input::KeyCode::Num1;
+                return Input::EKeyCode::Num1;
             case SDLK_2:
-                return Input::KeyCode::Num2;
+                return Input::EKeyCode::Num2;
             case SDLK_3:
-                return Input::KeyCode::Num3;
+                return Input::EKeyCode::Num3;
             case SDLK_4:
-                return Input::KeyCode::Num4;
+                return Input::EKeyCode::Num4;
             case SDLK_5:
-                return Input::KeyCode::Num5;
+                return Input::EKeyCode::Num5;
             case SDLK_6:
-                return Input::KeyCode::Num6;
+                return Input::EKeyCode::Num6;
             case SDLK_7:
-                return Input::KeyCode::Num7;
+                return Input::EKeyCode::Num7;
             case SDLK_8:
-                return Input::KeyCode::Num8;
+                return Input::EKeyCode::Num8;
             case SDLK_9:
-                return Input::KeyCode::Num9;
+                return Input::EKeyCode::Num9;
             case SDLK_COLON:
                 break;
             case SDLK_SEMICOLON:
@@ -100,83 +100,83 @@ namespace Wraith {
             case SDLK_BACKQUOTE:
                 break;
             case SDLK_a:
-                return Input::KeyCode::A;
+                return Input::EKeyCode::A;
             case SDLK_b:
-                return Input::KeyCode::B;
+                return Input::EKeyCode::B;
             case SDLK_c:
-                return Input::KeyCode::C;
+                return Input::EKeyCode::C;
             case SDLK_d:
-                return Input::KeyCode::D;
+                return Input::EKeyCode::D;
             case SDLK_e:
-                return Input::KeyCode::E;
+                return Input::EKeyCode::E;
             case SDLK_f:
-                return Input::KeyCode::F;
+                return Input::EKeyCode::F;
             case SDLK_g:
-                return Input::KeyCode::G;
+                return Input::EKeyCode::G;
             case SDLK_h:
-                return Input::KeyCode::H;
+                return Input::EKeyCode::H;
             case SDLK_i:
-                return Input::KeyCode::I;
+                return Input::EKeyCode::I;
             case SDLK_j:
-                return Input::KeyCode::J;
+                return Input::EKeyCode::J;
             case SDLK_k:
-                return Input::KeyCode::K;
+                return Input::EKeyCode::K;
             case SDLK_l:
-                return Input::KeyCode::L;
+                return Input::EKeyCode::L;
             case SDLK_m:
-                return Input::KeyCode::M;
+                return Input::EKeyCode::M;
             case SDLK_n:
-                return Input::KeyCode::N;
+                return Input::EKeyCode::N;
             case SDLK_o:
-                return Input::KeyCode::O;
+                return Input::EKeyCode::O;
             case SDLK_p:
-                return Input::KeyCode::P;
+                return Input::EKeyCode::P;
             case SDLK_q:
-                return Input::KeyCode::Q;
+                return Input::EKeyCode::Q;
             case SDLK_r:
-                return Input::KeyCode::R;
+                return Input::EKeyCode::R;
             case SDLK_s:
-                return Input::KeyCode::S;
+                return Input::EKeyCode::S;
             case SDLK_t:
-                return Input::KeyCode::T;
+                return Input::EKeyCode::T;
             case SDLK_u:
-                return Input::KeyCode::U;
+                return Input::EKeyCode::U;
             case SDLK_v:
-                return Input::KeyCode::V;
+                return Input::EKeyCode::V;
             case SDLK_w:
-                return Input::KeyCode::W;
+                return Input::EKeyCode::W;
             case SDLK_x:
-                return Input::KeyCode::X;
+                return Input::EKeyCode::X;
             case SDLK_y:
-                return Input::KeyCode::Y;
+                return Input::EKeyCode::Y;
             case SDLK_z:
-                return Input::KeyCode::Z;
+                return Input::EKeyCode::Z;
             case SDLK_CAPSLOCK:
-                return Input::KeyCode::CapsLock;
+                return Input::EKeyCode::CapsLock;
             case SDLK_F1:
-                return Input::KeyCode::F1;
+                return Input::EKeyCode::F1;
             case SDLK_F2:
-                return Input::KeyCode::F2;
+                return Input::EKeyCode::F2;
             case SDLK_F3:
-                return Input::KeyCode::F3;
+                return Input::EKeyCode::F3;
             case SDLK_F4:
-                return Input::KeyCode::F4;
+                return Input::EKeyCode::F4;
             case SDLK_F5:
-                return Input::KeyCode::F5;
+                return Input::EKeyCode::F5;
             case SDLK_F6:
-                return Input::KeyCode::F6;
+                return Input::EKeyCode::F6;
             case SDLK_F7:
-                return Input::KeyCode::F7;
+                return Input::EKeyCode::F7;
             case SDLK_F8:
-                return Input::KeyCode::F8;
+                return Input::EKeyCode::F8;
             case SDLK_F9:
-                return Input::KeyCode::F9;
+                return Input::EKeyCode::F9;
             case SDLK_F10:
-                return Input::KeyCode::F10;
+                return Input::EKeyCode::F10;
             case SDLK_F11:
-                return Input::KeyCode::F11;
+                return Input::EKeyCode::F11;
             case SDLK_F12:
-                return Input::KeyCode::F12;
+                return Input::EKeyCode::F12;
             case SDLK_PRINTSCREEN:
                 break;
             case SDLK_SCROLLLOCK:
@@ -184,26 +184,26 @@ namespace Wraith {
             case SDLK_PAUSE:
                 break;
             case SDLK_INSERT:
-                return Input::KeyCode::Insert;
+                return Input::EKeyCode::Insert;
             case SDLK_HOME:
-                return Input::KeyCode::Home;
+                return Input::EKeyCode::Home;
             case SDLK_PAGEUP:
                 break;
             case SDLK_DELETE:
-                return Input::KeyCode::Delete;
+                return Input::EKeyCode::Delete;
                 break;
             case SDLK_END:
                 break;
             case SDLK_PAGEDOWN:
                 break;
             case SDLK_RIGHT:
-                return Input::KeyCode::ArrowRight;
+                return Input::EKeyCode::ArrowRight;
             case SDLK_LEFT:
-                return Input::KeyCode::ArrowLeft;
+                return Input::EKeyCode::ArrowLeft;
             case SDLK_DOWN:
-                return Input::KeyCode::ArrowDown;
+                return Input::EKeyCode::ArrowDown;
             case SDLK_UP:
-                return Input::KeyCode::ArrowUp;
+                return Input::EKeyCode::ArrowUp;
             case SDLK_NUMLOCKCLEAR:
                 break;
             case SDLK_KP_DIVIDE:
@@ -217,25 +217,25 @@ namespace Wraith {
             case SDLK_KP_ENTER:
                 break;
             case SDLK_KP_1:
-                return Input::KeyCode::NumPad1;
+                return Input::EKeyCode::NumPad1;
             case SDLK_KP_2:
-                return Input::KeyCode::NumPad2;
+                return Input::EKeyCode::NumPad2;
             case SDLK_KP_3:
-                return Input::KeyCode::NumPad3;
+                return Input::EKeyCode::NumPad3;
             case SDLK_KP_4:
-                return Input::KeyCode::NumPad4;
+                return Input::EKeyCode::NumPad4;
             case SDLK_KP_5:
-                return Input::KeyCode::NumPad5;
+                return Input::EKeyCode::NumPad5;
             case SDLK_KP_6:
-                return Input::KeyCode::NumPad6;
+                return Input::EKeyCode::NumPad6;
             case SDLK_KP_7:
-                return Input::KeyCode::NumPad7;
+                return Input::EKeyCode::NumPad7;
             case SDLK_KP_8:
-                return Input::KeyCode::NumPad8;
+                return Input::EKeyCode::NumPad8;
             case SDLK_KP_9:
-                return Input::KeyCode::NumPad9;
+                return Input::EKeyCode::NumPad9;
             case SDLK_KP_0:
-                return Input::KeyCode::NumPad0;
+                return Input::EKeyCode::NumPad0;
             case SDLK_KP_PERIOD:
                 break;
             case SDLK_APPLICATION:
@@ -245,29 +245,29 @@ namespace Wraith {
             case SDLK_KP_EQUALS:
                 break;
             case SDLK_F13:
-                return Input::KeyCode::F13;
+                return Input::EKeyCode::F13;
             case SDLK_F14:
-                return Input::KeyCode::F14;
+                return Input::EKeyCode::F14;
             case SDLK_F15:
-                return Input::KeyCode::F15;
+                return Input::EKeyCode::F15;
             case SDLK_F16:
-                return Input::KeyCode::F16;
+                return Input::EKeyCode::F16;
             case SDLK_F17:
-                return Input::KeyCode::F17;
+                return Input::EKeyCode::F17;
             case SDLK_F18:
-                return Input::KeyCode::F18;
+                return Input::EKeyCode::F18;
             case SDLK_F19:
-                return Input::KeyCode::F19;
+                return Input::EKeyCode::F19;
             case SDLK_F20:
-                return Input::KeyCode::F20;
+                return Input::EKeyCode::F20;
             case SDLK_F21:
-                return Input::KeyCode::F21;
+                return Input::EKeyCode::F21;
             case SDLK_F22:
-                return Input::KeyCode::F22;
+                return Input::EKeyCode::F22;
             case SDLK_F23:
-                return Input::KeyCode::F23;
+                return Input::EKeyCode::F23;
             case SDLK_F24:
-                return Input::KeyCode::F24;
+                return Input::EKeyCode::F24;
             case SDLK_EXECUTE:
                 break;
             case SDLK_HELP:
@@ -417,19 +417,19 @@ namespace Wraith {
             case SDLK_KP_HEXADECIMAL:
                 break;
             case SDLK_LCTRL:
-                return Input::KeyCode::LCtrl;
+                return Input::EKeyCode::LCtrl;
             case SDLK_LSHIFT:
-                return Input::KeyCode::LShift;
+                return Input::EKeyCode::LShift;
             case SDLK_LALT:
-                return Input::KeyCode::LAlt;
+                return Input::EKeyCode::LAlt;
             case SDLK_LGUI:
                 break;
             case SDLK_RCTRL:
-                return Input::KeyCode::RCtrl;
+                return Input::EKeyCode::RCtrl;
             case SDLK_RSHIFT:
-                return Input::KeyCode::RShift;
+                return Input::EKeyCode::RShift;
             case SDLK_RALT:
-                return Input::KeyCode::RAlt;
+                return Input::EKeyCode::RAlt;
             case SDLK_RGUI:
                 break;
             case SDLK_MODE:
@@ -493,21 +493,21 @@ namespace Wraith {
             case SDLK_AUDIOFASTFORWARD:
                 break;
             default:
-                return Input::KeyCode::Unknown;
+                return Input::EKeyCode::Unknown;
         }
-        return Input::KeyCode::Unknown;
+        return Input::EKeyCode::Unknown;
     }
 
-    Input::MouseButton Wraith::SDL2Input::TranslateMouseButton(Uint8 sdlMouseButton) {
+    Input::EMouseButton Wraith::SDL2Input::TranslateMouseButton(Uint8 sdlMouseButton) {
         switch(sdlMouseButton) {
             case SDL_BUTTON_LEFT:
-                return Input::MouseButton::Left;
+                return Input::EMouseButton::Left;
             case SDL_BUTTON_RIGHT:
-                return Input::MouseButton::Right;
+                return Input::EMouseButton::Right;
             case SDL_BUTTON_MIDDLE:
-                return Input::MouseButton::Middle;
+                return Input::EMouseButton::Middle;
             default:
-                return Input::MouseButton::Unknown;
+                return Input::EMouseButton::Unknown;
         }
     }
 

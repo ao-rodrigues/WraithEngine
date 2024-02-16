@@ -9,55 +9,65 @@
 
 #include "TimeManager.h"
 
-namespace Wraith {
+namespace Wraith
+{
+    static constexpr Time::Timestep k_FixedTimestep = 1.0 / 60.0;
 
-    static constexpr Time::Timestep FIXED_TIMESTEP = 1.0 / 60.0;
-
-    void TimeManager::Init() {
-        _lastFrameTimestamp = std::chrono::high_resolution_clock::now();
-        _lastFixedFrameTimestamp = std::chrono::high_resolution_clock::now();
+    void TimeManager::Init()
+    {
+        m_LastFrameTimestamp = std::chrono::high_resolution_clock::now();
+        m_LastFixedFrameTimestamp = std::chrono::high_resolution_clock::now();
     }
 
-    void TimeManager::Update() {
-        Time::Timestamp currentTime = std::chrono::high_resolution_clock::now();
-        auto deltaDuration = std::chrono::duration_cast<std::chrono::duration<double, std::milli>>(currentTime - _lastFrameTimestamp);
-        _deltaTime = deltaDuration.count() / 1000.0;
-        _lastFrameTimestamp = currentTime;
+    void TimeManager::Update()
+    {
+        const Time::Timestamp currentTime = std::chrono::high_resolution_clock::now();
+        const auto deltaDuration = std::chrono::duration_cast<std::chrono::duration<double, std::milli>>(
+            currentTime - m_LastFrameTimestamp);
+        m_DeltaTime = deltaDuration.count() / 1000.0;
+        m_LastFrameTimestamp = currentTime;
 
-        _timeAccumulator += _deltaTime;
-        if (_timeAccumulator >= FIXED_TIMESTEP) {
-            auto fixedDeltaDuration = std::chrono::duration_cast<std::chrono::duration<double, std::milli>>(currentTime - _lastFixedFrameTimestamp);
-            _fixedDeltaTime = fixedDeltaDuration.count() / 1000.0;
-            _lastFixedFrameTimestamp = currentTime;
-            _timeAccumulator = 0.0;
+        m_TimeAccumulator += m_DeltaTime;
+        if (m_TimeAccumulator >= k_FixedTimestep)
+        {
+            const auto fixedDeltaDuration = std::chrono::duration_cast<std::chrono::duration<double, std::milli>>(
+                currentTime - m_LastFixedFrameTimestamp);
+            m_FixedDeltaTime = fixedDeltaDuration.count() / 1000.0;
+            m_LastFixedFrameTimestamp = currentTime;
+            m_TimeAccumulator = 0.0;
         }
 
-        _time += _deltaTime;
+        m_Time += m_DeltaTime;
     }
 
-    Time::Timestep TimeManager::GetTime() const {
-        return _time;
+    Time::Timestep TimeManager::GetTime() const
+    {
+        return m_Time;
     }
 
-    Time::Timestep TimeManager::GetDeltaTime() const {
-        return _deltaTime;
+    Time::Timestep TimeManager::GetDeltaTime() const
+    {
+        return m_DeltaTime;
     }
 
-    Time::Timestep TimeManager::GetFixedDeltaTime() const {
-        return _fixedDeltaTime;
+    Time::Timestep TimeManager::GetFixedDeltaTime() const
+    {
+        return m_FixedDeltaTime;
     }
 
 
-    Time::Timestep Time::GetTime() {
+    Time::Timestep Time::GetTime()
+    {
         return TimeManager::GetInstance().GetTime();
     }
 
-    Time::Timestep Time::GetDeltaTime() {
+    Time::Timestep Time::GetDeltaTime()
+    {
         return TimeManager::GetInstance().GetDeltaTime();
     }
 
-    Time::Timestep Time::GetFixedDeltaTime() {
+    Time::Timestep Time::GetFixedDeltaTime()
+    {
         return TimeManager::GetInstance().GetFixedDeltaTime();
     }
-
 }

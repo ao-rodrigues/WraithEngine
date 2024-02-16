@@ -36,10 +36,10 @@ namespace Wraith {
         void ResetWindowResizedFlag();
 
     protected:
-        int _width = 800;
-        int _height = 600;
-        std::string _title = "Wraith Window";
+        int m_Width = 800;
+        int m_Height = 600;
+        std::string m_Title = "Wraith Window";
 
-        bool _windowResized = false;
+        bool m_WindowResized = false;
     };
 }

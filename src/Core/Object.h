@@ -9,39 +9,60 @@
 
 #include <functional>
 
-namespace Wraith {
+namespace Wraith
+{
 
-    template<typename T>
-    class Object {
+    template <typename T>
+    class Object
+    {
     public:
-        static T Undefined;
+        static T s_Undefined;
 
-        class Ref : public std::reference_wrapper<const T> {
+        class Ref : public std::reference_wrapper<const T>
+        {
         public:
-            Ref() : std::reference_wrapper<const T>(Object<T>::Undefined) {}
-            Ref(const T& obj) : std::reference_wrapper<const T>(obj) {}
+            Ref() :
+                std::reference_wrapper<const T>(Object<T>::s_Undefined)
+            {
+            }
 
-            const T* operator->() const {
+            Ref(const T &obj) :
+                std::reference_wrapper<const T>(obj)
+            {
+            }
+
+            const T *operator->() const
+            {
                 return &std::reference_wrapper<const T>::get();
             }
         };
 
-        class MutableRef : public std::reference_wrapper<T> {
+        class MutableRef : public std::reference_wrapper<T>
+        {
         public:
-            MutableRef() : std::reference_wrapper<T>(Object<T>::Undefined) {}
-            MutableRef(T& obj) : std::reference_wrapper<T>(obj) {}
+            MutableRef() :
+                std::reference_wrapper<T>(Object<T>::s_Undefined)
+            {
+            }
 
-            T* operator->() {
+            MutableRef(T &obj) :
+                std::reference_wrapper<T>(obj)
+            {
+            }
+
+            T *operator->()
+            {
                 return &std::reference_wrapper<T>::get();
             }
         };
 
-        virtual bool IsUndefined() const {
-            return this == &Object<T>::Undefined;
+        virtual bool IsUndefined() const
+        {
+            return this == &Object<T>::s_Undefined;
         }
     };
 
-    template<typename T>
-    T Object<T>::Undefined = T();
+    template <typename T>
+    T Object<T>::s_Undefined = T();
 
 }

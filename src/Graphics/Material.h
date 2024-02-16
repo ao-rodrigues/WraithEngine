@@ -13,7 +13,7 @@
 namespace Wraith {
 
     struct Material {
-        std::shared_ptr<Pipeline> pipeline;
+        std::shared_ptr<Pipeline> Pipeline;
     };
 }
 

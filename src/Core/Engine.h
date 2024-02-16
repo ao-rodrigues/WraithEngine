@@ -21,14 +21,17 @@
 
 #include "Graphics/Renderer.h"
 
-namespace Wraith {
-    struct EngineInitParams {
-        int windowWidth;
-        int windowHeight;
-        std::string windowTitle;
+namespace Wraith
+{
+    struct EngineInitParams
+    {
+        int WindowWidth;
+        int WindowHeight;
+        std::string WindowTitle;
     };
 
-    class Engine final : public Singleton<Engine> {
+    class Engine final : public Singleton<Engine>
+    {
     public:
         void Init(const EngineInitParams& initParams);
         void Run();
@@ -49,22 +52,22 @@ namespace Wraith {
         void UpdateLogic();
         void DrawRenderables(VkCommandBuffer commandBuffer, const std::vector<Renderable>& renderables);
 
-        std::unique_ptr<Window> _window;
-        Device _device;
-        std::shared_ptr<Pipeline> _meshPipeline;
+        std::unique_ptr<Window> m_Window;
+        Device m_Device;
+        std::shared_ptr<Pipeline> m_MeshPipeline;
 
-        DeletionQueue _mainDeletionQueue;
+        DeletionQueue m_MainDeletionQueue;
 
-        std::unordered_map<std::string, std::shared_ptr<Material>> _materials;
-        std::unordered_map<std::string, std::shared_ptr<Mesh>> _meshes;
-        std::vector<Renderable> _renderables;
+        std::unordered_map<std::string, std::shared_ptr<Material>> m_Materials;
+        std::unordered_map<std::string, std::shared_ptr<Mesh>> m_Meshes;
+        std::vector<Renderable> m_Renderables;
 
-        glm::vec3 _cameraPos {0.0f, 5.0f, 8.0f};
-        glm::vec3 _cameraFront {0.0f, 0.0f, -1.0f};
-        glm::vec3 _cameraUp {0.0f, 1.0f, 0.0f};
+        glm::vec3 m_CameraPos {0.0f, 5.0f, 8.0f};
+        glm::vec3 m_CameraFront {0.0f, 0.0f, -1.0f};
+        glm::vec3 m_CameraUp {0.0f, 1.0f, 0.0f};
 
-        glm::vec2 _cameraLook {-90.0f, 0.0f};
-        float _fov = 70.0f;
+        glm::vec2 m_CameraLook {-90.0f, 0.0f};
+        float m_Fov = 70.0f;
     };
 
 #define WRAITH_ENGINE ::Wraith::Engine::Instance()

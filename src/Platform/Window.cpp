@@ -12,21 +12,21 @@
 namespace Wraith {
 
     void Window::Create(int width, int height, const std::string& title) {
-        _width = width;
-        _height = height;
-        _title = title;
+        m_Width = width;
+        m_Height = height;
+        m_Title = title;
     }
 
     VkExtent2D Window::GetExtent() const {
-        return {static_cast<uint32_t>(_width), static_cast<uint32_t>(_height)};
+        return {static_cast<uint32_t>(m_Width), static_cast<uint32_t>(m_Height)};
     }
 
     bool Window::WasResized() const {
-        return _windowResized;
+        return m_WindowResized;
     }
 
     void Window::ResetWindowResizedFlag() {
-        _windowResized = false;
+        m_WindowResized = false;
     }
 
     void Window::Destroy() {}

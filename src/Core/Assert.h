@@ -15,14 +15,12 @@
     if (!(x)) {                                     \
         WR_LOG_FATAL("Assert {} failed!", #x);      \
         abort();                                    \
-    }                                               \
-
+    }
 #define WR_ASSERT_MSG(x, msg)                                                           \
     if (!(x)) {                                                                         \
         WR_LOG_FATAL("[{}:{}] Assert {} failed: {}", __FILE__, __LINE__, #x, msg);      \
         abort();                                                                        \
-    }                                                                                   \
-
+    }
 #else
 
 #define WR_ASSERT(x)

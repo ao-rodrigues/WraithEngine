@@ -18,25 +18,25 @@ namespace Wraith {
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
-        _window = glfwCreateWindow(_width, _height, _title.c_str(), nullptr, nullptr);
-        glfwSetWindowUserPointer(_window, this);
-        glfwSetFramebufferSizeCallback(_window, OnFramebufferResized);
+        m_Window = glfwCreateWindow(m_Width, m_Height, m_Title.c_str(), nullptr, nullptr);
+        glfwSetWindowUserPointer(m_Window, this);
+        glfwSetFramebufferSizeCallback(m_Window, OnFramebufferResized);
     }
 
     void GLFWWindow::Destroy() {
-        glfwDestroyWindow(_window);
+        glfwDestroyWindow(m_Window);
         glfwTerminate();
     }
 
     void GLFWWindow::CreateSurface(VkInstance instance, VkSurfaceKHR* surface) {
-        if (glfwCreateWindowSurface(instance, _window, nullptr, surface) != VK_SUCCESS) {
+        if (glfwCreateWindowSurface(instance, m_Window, nullptr, surface) != VK_SUCCESS) {
             throw std::runtime_error("Failed to create window surface!");
         }
         WR_LOG_DEBUG("Created surface.")
     }
 
     void GLFWWindow::GetFramebufferSize(int* width, int* height) const {
-        glfwGetFramebufferSize(_window, width, height);
+        glfwGetFramebufferSize(m_Window, width, height);
     }
 
     std::vector<const char*> GLFWWindow::GetInstanceExtensions(unsigned int* count) const {
@@ -53,14 +53,14 @@ namespace Wraith {
     }
 
     bool GLFWWindow::ShouldClose() const {
-        return glfwWindowShouldClose(_window);
+        return glfwWindowShouldClose(m_Window);
     }
 
     void GLFWWindow::OnFramebufferResized(GLFWwindow* window, int newWidth, int newHeight) {
         const auto thisWindow = static_cast<GLFWWindow*>(glfwGetWindowUserPointer(window));
-        thisWindow->_width = newWidth;
-        thisWindow->_height = newHeight;
-        thisWindow->_windowResized = true;
+        thisWindow->m_Width = newWidth;
+        thisWindow->m_Height = newHeight;
+        thisWindow->m_WindowResized = true;
     }
 
 }
