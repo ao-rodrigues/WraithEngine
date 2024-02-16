@@ -36,8 +36,8 @@ find_package(Vulkan REQUIRED COMPONENTS glslc)
 find_program(GLSLC_EXECUTABLE NAMES glslc HINTS Vulkan::glslc)
 
 add_library(${PROJECT_NAME} STATIC
-        ${PROJECT_SOURCE_DIR}/include/Wraith/Application.h
-        ${PROJECT_SOURCE_DIR}/include/Wraith/Singleton.h
+        "src/Core/Application.h"
+        "src/Utils/Singleton.h"
         ${PROJECT_SOURCE_DIR}/src/Graphics/Vulkan.cpp
         ${PROJECT_SOURCE_DIR}/src/Graphics/Vulkan.h
         ${PROJECT_SOURCE_DIR}/src/Core/Application.cpp
@@ -65,31 +65,28 @@ add_library(${PROJECT_NAME} STATIC
         ${PROJECT_SOURCE_DIR}/src/Graphics/VkFactory.h
         ${PROJECT_SOURCE_DIR}/src/wrpch.cpp
         ${PROJECT_SOURCE_DIR}/src/wrpch.h
-        ${PROJECT_SOURCE_DIR}/include/Wraith/Input.h
+        "src/Input/Input.h"
         ${PROJECT_SOURCE_DIR}/src/Input/InputManager.cpp
         ${PROJECT_SOURCE_DIR}/src/Input/InputManager.h
         ${PROJECT_SOURCE_DIR}/src/Platform/SDL2Input.cpp
         ${PROJECT_SOURCE_DIR}/src/Platform/SDL2Input.h
-        ${PROJECT_SOURCE_DIR}/include/Wraith/Time.h
+        "src/Core/Time.h"
         ${PROJECT_SOURCE_DIR}/src/Core/TimeManager.cpp
         ${PROJECT_SOURCE_DIR}/src/Core/TimeManager.h
-        ${PROJECT_SOURCE_DIR}/include/Wraith/DeletionQueue.h
-        ${PROJECT_SOURCE_DIR}/include/Wraith/Object.h
+        "src/Utils/DeletionQueue.h"
+        "src/Core/Object.h"
         ${PROJECT_SOURCE_DIR}/src/Platform/Window.cpp
-        ${PROJECT_SOURCE_DIR}/include/Wraith/Logger.h
+        "src/Core/Logger.h"
         ${PROJECT_SOURCE_DIR}/src/Core/Logger.cpp
         ${PROJECT_SOURCE_DIR}/src/Core/Assert.h
         ${PROJECT_SOURCE_DIR}/src/Math/Math.h src/IO/IO.h src/Asset/AssetManager.h)
 
 target_include_directories(${PROJECT_NAME}
         PUBLIC
-            $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-            $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>
-            glm
-            spdlog
+            $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
+            $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/src>
         PRIVATE
             ${PROJECT_SOURCE_DIR}/src
-            ${PROJECT_SOURCE_DIR}/include
             ${Vulkan_INCLUDE_DIRS}
             glfw
             VulkanMemoryAllocator

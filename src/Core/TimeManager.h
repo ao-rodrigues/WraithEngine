@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "Wraith/Singleton.h"
-#include "Wraith/Time.h"
+#include "Utils/Singleton.h"
+#include "Core/Time.h"
 
 namespace Wraith {
 

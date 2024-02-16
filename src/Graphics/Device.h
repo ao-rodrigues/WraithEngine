@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "Wraith/Object.h"
+#include "Core/Object.h"
 #include "Graphics/Vulkan.h"
 #include "Platform/Window.h"
 

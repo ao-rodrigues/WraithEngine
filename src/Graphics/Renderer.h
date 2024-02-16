@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "Wraith/Singleton.h"
+#include "Utils/Singleton.h"
 
 #include "Graphics/Vulkan.h"
 

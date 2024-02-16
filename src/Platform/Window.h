@@ -8,7 +8,7 @@
 #pragma once
 
 #include "Graphics/Vulkan.h"
-#include "Wraith/Object.h"
+#include "Core/Object.h"
 
 namespace Wraith {
     class Window : public Object<Window> {

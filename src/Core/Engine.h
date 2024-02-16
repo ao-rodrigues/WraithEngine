@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "Wraith/DeletionQueue.h"
-#include "Wraith/Singleton.h"
+#include "Utils/DeletionQueue.h"
+#include "Utils/Singleton.h"
 
 #include "Platform/Window.h"
 

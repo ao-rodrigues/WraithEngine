@@ -12,7 +12,7 @@
 
 #include "Asset/AssetManager.h"
 
-#include "Wraith/Logger.h"
+#include "Core/Logger.h"
 
 #include "Core/TimeManager.h"
 
@@ -67,6 +67,7 @@ namespace Wraith {
         while (!_window->ShouldClose()) {
             InputManager::GetInstance().ClearFrameEvents();
             TimeManager::GetInstance().Update();
+            _window = nullptr;
             _window->PollEvents();
 
              UpdateLogic();

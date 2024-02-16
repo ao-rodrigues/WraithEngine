@@ -12,7 +12,7 @@
 #define VULKAN_H // No need to include Vulkan again
 #include <vk_mem_alloc.h>
 
-#include "Wraith/Logger.h"
+#include "Core/Logger.h"
 
 #define WR_VK_CHECK(x)                                                          \
 {                                                                               \

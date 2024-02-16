@@ -8,6 +8,8 @@
 #include "wrpch.h"
 #include "Pipeline.h"
 
+#include "Core/Logger.h"
+
 namespace Wraith {
 
     VkPipeline Pipeline::Builder::Build(VkDevice device, VkRenderPass renderPass) {

@@ -9,7 +9,7 @@
 
 #include <SDL.h>
 
-#include "Wraith/Input.h"
+#include "Input/Input.h"
 
 namespace Wraith {
 

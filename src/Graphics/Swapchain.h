@@ -9,7 +9,7 @@
 
 #include "Graphics/Vulkan.h"
 #include "Graphics/Device.h"
-#include "Wraith/Object.h"
+#include "Core/Object.h"
 
 namespace Wraith {
 

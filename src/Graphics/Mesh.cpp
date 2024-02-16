@@ -53,10 +53,10 @@ namespace Wraith {
         std::string err;
         std::string warn;
         if (!binaryFile && !loader.LoadASCIIFromFile(&model, &err, &warn, modelPath)) {
-            WR_LOG_ERROR("Failed to parse glTF from file: {}", modelPath);
+            WR_LOG_ERROR("Failed to parse glTF file {}. Error: {}", modelPath, err);
             return;
         } else if (binaryFile && !loader.LoadBinaryFromFile(&model, &err, &warn, modelPath)) {
-            WR_LOG_ERROR("Failed to parse glb from file: {}", modelPath);
+            WR_LOG_ERROR("Failed to parse glb file {}. Error: {}", modelPath, err);
             return;
         }
         if (!warn.empty()) {

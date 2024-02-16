@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "Wraith/Logger.h"
+#include "Core/Logger.h"
 
 #ifdef WR_CONFIG_DEBUG
 
