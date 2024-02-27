@@ -10,11 +10,10 @@
 #include "Graphics/Vulkan.h"
 #include "Graphics/Pipeline.h"
 
-namespace Wraith {
-
-    struct Material {
+namespace Wraith
+{
+    struct Material
+    {
         std::shared_ptr<Pipeline> Pipeline;
     };
 }
-
-

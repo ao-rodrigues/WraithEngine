@@ -10,11 +10,13 @@
 #include "Graphics/Device.h"
 #include "Graphics/Vulkan.h"
 
-namespace Wraith {
-
-    class Pipeline {
+namespace Wraith
+{
+    class Pipeline
+    {
     public:
-        struct Builder {
+        struct Builder
+        {
             Builder() = default;
             ~Builder() = default;
 

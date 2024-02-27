@@ -9,6 +9,6 @@
 
 #include "Material.h"
 
-namespace Wraith {
-
+namespace Wraith
+{
 }

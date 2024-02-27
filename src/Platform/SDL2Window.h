@@ -12,8 +12,10 @@
 struct SDL_Window;
 union SDL_Event;
 
-namespace Wraith {
-    class SDL2Window : public Window {
+namespace Wraith
+{
+    class SDL2Window : public Window
+    {
     public:
         void Create(int width, int height, const std::string& title) override;
         void Destroy() override;

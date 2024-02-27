@@ -9,9 +9,10 @@
 
 #include <GLFW/glfw3.h>
 
-namespace Wraith {
-
-    void GLFWWindow::Create(int width, int height, const std::string& title) {
+namespace Wraith
+{
+    void GLFWWindow::Create(int width, int height, const std::string& title)
+    {
         Window::Create(width, height, title);
 
         glfwInit();
@@ -23,44 +24,52 @@ namespace Wraith {
         glfwSetFramebufferSizeCallback(m_Window, OnFramebufferResized);
     }
 
-    void GLFWWindow::Destroy() {
+    void GLFWWindow::Destroy()
+    {
         glfwDestroyWindow(m_Window);
         glfwTerminate();
     }
 
-    void GLFWWindow::CreateSurface(VkInstance instance, VkSurfaceKHR* surface) {
-        if (glfwCreateWindowSurface(instance, m_Window, nullptr, surface) != VK_SUCCESS) {
+    void GLFWWindow::CreateSurface(VkInstance instance, VkSurfaceKHR* surface)
+    {
+        if (glfwCreateWindowSurface(instance, m_Window, nullptr, surface) != VK_SUCCESS)
+        {
             throw std::runtime_error("Failed to create window surface!");
         }
         WR_LOG_DEBUG("Created surface.")
     }
 
-    void GLFWWindow::GetFramebufferSize(int* width, int* height) const {
+    void GLFWWindow::GetFramebufferSize(int* width, int* height) const
+    {
         glfwGetFramebufferSize(m_Window, width, height);
     }
 
-    std::vector<const char*> GLFWWindow::GetInstanceExtensions(unsigned int* count) const {
+    std::vector<const char*> GLFWWindow::GetInstanceExtensions(unsigned int* count) const
+    {
         const char** extensionNames = glfwGetRequiredInstanceExtensions(count);
         return {extensionNames, extensionNames + *count};
     }
 
-    void GLFWWindow::PollEvents() {
+    void GLFWWindow::PollEvents()
+    {
         glfwPollEvents();
     }
 
-    void GLFWWindow::WaitEvents() {
+    void GLFWWindow::WaitEvents()
+    {
         glfwWaitEvents();
     }
 
-    bool GLFWWindow::ShouldClose() const {
+    bool GLFWWindow::ShouldClose() const
+    {
         return glfwWindowShouldClose(m_Window);
     }
 
-    void GLFWWindow::OnFramebufferResized(GLFWwindow* window, int newWidth, int newHeight) {
+    void GLFWWindow::OnFramebufferResized(GLFWwindow* window, int newWidth, int newHeight)
+    {
         const auto thisWindow = static_cast<GLFWWindow*>(glfwGetWindowUserPointer(window));
         thisWindow->m_Width = newWidth;
         thisWindow->m_Height = newHeight;
         thisWindow->m_WindowResized = true;
     }
-
 }

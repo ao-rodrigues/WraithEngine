@@ -12,8 +12,10 @@
 #include "Input/Input.h"
 #include "Utils/Singleton.h"
 
-namespace Wraith {
-    class InputManager : public Singleton<InputManager> {
+namespace Wraith
+{
+    class InputManager : public Singleton<InputManager>
+    {
     public:
         void RegisterKeyDown(Input::EKeyCode keyCode);
         void RegisterKeyUp(Input::EKeyCode keyCode);

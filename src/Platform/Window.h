@@ -10,8 +10,10 @@
 #include "Graphics/Vulkan.h"
 #include "Core/Object.h"
 
-namespace Wraith {
-    class Window : public Object<Window> {
+namespace Wraith
+{
+    class Window : public Object<Window>
+    {
     public:
         Window() = default;
         virtual ~Window() = default;

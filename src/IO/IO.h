@@ -11,10 +11,13 @@
 #include <string>
 #include <fstream>
 
-namespace Wraith::IO {
-    inline std::vector<char> ReadFile(const std::string& fileName) {
+namespace Wraith::IO
+{
+    inline std::vector<char> ReadFile(const std::string& fileName)
+    {
         std::ifstream file(fileName, std::ios::ate | std::ios::binary);
-        if (!file.is_open()) {
+        if (!file.is_open())
+        {
             throw std::runtime_error("Failed to open file!");
         }
 

@@ -7,16 +7,16 @@
 
 #pragma once
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
 #include "Input/Input.h"
 
-namespace Wraith {
-
-    class SDL2Input {
+namespace Wraith
+{
+    class SDL2Input
+    {
     public:
         static Input::EKeyCode TranslateKeyCode(SDL_Keycode sdlKeyCode);
         static Input::EMouseButton TranslateMouseButton(Uint8 sdlMouseButton);
     };
-
 }

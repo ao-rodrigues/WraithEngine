@@ -11,8 +11,10 @@
 
 struct GLFWwindow;
 
-namespace Wraith {
-    class GLFWWindow : public Window {
+namespace Wraith
+{
+    class GLFWWindow : public Window
+    {
     public:
         void Create(int width, int height, const std::string& title) override;
         void Destroy() override;

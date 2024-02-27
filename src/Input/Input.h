@@ -9,9 +9,10 @@
 
 #include "Math/Math.h"
 
-namespace Wraith::Input {
-
-    enum class EKeyCode : int {
+namespace Wraith::Input
+{
+    enum class EKeyCode : int
+    {
         A,
         B,
         C,
@@ -113,7 +114,8 @@ namespace Wraith::Input {
         Count // Reserved: always keep as last
     };
 
-    enum class EMouseButton : int {
+    enum class EMouseButton : int
+    {
         Left,
         Right,
         Middle,
@@ -134,5 +136,4 @@ namespace Wraith::Input {
     glm::vec2 GetMousePosition();
     glm::vec2 GetMouseDelta();
     glm::vec2 GetMouseWheel();
-
 }

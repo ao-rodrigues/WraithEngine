@@ -10,17 +10,21 @@
 #include "Graphics/Vulkan.h"
 #include "Math/Math.h"
 
-namespace Wraith {
+namespace Wraith
+{
     class Device;
 
-    class Mesh {
+    class Mesh
+    {
     public:
-        struct PushConstants {
+        struct PushConstants
+        {
             glm::vec4 Data;
             glm::mat4 RenderMatrix;
         };
 
-        struct Vertex {
+        struct Vertex
+        {
             glm::vec3 Position;
             glm::vec3 Color;
 

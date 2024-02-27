@@ -29,7 +29,7 @@ namespace Wraith
 
         struct SwapChainSupportDetails
         {
-            VkSurfaceCapabilitiesKHR Capabilities{};
+            VkSurfaceCapabilitiesKHR Capabilities {};
             std::vector<VkSurfaceFormatKHR> Formats;
             std::vector<VkPresentModeKHR> PresentModes;
         };

@@ -17,9 +17,10 @@
 
 #include "Platform/Window.h"
 
-namespace Wraith {
-
-    class Renderer : public Singleton<Renderer> {
+namespace Wraith
+{
+    class Renderer : public Singleton<Renderer>
+    {
     public:
         void Init(const Device& device, Window& window);
 
@@ -28,7 +29,8 @@ namespace Wraith {
         VkRenderPass GetRenderPass() const { return m_RenderPass; }
 
     private:
-        struct FrameData {
+        struct FrameData
+        {
             VkSemaphore RenderSemaphore = VK_NULL_HANDLE;
             VkSemaphore PresentSemaphore = VK_NULL_HANDLE;
             VkFence RenderFence = VK_NULL_HANDLE;
@@ -62,7 +64,7 @@ namespace Wraith {
         VkRenderPass m_RenderPass = VK_NULL_HANDLE;
         std::array<FrameData, k_MaxFramesInFlight> m_Frames;
 
-        uint32_t m_SwapChainImageIndex = 0;
+        uint32_t m_SwapchainImageIndex = 0;
         size_t m_FrameIndex = 0;
     };
 }

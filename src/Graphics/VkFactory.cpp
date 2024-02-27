@@ -9,18 +9,20 @@
 
 #include "IO/IO.h"
 
-namespace Wraith::VkFactory {
-
-    VkShaderModule ShaderModule(VkDevice device, const std::string& shaderPath) {
+namespace Wraith::VkFactory
+{
+    VkShaderModule ShaderModule(VkDevice device, const std::string& shaderPath)
+    {
         const std::vector<char> shaderCode = IO::ReadFile(shaderPath);
 
-        VkShaderModuleCreateInfo shaderInfo{};
+        VkShaderModuleCreateInfo shaderInfo {};
         shaderInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
         shaderInfo.codeSize = shaderCode.size();
         shaderInfo.pCode = reinterpret_cast<const uint32_t*>(shaderCode.data());
 
         VkShaderModule shaderModule;
-        if (vkCreateShaderModule(device, &shaderInfo, nullptr, &shaderModule) != VK_SUCCESS) {
+        if (vkCreateShaderModule(device, &shaderInfo, nullptr, &shaderModule) != VK_SUCCESS)
+        {
             WR_LOG_ERROR("Failed to create shader module!")
             return VK_NULL_HANDLE;
         }
@@ -28,8 +30,10 @@ namespace Wraith::VkFactory {
     }
 
     // Pipeline creation factories
-    VkPipelineShaderStageCreateInfo PipelineShaderStageCreateInfo(VkShaderStageFlagBits stage, VkShaderModule shaderModule) {
-        VkPipelineShaderStageCreateInfo shaderStageInfo{};
+    VkPipelineShaderStageCreateInfo PipelineShaderStageCreateInfo(VkShaderStageFlagBits stage,
+                                                                  VkShaderModule shaderModule)
+    {
+        VkPipelineShaderStageCreateInfo shaderStageInfo {};
         shaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
         shaderStageInfo.stage = stage;
         shaderStageInfo.module = shaderModule;
@@ -37,8 +41,11 @@ namespace Wraith::VkFactory {
         return shaderStageInfo;
     }
 
-    VkPipelineVertexInputStateCreateInfo PipelineVertexInputStateCreateInfo(const std::vector<VkVertexInputBindingDescription>& bindingDescriptions, const std::vector<VkVertexInputAttributeDescription>& attributeDescriptions) {
-        VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
+    VkPipelineVertexInputStateCreateInfo PipelineVertexInputStateCreateInfo(
+        const std::vector<VkVertexInputBindingDescription>& bindingDescriptions,
+        const std::vector<VkVertexInputAttributeDescription>& attributeDescriptions)
+    {
+        VkPipelineVertexInputStateCreateInfo vertexInputInfo {};
         vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
         vertexInputInfo.vertexBindingDescriptionCount = static_cast<uint32_t>(bindingDescriptions.size());
         vertexInputInfo.pVertexBindingDescriptions = bindingDescriptions.data(); // Optional
@@ -47,16 +54,18 @@ namespace Wraith::VkFactory {
         return vertexInputInfo;
     }
 
-    VkPipelineInputAssemblyStateCreateInfo PipelineInputAssemblyStateCreateInfo(VkPrimitiveTopology topology) {
-        VkPipelineInputAssemblyStateCreateInfo inputAssembly{};
+    VkPipelineInputAssemblyStateCreateInfo PipelineInputAssemblyStateCreateInfo(VkPrimitiveTopology topology)
+    {
+        VkPipelineInputAssemblyStateCreateInfo inputAssembly {};
         inputAssembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
         inputAssembly.topology = topology;
         inputAssembly.primitiveRestartEnable = VK_FALSE;
         return inputAssembly;
     }
 
-    VkPipelineViewportStateCreateInfo PipelineViewportStateCreateInfo() {
-        VkPipelineViewportStateCreateInfo viewportState{};
+    VkPipelineViewportStateCreateInfo PipelineViewportStateCreateInfo()
+    {
+        VkPipelineViewportStateCreateInfo viewportState {};
         viewportState.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
         viewportState.viewportCount = 1;
         viewportState.pViewports = nullptr;
@@ -65,8 +74,9 @@ namespace Wraith::VkFactory {
         return viewportState;
     }
 
-    VkPipelineRasterizationStateCreateInfo PipelineRasterizationStateCreateInfo(VkPolygonMode polygonMode) {
-        VkPipelineRasterizationStateCreateInfo rasterizer{};
+    VkPipelineRasterizationStateCreateInfo PipelineRasterizationStateCreateInfo(VkPolygonMode polygonMode)
+    {
+        VkPipelineRasterizationStateCreateInfo rasterizer {};
         rasterizer.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
         rasterizer.depthClampEnable = VK_FALSE;
         rasterizer.rasterizerDiscardEnable = VK_FALSE;
@@ -76,39 +86,43 @@ namespace Wraith::VkFactory {
         rasterizer.frontFace = VK_FRONT_FACE_CLOCKWISE;
         rasterizer.depthBiasEnable = VK_FALSE;
         rasterizer.depthBiasConstantFactor = 0.0f; // Optional
-        rasterizer.depthBiasClamp = 0.0f; // Optional
-        rasterizer.depthBiasSlopeFactor = 0.0f; // Optional
+        rasterizer.depthBiasClamp = 0.0f;          // Optional
+        rasterizer.depthBiasSlopeFactor = 0.0f;    // Optional
         return rasterizer;
     }
 
-    VkPipelineMultisampleStateCreateInfo PipelineMultisampleStateCreateInfo() {
-        VkPipelineMultisampleStateCreateInfo multisampling{};
+    VkPipelineMultisampleStateCreateInfo PipelineMultisampleStateCreateInfo()
+    {
+        VkPipelineMultisampleStateCreateInfo multisampling {};
         multisampling.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
         multisampling.sampleShadingEnable = VK_FALSE;
         multisampling.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
-        multisampling.minSampleShading = 1.0f; // Optional
-        multisampling.pSampleMask = nullptr; // Optional
+        multisampling.minSampleShading = 1.0f;          // Optional
+        multisampling.pSampleMask = nullptr;            // Optional
         multisampling.alphaToCoverageEnable = VK_FALSE; // Optional
-        multisampling.alphaToOneEnable = VK_FALSE; // Optional
+        multisampling.alphaToOneEnable = VK_FALSE;      // Optional
         return multisampling;
     }
 
-    VkPipelineColorBlendAttachmentState PipelineColorBlendAttachmentState() {
-        VkPipelineColorBlendAttachmentState colorBlendAttachment{};
+    VkPipelineColorBlendAttachmentState PipelineColorBlendAttachmentState()
+    {
+        VkPipelineColorBlendAttachmentState colorBlendAttachment {};
         colorBlendAttachment.colorWriteMask =
-                VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT |
-                VK_COLOR_COMPONENT_A_BIT;
-        colorBlendAttachment.blendEnable = VK_FALSE; // TODO Disabled for now
-        colorBlendAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_ONE; // Optional
+            VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT |
+            VK_COLOR_COMPONENT_A_BIT;
+        colorBlendAttachment.blendEnable = VK_FALSE;                     // TODO Disabled for now
+        colorBlendAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_ONE;  // Optional
         colorBlendAttachment.dstColorBlendFactor = VK_BLEND_FACTOR_ZERO; // Optional
-        colorBlendAttachment.colorBlendOp = VK_BLEND_OP_ADD; // Optional
+        colorBlendAttachment.colorBlendOp = VK_BLEND_OP_ADD;             // Optional
         colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO; // Optional
-        colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD; // Optional
+        colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD;             // Optional
         return colorBlendAttachment;
     }
 
-    VkPipelineColorBlendStateCreateInfo PipelineColorBlendStateCreateInfo(const std::vector<VkPipelineColorBlendAttachmentState>& colorBlendAttachments) {
-        VkPipelineColorBlendStateCreateInfo colorBlending{};
+    VkPipelineColorBlendStateCreateInfo PipelineColorBlendStateCreateInfo(
+        const std::vector<VkPipelineColorBlendAttachmentState>& colorBlendAttachments)
+    {
+        VkPipelineColorBlendStateCreateInfo colorBlending {};
         colorBlending.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
         colorBlending.logicOpEnable = VK_FALSE;
         colorBlending.logicOp = VK_LOGIC_OP_COPY; // Optional
@@ -121,36 +135,40 @@ namespace Wraith::VkFactory {
         return colorBlending;
     }
 
-    VkPipelineDynamicStateCreateInfo PipelineDynamicStateCreateInfo(const std::vector<VkDynamicState>& dynamicStates) {
-        VkPipelineDynamicStateCreateInfo dynamicState{};
+    VkPipelineDynamicStateCreateInfo PipelineDynamicStateCreateInfo(const std::vector<VkDynamicState>& dynamicStates)
+    {
+        VkPipelineDynamicStateCreateInfo dynamicState {};
         dynamicState.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
         dynamicState.pDynamicStates = dynamicStates.data();
         dynamicState.dynamicStateCount = static_cast<uint32_t>(dynamicStates.size());
         return dynamicState;
     }
 
-    VkPushConstantRange PushConstantRange(uint32_t offset, uint32_t size, VkShaderStageFlags stageFlags) {
-        VkPushConstantRange pushConstantRange{};
+    VkPushConstantRange PushConstantRange(uint32_t offset, uint32_t size, VkShaderStageFlags stageFlags)
+    {
+        VkPushConstantRange pushConstantRange {};
         pushConstantRange.offset = offset;
         pushConstantRange.size = size;
         pushConstantRange.stageFlags = stageFlags;
         return pushConstantRange;
     }
 
-    VkPipelineLayoutCreateInfo PipelineLayoutCreateInfo(const std::vector<VkPushConstantRange>& pushConstantRanges) {
-        VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
+    VkPipelineLayoutCreateInfo PipelineLayoutCreateInfo(const std::vector<VkPushConstantRange>& pushConstantRanges)
+    {
+        VkPipelineLayoutCreateInfo pipelineLayoutInfo {};
         pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-        pipelineLayoutInfo.setLayoutCount = 0; // Optional
-        pipelineLayoutInfo.pSetLayouts = nullptr; // Optional
+        pipelineLayoutInfo.setLayoutCount = 0;                                 // Optional
+        pipelineLayoutInfo.pSetLayouts = nullptr;                              // Optional
         pipelineLayoutInfo.pushConstantRangeCount = pushConstantRanges.size(); // Optional
-        pipelineLayoutInfo.pPushConstantRanges = pushConstantRanges.data(); // Optional
+        pipelineLayoutInfo.pPushConstantRanges = pushConstantRanges.data();    // Optional
         return pipelineLayoutInfo;
     }
 
     // Image factories
 
-    VkImageCreateInfo ImageCreateInfo(VkFormat format, VkImageUsageFlags usageFlags, VkExtent3D extent) {
-        VkImageCreateInfo createInfo{};
+    VkImageCreateInfo ImageCreateInfo(VkFormat format, VkImageUsageFlags usageFlags, VkExtent3D extent)
+    {
+        VkImageCreateInfo createInfo {};
         createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
         createInfo.pNext = nullptr;
         createInfo.imageType = VK_IMAGE_TYPE_2D;
@@ -165,8 +183,9 @@ namespace Wraith::VkFactory {
         return createInfo;
     }
 
-    VkImageViewCreateInfo ImageViewCreateInfo(VkFormat format, VkImage image, VkImageAspectFlags aspectFlags) {
-        VkImageViewCreateInfo createInfo{};
+    VkImageViewCreateInfo ImageViewCreateInfo(VkFormat format, VkImage image, VkImageAspectFlags aspectFlags)
+    {
+        VkImageViewCreateInfo createInfo {};
         createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
         createInfo.image = image;
         createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
@@ -184,8 +203,10 @@ namespace Wraith::VkFactory {
         return createInfo;
     }
 
-    VkFramebufferCreateInfo FramebufferCreateInfo(VkRenderPass renderPass, VkImageView* attachments, VkExtent2D swapChainExtent) {
-        VkFramebufferCreateInfo createInfo{};
+    VkFramebufferCreateInfo FramebufferCreateInfo(VkRenderPass renderPass, VkImageView* attachments,
+                                                  VkExtent2D swapChainExtent)
+    {
+        VkFramebufferCreateInfo createInfo {};
         createInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
         createInfo.renderPass = renderPass;
         createInfo.attachmentCount = 2;
@@ -197,23 +218,27 @@ namespace Wraith::VkFactory {
         return createInfo;
     }
 
-    VkFenceCreateInfo FenceCreateInfo() {
-        VkFenceCreateInfo createInfo{};
+    VkFenceCreateInfo FenceCreateInfo()
+    {
+        VkFenceCreateInfo createInfo {};
         createInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
         createInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 
         return createInfo;
     }
 
-    VkSemaphoreCreateInfo SemaphoreCreateInfo() {
-        VkSemaphoreCreateInfo createInfo{};
+    VkSemaphoreCreateInfo SemaphoreCreateInfo()
+    {
+        VkSemaphoreCreateInfo createInfo {};
         createInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
 
         return createInfo;
     }
 
-    VkPipelineDepthStencilStateCreateInfo DepthStencilStateCreateInfo(bool depthTest, bool depthWrite, VkCompareOp compareOp) {
-        VkPipelineDepthStencilStateCreateInfo createInfo{};
+    VkPipelineDepthStencilStateCreateInfo DepthStencilStateCreateInfo(bool depthTest, bool depthWrite,
+                                                                      VkCompareOp compareOp)
+    {
+        VkPipelineDepthStencilStateCreateInfo createInfo {};
         createInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
         createInfo.pNext = nullptr;
 
@@ -227,6 +252,4 @@ namespace Wraith::VkFactory {
 
         return createInfo;
     }
-
 }
-

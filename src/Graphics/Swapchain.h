@@ -11,9 +11,10 @@
 #include "Graphics/Device.h"
 #include "Core/Object.h"
 
-namespace Wraith {
-
-    class Swapchain : public Object<Swapchain> {
+namespace Wraith
+{
+    class Swapchain : public Object<Swapchain>
+    {
     public:
         Swapchain() = default;
 
@@ -46,15 +47,15 @@ namespace Wraith {
         VkSwapchainKHR m_Swapchain = VK_NULL_HANDLE;
 
         std::vector<VkImage> m_Images;
-        VkImage m_DepthImage{};
+        VkImage m_DepthImage {};
 
-        VkFormat m_ImageFormat{};
-        VkFormat m_DepthImageFormat{};
+        VkFormat m_ImageFormat {};
+        VkFormat m_DepthImageFormat {};
 
-        VkExtent2D m_Extent{};
+        VkExtent2D m_Extent {};
         std::vector<VkImageView> m_ImageViews;
 
-        VkImageView m_DepthImageView{};
+        VkImageView m_DepthImageView {};
         VmaAllocation m_DepthImageAllocation = VK_NULL_HANDLE;
     };
 }
