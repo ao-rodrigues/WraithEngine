@@ -24,3 +24,6 @@
 #include <vector>
 #include <set>
 #include <unordered_map>
+
+// Core engine headers
+#include "Core/Core.h"
