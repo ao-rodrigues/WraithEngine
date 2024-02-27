@@ -22,30 +22,30 @@ namespace Wraith {
             return nullptr;
         }
 
-        void* alignedAddress = m_CurrentPos + adjustment;
-
-        const auto header = static_cast<AllocationHeader*>(alignedAddress - sizeof(AllocationHeader));
+        const uintptr alignedAddress = reinterpret_cast<uintptr>(m_CurrentPos) + adjustment;
+        const auto header = reinterpret_cast<AllocationHeader*>(alignedAddress - sizeof(AllocationHeader));
         header->Adjustment = adjustment;
 
 #ifdef WR_CONFIG_DEBUG
         header->PrevAddress = m_PrevPosition;
-        m_PrevPosition = alignedAddress;
+        m_PrevPosition = reinterpret_cast<void*>(alignedAddress);
 #endif
 
-        m_CurrentPos = alignedAddress + sizeBytes;
+        m_CurrentPos = reinterpret_cast<void*>(alignedAddress + sizeBytes);
         m_UsedMemory += sizeBytes + adjustment;
         m_NumAllocations++;
 
-        return alignedAddress;
+        return reinterpret_cast<void*>(alignedAddress);
     }
 
-    void StackAllocator::Free(void* ptr)
+    void StackAllocator::Free(void* address)
     {
-        WR_ASSERT(ptr == m_PrevPosition);
+        WR_ASSERT(address == m_PrevPosition);
+        const auto addr = reinterpret_cast<uintptr>(address);
 
-        const auto header = static_cast<AllocationHeader*>(ptr - sizeof(AllocationHeader));
-        m_UsedMemory -= m_CurrentPos - ptr + header->Adjustment;
-        m_CurrentPos = ptr - header->Adjustment;
+        const auto header = reinterpret_cast<AllocationHeader*>(addr - sizeof(AllocationHeader));
+        m_UsedMemory -= reinterpret_cast<uintptr>(m_CurrentPos) - addr + header->Adjustment;
+        m_CurrentPos = reinterpret_cast<void*>(addr - header->Adjustment);
 
 #ifdef WR_CONFIG_DEBUG
         m_PrevPosition = header->PrevAddress;

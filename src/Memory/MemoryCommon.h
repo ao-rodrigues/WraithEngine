@@ -13,15 +13,20 @@ namespace Wraith::PointerMath
 {
     inline void* AlignForward(void* address, uint8 alignment)
     {
-        const uint8 mask = alignment - 1;
+        const uintptr mask = alignment - 1;
         WR_ASSERT_MSG((alignment & mask) == 0, "Alignment must be a power of 2!");
 
-        return (address + mask) & ~mask;
+        const auto addr = reinterpret_cast<uintptr>(address);
+        const uintptr alignedAddress = (addr + mask) & ~mask;
+
+        return reinterpret_cast<void*>(alignedAddress);
     }
 
     inline uint8 GetAlignForwardAdjustment(const void* address, uint8 alignment)
     {
-        const uint8 adjustment = alignment - (static_cast<uint8*>(address) & static_cast<uint8*>(alignment - 1));
+        const auto addr = reinterpret_cast<uintptr>(address);
+        const uintptr mask = alignment - 1;
+        const uint8 adjustment = alignment - (addr & mask);
 
         if (adjustment == alignment)
         {

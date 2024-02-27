@@ -16,7 +16,7 @@ public:
     explicit StackAllocator(uint32 sizeBytes) : AllocatorBase(sizeBytes), m_CurrentPos(m_Start) {}
 
     void* Alloc(uint64 sizeBytes, uint8 alignment) override;
-    void Free(void* ptr) override;
+    void Free(void* address) override;
 
     void Clear();
 
@@ -24,10 +24,10 @@ private:
     struct AllocationHeader
     {
 #ifdef WR_CONFIG_DEBUG
-        void* PrevAddress;
+        void* PrevAddress = nullptr;
 #endif
 
-        uint8 Adjustment;
+        uint8 Adjustment = 0;
     };
 
 #ifdef WR_CONFIG_DEBUG
