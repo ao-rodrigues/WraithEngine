@@ -9,7 +9,7 @@
 
 namespace Wraith
 {
-    Input::EKeyCode Wraith::SDL2Input::TranslateKeyCode(SDL_Keycode sdlKeyCode)
+    Input::EKeyCode SDL2Input::TranslateKeyCode(SDL_Keycode sdlKeyCode)
     {
         switch (sdlKeyCode)
         {
@@ -500,7 +500,7 @@ namespace Wraith
         return Input::EKeyCode::Unknown;
     }
 
-    Input::EMouseButton Wraith::SDL2Input::TranslateMouseButton(Uint8 sdlMouseButton)
+    Input::EMouseButton SDL2Input::TranslateMouseButton(Uint8 sdlMouseButton)
     {
         switch (sdlMouseButton)
         {
