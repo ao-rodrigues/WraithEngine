@@ -55,8 +55,6 @@ add_library(${PROJECT_NAME} STATIC
         src/Graphics/Renderable.h
         src/Graphics/Swapchain.cpp
         src/Graphics/Swapchain.h
-        src/Platform/GLFWWindow.cpp
-        src/Platform/GLFWWindow.h
         src/Platform/SDL2Window.cpp
         src/Platform/SDL2Window.h
         src/Graphics/Renderer.cpp
