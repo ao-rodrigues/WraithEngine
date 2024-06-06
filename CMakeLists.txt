@@ -87,7 +87,9 @@ add_library(${PROJECT_NAME} STATIC
         src/Memory/AllocatorBase.cpp
         src/Memory/AllocatorBase.h
         src/Memory/MemoryCommon.h
-        src/Core/Types.h)
+        src/Core/Types.h
+        src/Memory/FreeListAllocator.cpp
+        src/Memory/FreeListAllocator.h)
 
 target_include_directories(${PROJECT_NAME}
         PUBLIC

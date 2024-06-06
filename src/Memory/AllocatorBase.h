@@ -16,7 +16,7 @@ public:
     virtual ~AllocatorBase();
 
     virtual void* Alloc(uint64 sizeBytes, uint8 alignment = 4) = 0;
-    virtual void Free(void* ptr) = 0;
+    virtual void Free(void* address) = 0;
 
     uint64 GetSize() const { return m_Size; }
     uint64 GetUsedMemory() const { return m_UsedMemory; }
