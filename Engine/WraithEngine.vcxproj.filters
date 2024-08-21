@@ -7,19 +7,13 @@
     <Filter Include="Source\Core">
       <UniqueIdentifier>{6E95150F-DA4A-8E04-633F-88DBCFF38408}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Core\Application">
-      <UniqueIdentifier>{3166B082-9D9D-F819-A6A7-5C3D125E1F13}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Core\Containers">
       <UniqueIdentifier>{33573A62-1F51-63B4-08BE-F9C4F456C920}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Core\Launch">
-      <UniqueIdentifier>{38F7FB54-24DB-BCAA-8D3B-B7FD793EA72C}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Wraith\Core\Application\Application.h">
-      <Filter>Source\Core\Application</Filter>
+    <ClInclude Include="Source\Wraith\Core\Application.h">
+      <Filter>Source\Core</Filter>
     </ClInclude>
     <ClInclude Include="Source\Wraith\Core\Containers\Array.h">
       <Filter>Source\Core\Containers</Filter>
@@ -33,19 +27,16 @@
     <ClInclude Include="Source\Wraith\Core\Containers\Vector.h">
       <Filter>Source\Core\Containers</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Wraith\Core\Core.h">
+    <ClInclude Include="Source\Wraith\Core\Launch.h">
       <Filter>Source\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Wraith\Core\Launch\Launch.h">
-      <Filter>Source\Core\Launch</Filter>
     </ClInclude>
     <ClInclude Include="Source\Wraith\Core\Types.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Wraith\Core\Application\Application.cpp">
-      <Filter>Source\Core\Application</Filter>
+    <ClCompile Include="Source\Wraith\Core\Application.cpp">
+      <Filter>Source\Core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -74,7 +74,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>Source\Wraith;Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Source;Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -85,15 +85,12 @@
     <Link>
       <SubSystem>Windows</SubSystem>
     </Link>
-    <Lib>
-      <AdditionalDependencies>\Lib\shaderc_sharedd.lib;\Lib\spirv-cross-cored.lib;\Lib\spirv-cross-glsld.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Development Win64|x64'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>Source\Wraith;Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Source;Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -104,15 +101,12 @@
     <Link>
       <SubSystem>Windows</SubSystem>
     </Link>
-    <Lib>
-      <AdditionalDependencies>\Lib\shaderc_shared.lib;\Lib\spirv-cross-core.lib;\Lib\spirv-cross-glsl.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shipping Win64|x64'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>Source\Wraith;Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Source;Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -123,22 +117,18 @@
     <Link>
       <SubSystem>Windows</SubSystem>
     </Link>
-    <Lib>
-      <AdditionalDependencies>\Lib\shaderc_shared.lib;\Lib\spirv-cross-core.lib;\Lib\spirv-cross-glsl.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Wraith\Core\Application\Application.h" />
+    <ClInclude Include="Source\Wraith\Core\Application.h" />
     <ClInclude Include="Source\Wraith\Core\Containers\Array.h" />
     <ClInclude Include="Source\Wraith\Core\Containers\ContainerDefines.h" />
     <ClInclude Include="Source\Wraith\Core\Containers\String.h" />
     <ClInclude Include="Source\Wraith\Core\Containers\Vector.h" />
-    <ClInclude Include="Source\Wraith\Core\Core.h" />
-    <ClInclude Include="Source\Wraith\Core\Launch\Launch.h" />
+    <ClInclude Include="Source\Wraith\Core\Launch.h" />
     <ClInclude Include="Source\Wraith\Core\Types.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Wraith\Core\Application\Application.cpp" />
+    <ClCompile Include="Source\Wraith\Core\Application.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

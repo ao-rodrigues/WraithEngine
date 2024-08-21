@@ -1,12 +1,7 @@
-#include <Wraith/Core/Launch/Launch.h>
+#include <Wraith/Core/Launch.h>
+#include "SandboxApp.h"
 
-class SandboxApp : public Wraith::Application
-{
-public:
-	
-};
-
-Wraith::Application* CreateApplication()
+Wraith::Application* Wraith::CreateApplication()
 {
 	return new SandboxApp();
 }

@@ -5,10 +5,10 @@ namespace Wraith
 	class Application
 	{
 	public:
-		Application();
-		virtual ~Application();
+		Application() = default;
+		virtual ~Application() = default;
 
-		void Run();
+		virtual void Run() = 0;
 	};
 
 	Application* CreateApplication();

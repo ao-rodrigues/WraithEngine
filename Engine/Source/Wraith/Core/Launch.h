@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Core/Application/Application.h"
+#include "Wraith/Core/Application.h"
 
 extern Wraith::Application* Wraith::CreateApplication();
 
-inline int main()
+int main()
 {
 	Wraith::Application* app = Wraith::CreateApplication();
 

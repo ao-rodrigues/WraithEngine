@@ -7,23 +7,24 @@ project "WraithEngine"
     targetdir ("%{prj.location}/Binaries/" .. OutputDir)
     objdir ("%{prj.location}/Intermediate/" .. OutputDir)
 
+    vpaths
+    {
+        ["Source/*"] = { "Source/Wraith/**.h", "Source/Wraith/**.cpp" }
+    }
+
     files
     {
         "Source/**.h",
         "Source/**.cpp"
     }
 
-    vpaths
-    {
-        ["Source/*"] = { "Source/Wraith/**.h", "Source/Wraith/**.cpp" }
-    }
-
     includedirs
     {
-        "Source/Wraith",
+        "Source",
         "%{IncludeDirs.VulkanSDK}"
     }
 
+    --[[
     filter "configurations:Debug"
         links
         {
@@ -47,3 +48,4 @@ project "WraithEngine"
             "%{Libraries.SPIRV_Cross_Release}",
             "%{Libraries.SPIRV_Cross_GLSL_Release}"
         }
+    --]]
