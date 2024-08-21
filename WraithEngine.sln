@@ -1,0 +1,39 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Games", "Games", "{99427816-05F8-F00B-8EEC-EAE2FAA0E70F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sandbox", "Sandbox\Sandbox.vcxproj", "{F4C124E3-60A1-A37E-69B9-2E55D5170AE0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Engine", "Engine", "{8249BEE1-6EAC-4D86-1732-863C03741909}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WraithEngine", "Engine\WraithEngine.vcxproj", "{CA751DAA-B6D8-AC4E-5F5E-E5044BA078D1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win64 = Debug|Win64
+		Development|Win64 = Development|Win64
+		Shipping|Win64 = Shipping|Win64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F4C124E3-60A1-A37E-69B9-2E55D5170AE0}.Debug|Win64.ActiveCfg = Debug Win64|x64
+		{F4C124E3-60A1-A37E-69B9-2E55D5170AE0}.Debug|Win64.Build.0 = Debug Win64|x64
+		{F4C124E3-60A1-A37E-69B9-2E55D5170AE0}.Development|Win64.ActiveCfg = Development Win64|x64
+		{F4C124E3-60A1-A37E-69B9-2E55D5170AE0}.Development|Win64.Build.0 = Development Win64|x64
+		{F4C124E3-60A1-A37E-69B9-2E55D5170AE0}.Shipping|Win64.ActiveCfg = Shipping Win64|x64
+		{F4C124E3-60A1-A37E-69B9-2E55D5170AE0}.Shipping|Win64.Build.0 = Shipping Win64|x64
+		{CA751DAA-B6D8-AC4E-5F5E-E5044BA078D1}.Debug|Win64.ActiveCfg = Debug Win64|x64
+		{CA751DAA-B6D8-AC4E-5F5E-E5044BA078D1}.Debug|Win64.Build.0 = Debug Win64|x64
+		{CA751DAA-B6D8-AC4E-5F5E-E5044BA078D1}.Development|Win64.ActiveCfg = Development Win64|x64
+		{CA751DAA-B6D8-AC4E-5F5E-E5044BA078D1}.Development|Win64.Build.0 = Development Win64|x64
+		{CA751DAA-B6D8-AC4E-5F5E-E5044BA078D1}.Shipping|Win64.ActiveCfg = Shipping Win64|x64
+		{CA751DAA-B6D8-AC4E-5F5E-E5044BA078D1}.Shipping|Win64.Build.0 = Shipping Win64|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F4C124E3-60A1-A37E-69B9-2E55D5170AE0} = {99427816-05F8-F00B-8EEC-EAE2FAA0E70F}
+		{CA751DAA-B6D8-AC4E-5F5E-E5044BA078D1} = {8249BEE1-6EAC-4D86-1732-863C03741909}
+	EndGlobalSection
+EndGlobal
