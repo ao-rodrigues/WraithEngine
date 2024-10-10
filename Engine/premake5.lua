@@ -4,23 +4,23 @@ project "WraithEngine"
     cppdialect "C++20"
     staticruntime "Off"
 
-    targetdir ("%{prj.location}/Binaries/" .. OutputDir)
-    objdir ("%{prj.location}/Intermediate/" .. OutputDir)
+    targetdir ("%{prj.location}/out/bin/" .. OutputDir)
+    objdir ("%{prj.location}/out/int/" .. OutputDir)
 
     vpaths
     {
-        ["Source/*"] = { "Source/Wraith/**.h", "Source/Wraith/**.cpp" }
+        ["Source/*"] = { "src/Wraith/**.h", "src/Wraith/**.cpp" }
     }
 
     files
     {
-        "Source/**.h",
-        "Source/**.cpp"
+        "src/**.h",
+        "src/**.cpp"
     }
 
     includedirs
     {
-        "Source",
+        "src",
         "%{IncludeDirs.VulkanSDK}"
     }
 

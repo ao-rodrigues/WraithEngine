@@ -2,21 +2,27 @@ include "Dependencies.lua"
 
 workspace "WraithEngine"
     configurations
-    { 
-        "Debug",
-        "Development",
-        "Shipping"
+    {
+        "DebugEditor",
+        "DevelopmentEditor",
+        "ShippingEditor",
+        "DebugGame",
+        "DevelopmentGame",
+        "ShippingGame"
     }
     platforms {
         "Win64"
     }
-    startproject "Sandbox"
 
     flags { "MultiProcessorCompile"}
+
+    startproject "Sandbox"
+
 
 OutputDir = "%{cfg.buildcfg}/%{cfg.platform}"
 
 group "Engine"
+    include "Editor"
     include "Engine"
 group ""
 
@@ -32,32 +38,38 @@ filter "platforms:Win64"
         "WR_PLATFORM_WINDOWS"
     }
 
-filter "configurations:Debug"
+filter "configurations:Debug*"
     runtime "Debug"
     symbols "On"
     optimize "Off"
-    targetsuffix "-Debug"
     defines
     {
         "WR_CONFIG_DEBUG"
     }
 
-filter "configurations:Development"
+filter "configurations:Development*"
     runtime "Release"
     symbols "On"
     optimize "Debug"
-    targetsuffix "-Development"
     defines
     {
         "WR_CONFIG_DEVELOPMENT"
     }
 
-filter "configurations:Shipping"
+filter "configurations:Shipping*"
     runtime "Release"
     symbols "Off"
     optimize "Full"
-    targetsuffix "-Shipping"
     defines
     {
         "WR_CONFIG_SHIPPING"
     }
+
+filter { "platforms:Win64", "configurations:Debug*" }
+    targetsuffix "-Win64-Debug"
+
+filter { "platforms:Win64", "configurations:Development*" }
+    targetsuffix "-Win64-Development"
+
+filter { "platforms:Win64", "configurations:Shipping*" }
+    targetsuffix "-Win64-Shipping"

@@ -1,4 +1,4 @@
-project "Sandbox"
+project "WraithEditor"
     kind "ConsoleApp"
     language "C++"
     cppdialect "C++20"
@@ -9,7 +9,7 @@ project "Sandbox"
 
     vpaths
     {
-        ["Source/*"] = { "src/Sandbox/**.h", "src/Sandbox/**.cpp" }
+        ["Source/*"] = { "src/WraithEditor/**.h", "src/WraithEditor/**.cpp" }
     }
 
     files
@@ -18,11 +18,11 @@ project "Sandbox"
         "src/**.cpp"
     }
 
-	includedirs
-	{
-		"src",
+    includedirs
+    {
+        "src",
         "%{wks.location}/Engine/src"
-	}
+    }
 
     links
     {

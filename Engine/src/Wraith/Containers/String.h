@@ -1,6 +1,6 @@
 #pragma once
 
-#define WR_USE_WRAITH_STRING 0
+#include "ContainerDefines.h"
 
 namespace Wraith
 {

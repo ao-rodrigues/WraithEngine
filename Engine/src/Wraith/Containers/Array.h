@@ -11,4 +11,5 @@ namespace Wraith
 	using Array = std::array<T>;
 
 #endif
+
 }
