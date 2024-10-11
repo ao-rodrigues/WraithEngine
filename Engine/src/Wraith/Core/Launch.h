@@ -4,7 +4,7 @@
 
 extern Wraith::Application* Wraith::CreateApplication();
 
-int main()
+inline int main()
 {
 	Wraith::Application* app = Wraith::CreateApplication();
 
